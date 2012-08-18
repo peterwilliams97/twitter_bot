@@ -130,11 +130,7 @@ class BayesClassifier:
         self.cntv_unigrams = _get_cntv(self.unigram_counts)
         self.cntv_bigrams  = _get_cntv(self.bigram_counts)   
         self.cntv_trigrams = _get_cntv(self.trigram_counts)
-        
-        print '                  (neg, pos, cnt)'
-        print 'self.cntv_unigrams', self.cntv_unigrams
-        print ' self.cntv_bigrams', self.cntv_bigrams
-        print 'self.cntv_trigrams', self.cntv_trigrams
+
         
     def __repr__(self):    
         
@@ -143,9 +139,18 @@ class BayesClassifier:
             return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
             
         def show_counts(name, counts):
-            return '%s\n%s\n%s\n' % (name, counts_str(counts), '-' * 80)
-            
-        return show_counts('trigrams', self.trigram_counts) \
+            return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
+        
+        totals = [
+            '        (neg, pos, cnt)'
+            'unigrams %s' % str(self.cntv_unigrams),
+            ' bigrams %s' % str(self.cntv_bigrams),
+            'trigrams %s' % str(self.cntv_trigrams),
+        ]   
+        totals_string = '\n'.join(totals) + '\n'
+        
+        return totals_string \
+             + show_counts('trigrams', self.trigram_counts) \
              + show_counts('bigrams', self.bigram_counts) \
              + show_counts('unigrams', self.unigram_counts) \
 
