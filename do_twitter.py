@@ -5,7 +5,7 @@ from common import *
     http://code.google.com/p/python-twitter/
 """
 
-# Get all the file names LATEST_FILE
+# Get all the file names *_FILE
 from common import *
 
 import logging
@@ -18,7 +18,6 @@ logging.info('Starting '+ sys.argv[0])
 # The keys are: consumer_key, consumer_secret, access_token_key, access_token_secret 
 RE_CREDENTIALS = re.compile(r"(\w+)='([^']+)'")
 credentials = dict((m.group(1),m.group(2)) for m in RE_CREDENTIALS.finditer(file(CREDENTIALS_FILE,'rt').read()))
-
  
 # Lastest tweet id (an integer) is stored as text in LATEST_FILE
 # We use to prevent re-reading tweets

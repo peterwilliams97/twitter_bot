@@ -1,7 +1,8 @@
+from __future__ import division
 from common import *
 
 def _tokenize(message):
-    return message.split()
+    return message.lower().split()
 
 def _preprocess(words):
     """ !@#$ Stub"""
@@ -25,39 +26,40 @@ def _get_bigrams(words):
 def _get_trigrams(words):    
     return [_T(words[i-2],words[i-1],words[i]) for i in range(2,len(words))]
 
-def _cnt_positivity(pn):
-    """pn is (p,n) where p is num positives and n
+def _cnt_positivity(np):
+    """np is (n.p) where p is num positives and n
         is number of negatives
         return how positive this resultit
     """
-    if pn[0] == 0 or pn[1] == 0:
-        return pn[0] - pn[1]
-    return (pn[0] - pn[1])/(pn[0] + pn[1]) 
+    n,p = np
+    if n == 0 or p == 0:
+        return p - n
+    return (p - n)/(p + n) 
             
-def _cnt_show(ngram, pn):
-    """Return a string for an ngram with pn = (p,n)
+def _cnt_show(ngram, np):
+    """Return a string for an ngram with np = (n,p)
         positive and negative counts
     """    
-    return "[%3d,%3d] %4.1f '%s'" % (pn[0], pn[1], _cnt_positivity(pn), ngram)    
+    return "[%3d,%3d] %4.1f '%s'" % (np[0], np[1], _cnt_positivity(np), ngram)    
 
 def _get_cntv(counts):
-    """counts is a dict of ngram:(p,n) where
-            p is number of times ngram has appeared in a +ve
+    """counts is a dict of ngram:(n,p) where
             n is number of times ngram has appeared in a -ve
-        returns cntp,cntn,v
-            cntp: total number of positives
+            p is number of times ngram has appeared in a +ve
+        returns cntn,cntp,v
             cntn: total number of negatives
+            cntp: total number of positives
                v: number of unique ngrams
     """    
-    cntp = sum([p for p,n in counts.values()])
-    cntn = sum([n for p,n in counts.values()])
+    cntn = sum([n for n,p in counts.values()])
+    cntp = sum([p for n,p in counts.values()])
     v = len(counts.keys())
-    return cntp,cntn,v
+    return cntn,cntp,v
     
 class BayesClassifier:
     
     class Example:
-        """Represents a document with a label. cls is True, False or UNKNOWW
+        """Represents a document with a label. cls is True or False
             words is a list of strings.
         """
         def __init__(self):
@@ -66,14 +68,14 @@ class BayesClassifier:
 
     def __init__(self):
         """BayesClassifier initialization
-            <n>gram_counts are dicts of postive and negative
+            *gram_counts are dicts of positive and negative
                 counts for each <n>gram
-            <n>gram_counts[k] = [p,n]
+            *gram_counts[k] = [n,p]
             
-            <n>gram_keys is <n>gram_counts' key set
+            *gram_keys is *gram_counts' key set
             
-            class_count = [p,n] is the total counts of positve
-                and negative examples
+            class_count = [n,p] is the total counts of negative and
+                positive examples
         """
        
         self.unigram_counts = {}
@@ -89,6 +91,8 @@ class BayesClassifier:
             Add a training example
         """
 
+        assert cls in set([False, True]), 'invalid cls=%s' % cls
+            
         words = _tokenize(message)
         words = _preprocess(words)
         unigrams = words
@@ -110,6 +114,8 @@ class BayesClassifier:
                 count[cls] += 1
                 ngram_counts[k] = count
                 ngram_keys.add(k)
+                #if k == 'papercut':
+                #    print cls, ngram_counts[k], ngrams
 
         self.class_count[cls] += 1
         update_ngrams(unigrams, self.unigram_counts, self.unigram_keys)
@@ -124,7 +130,7 @@ class BayesClassifier:
         self.cntv_bigrams  = _get_cntv(self.bigram_counts)   
         self.cntv_trigrams = _get_cntv(self.trigram_counts)
         
-        print '                  (pos, neg, cnt)'
+        print '                  (neg, pos, cnt)'
         print 'self.cntv_unigrams', self.cntv_unigrams
         print ' self.cntv_bigrams', self.cntv_bigrams
         print 'self.cntv_trigrams', self.cntv_trigrams
@@ -138,9 +144,9 @@ class BayesClassifier:
         def show_counts(name, counts):
             return '%s\n%s\n%s\n' % (name, counts_str(counts), '-' * 80)
             
-        return show_counts('unigrams', self.unigram_counts) \
+        return show_counts('trigrams', self.trigram_counts) \
              + show_counts('bigrams', self.bigram_counts) \
-             + show_counts('trigrams', self.trigram_counts) \
+             + show_counts('unigrams', self.unigram_counts) \
 
     def classify(self, message):
         """ 
@@ -173,21 +179,22 @@ class BayesClassifier:
             """
                 Get a smoothed score for an ngram
                 
-                counts = (p,n) 
+                counts = (n,p) 
+                    n = number of negatives for ngram in training set                    
                     p = number of positives for ngram in training set
-                    n = number of negatives for ngram in training set 
-                cntv = (cntp,cntn,v) for an ngram training dict
-                    cntp: total number of positives
+                   
+                cntv = (cntn,cntp,v) for an ngram training dict
                     cntn: total number of negatives
+                    cntp: total number of positives
                     v: number of unique ngrams
-                alpha: a smoothing factor.  
+                alpha: smoothing factor.  
                 
                 Returns: a smoothed score for the ngram         
             """
-            p,n = counts
+            n,p = counts
             if p == n:
                 return 0
-            cntp,cntn,v  = cntv
+            cntn,cntp,v  = cntv
             return math.log((p+alpha)/(cntp+v*alpha)) - math.log((n+alpha)/(cntn+v*alpha)) 
 
         def unigram_score(k):
@@ -205,7 +212,7 @@ class BayesClassifier:
                 return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * 0.5 
             return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, 3.5)
 
-        p,n = self.class_count
+        n,p = self.class_count
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         posterior = prior + likelihood

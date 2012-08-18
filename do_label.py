@@ -1,15 +1,16 @@
 import twitter, os, time, sys, re
 from common import *
 
-NEGATIVES = [
-'Humans are the only creatures on earth that will cut down trees'
+EXCLUSIONS = [
+    'only creatures on earth that will cut down trees',
+    'one final moment of glorious revenge',
+    'Paper cut. I don\'t like it lmao',
+    'holy cow balls Harry'.
+    'receiving a papercut whilst signing his'
 ]
 
-def get_class(message):
-    if any(n in message for n in NEGATIVES):
-        return False
-    return None
-
+def allowed(message):
+    return not any(e in message for e in EXCLUSIONS)
 
 CLASS_STRINGS = {
     False: 'n',
@@ -18,39 +19,54 @@ CLASS_STRINGS = {
 }
 STRING_CLASSES = dict([(v,k) for k,v in CLASS_STRINGS.items()])
 
-print CLASS_STRINGS
-print STRING_CLASSES
-
 def get_class(s):
     return STRING_CLASSES.get(s, UNKNOWN)
+    
+# Lastest labelled tweet id (an integer) is stored as text in LATEST_CLASS_FILE
+# We use to prevent re-reading tweets
+latest_labelled_tweet_id = int(file(LATEST_CLASS_FILE, 'rt').read().strip()) if os.path.exists(LATEST_CLASS_FILE) else 0    
+previous_tweet_id = latest_labelled_tweet_id
    
-
 # Read the tweets
-tweets = []
+labelled_messages = []
 fp = open(TWEETS_FILE, 'rt')
-for i,ln in enumerate(fp):
-    ln = ln.strip('\n')
-    print  ln.split(',')
-    _,_,_,message = [pt.strip() for pt in ln.split('|')]
-    tweets.append([get_class(message), message])
+for line in fp:
+    line = line.strip('\n').strip()
+    if not line:
+        continue
+    id,tm,user,message = [pt.strip() for pt in line.split('|')]
+    if id <= latest_labelled_tweet_id:
+        continue
+    if not def allowed(message):
+        continue
+    print [id,tm,user,message]
+    labelled_messages.append([get_class(message), message])
+    latest_labelled_tweet_id = max(id, latest_labelled_tweet_id)
 fp.close()
 
-fp = open(CLASS_FILE, 'rt')
-for i,ln in enumerate(fp):
-    parts = [pt.strip() for pt in ln.split('|')]
-    tweets[i][0] = get_class(parts[0])
-fp.close()
+print 'loaded %d labelled_messages' % len(labelled_messages)
+print 'before: latest_labelled_tweet_id=%d' * previous_tweet_id
+print 'after:  latest_labelled_tweet_id=%d' * latest_labelled_tweet_id
+
+if False:
+    fp = open(CLASS_FILE, 'rt')
+    for i,ln in enumerate(fp):
+        parts = [pt.strip() for pt in ln.split('|')]
+        labelled_messages[i][0] = get_class(parts[0])
+    fp.close()
 
 fp = open(CLASS_FILE + '.out', 'wt')
-for i,t in enumerate(tweets):
+for i,t in enumerate(labelled_messages):
     fp.write('%s | %s\n' % (CLASS_STRINGS[t[0]], t[1]))
 fp.close()
+file(LATEST_CLASS_FILE, 'wt').write(str(latest_labelled_tweet_id))
 
-fp = open(CLASS_FILE + '.out', 'rt')
-for i,ln in enumerate(fp):
-    ln = ln.strip('\n')
-    print '%3d : %s' % (i, ln)
-fp.close()
+if False:
+    fp = open(CLASS_FILE + '.out', 'rt')
+    for i,ln in enumerate(fp):
+        ln = ln.strip('\n')
+        print '%3d : %s' % (i, ln)
+    fp.close()
 
     
 
