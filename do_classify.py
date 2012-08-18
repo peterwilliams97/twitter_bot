@@ -14,8 +14,8 @@ RE_USER = re.compile(r'@\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
 def clean(message):
-    message = RE_USER.sub('', message)
-    message = RE_HTTP.sub('', message)
+    message = RE_USER.sub('[TAG_USER]', message)
+    message = RE_HTTP.sub('[TAG_LINK]', message)
     return message
 
 if False:    
@@ -43,6 +43,16 @@ classifier = BayesClassifier()
 classifier.train(tweets)
 
 file(NGRAM_FILE, 'wt').write(str(classifier))
+
+ratings = [(classifier.classify(t[1]), t) for t in tweets]
+ratings.sort()
+
+print VALIDATION_FILE
+
+fp = open(VALIDATION_FILE, 'wt')
+for r in ratings:
+    fp.write('%s\n' % str(r))
+fp.close()    
  
     
     

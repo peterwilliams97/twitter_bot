@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 from common import *
 
 def _tokenize(message):
@@ -216,6 +217,6 @@ class BayesClassifier:
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         posterior = prior + likelihood
-        return posterior > 0
+        return posterior > 0, posterior
   
 

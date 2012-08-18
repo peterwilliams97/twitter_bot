@@ -1,12 +1,16 @@
-import twitter, os, time, sys, re
+import twitter, os, time, sys, re, shutil
 from common import *
 
+# This list is used to exclude whole tweets that have already been seen
+# It is NOT used to exclude phrases like 'Sandpaper kisses, paper cut bliss'
+# These strings should be added t screen new tweets as well
 EXCLUSIONS = [
     'only creatures on earth that will cut down trees',
     'one final moment of glorious revenge',
     'Paper cut. I don\'t like it lmao',
-    'holy cow balls Harry'.
-    'receiving a papercut whilst signing his'
+    'holy cow balls Harry',
+    'receiving a papercut whilst signing his',
+    'The Gym Leader used a full restore.'
 ]
 
 def allowed(message):
@@ -34,10 +38,11 @@ for line in fp:
     line = line.strip('\n').strip()
     if not line:
         continue
-    id,tm,user,message = [pt.strip() for pt in line.split('|')]
+    id_s,tm,user,message = [pt.strip() for pt in line.split('|')]
+    id = int(id_s)
     if id <= latest_labelled_tweet_id:
         continue
-    if not def allowed(message):
+    if not allowed(message):
         continue
     print [id,tm,user,message]
     labelled_messages.append([get_class(message), message])
@@ -45,8 +50,8 @@ for line in fp:
 fp.close()
 
 print 'loaded %d labelled_messages' % len(labelled_messages)
-print 'before: latest_labelled_tweet_id=%d' * previous_tweet_id
-print 'after:  latest_labelled_tweet_id=%d' * latest_labelled_tweet_id
+print 'before: latest_labelled_tweet_id=%d' % previous_tweet_id
+print 'after:  latest_labelled_tweet_id=%d' % latest_labelled_tweet_id
 
 if False:
     fp = open(CLASS_FILE, 'rt')
@@ -55,7 +60,10 @@ if False:
         labelled_messages[i][0] = get_class(parts[0])
     fp.close()
 
-fp = open(CLASS_FILE + '.out', 'wt')
+shutil.copyfile(CLASS_FILE, '%s.%d' % (CLASS_FILE, previous_tweet_id))
+
+     
+fp = open(CLASS_FILE, 'at')
 for i,t in enumerate(labelled_messages):
     fp.write('%s | %s\n' % (CLASS_STRINGS[t[0]], t[1]))
 fp.close()
