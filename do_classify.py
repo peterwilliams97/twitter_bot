@@ -2,7 +2,6 @@ import twitter, os, time, sys, re
 from common import *
 from BayesClassifier import BayesClassifier
 
-
 UNKNOWN = -1    
 CLASS_STRINGS = {
     False: 'n',
@@ -29,8 +28,9 @@ for i,t in enumerate(tweets):
     
 classifier = BayesClassifier()
 classifier.train(tweets)
-print '=' * 80
-print classifier    
+
+file(NGRAM_FILE, 'wt').write(str(classifier))
+ 
     
     
 

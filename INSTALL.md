@@ -19,5 +19,21 @@ Download the latest python-twitter library from:
   http://code.google.com/p/python-twitter/
   
 Follow the instructions in the README
+
+Get a Twitter Account
+---------------------
+
+Setup Credentials
+-----------------
+Create a file called credentials in the same directory as do_twitter.py
+with the following format
+Replace ??? with the values from your twitter account
+
+    # Credentials from https://dev.twitter.com/apps/???/show
+
+    consumer_key='???' 
+    consumer_secret='???' 
+    access_token_key='???' 
+    access_token_secret='???'
   
 
