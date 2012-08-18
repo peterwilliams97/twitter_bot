@@ -19,9 +19,7 @@ logging.info('Starting '+ sys.argv[0])
 RE_CREDENTIALS = re.compile(r"(\w+)='([^']+)'")
 credentials = dict((m.group(1),m.group(2)) for m in RE_CREDENTIALS.finditer(file(CREDENTIALS_FILE,'rt').read()))
 
-# Get access to Twitter APIs        
-api = twitter.Api(**credentials)
-   
+ 
 # Lastest tweet id (an integer) is stored as text in LATEST_FILE
 # We use to prevent re-reading tweets
 latest_tweet_id = int(file(LATEST_FILE, 'rt').read().strip()) if os.path.exists(LATEST_FILE) else 0
@@ -34,11 +32,11 @@ def decode_result(result):
             user: username of tweeter
             message: text of tweet
     """
-    tm0 = time.strptime(statusObj.created_at[:-6], '%a, %d %b %Y %H:%M:%S')
+    tm0 = time.strptime(result.created_at[:-6], '%a, %d %b %Y %H:%M:%S')
     tm = time.mktime(tm0)
-    user = statusObj.user.screen_name
-    message = statusObj.text.encode('ascii', 'replace')
-    id = statusObj.id
+    user = result.user.screen_name
+    message = result.text.encode('ascii', 'replace')
+    id = result.id
     return id, tm, user, message 
 
 print '-' * 80
@@ -57,16 +55,27 @@ def clean(message):
     message = message.replace('|', ' ')
     return message
   
+# Get access to Twitter APIs        
+api = twitter.Api(**credentials)
+  
 while True:
     # perform the search
     # until no matching tweets are found
     latest_tweet_id += 1
-    results = api.GetSearch('paper cut', since_id = latest_tweet_id)
-    print 'Found %s results.' % (len(results))
+    results1 = api.GetSearch('paper cut', since_id = latest_tweet_id)
+    time.sleep(2)
+    results2 = api.GetSearch('papercut', since_id = latest_tweet_id)
+    results = results1 + results2
+    print 'Found %s results = %d + %d' % (len(results), len(results1), len(results2))
     if len(results) == 0:
         logging.info(' done')
         print 'Nothing to reply to. Quitting.'
         exit()
+    tweets = [decode_result(r) for r in results]    
+    tweets.sort(key = lambda t: t[0])
+    id_list = [t[0] for t in tweets]
+    if len(set(id_list)) != len(id_list):
+        print 'Duplicate ids!'
 
     num_relevant = 0    
     # Store the tweets in TWEETS_FILE
@@ -74,11 +83,12 @@ while True:
     if not fp:
         logging.error('Could not open %s' % TWEETS_FILE)
     assert fp, 'Could not open %s' % TWEETS_FILE
-    for i,r in enumerate(results):
-        id, tm, user, message = decode_result(r)
+    for i,t in enumerate(tweets):
+        id, tm, user, message = t
         if is_relevant(message):
-            print '%s,%s,%s,"%s"' % (id, tm, user, message)
-            fp.write('%s | %s | %-20s | %s\n' % (id, tm, user, clean(message)))
+            line = '%s | %s | %-20s | %s' % (id, tm, user, clean(message))
+            print line
+            fp.write('%s\n' % line)
             num_relevant += 1
     fp.close()
     
