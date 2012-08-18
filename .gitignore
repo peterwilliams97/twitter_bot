@@ -1,0 +1,6 @@
+credentials
+.pyc
+doc/
+examples/
+python_twitter.egg-info/
+setup.*
