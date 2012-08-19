@@ -66,7 +66,7 @@ AUTO_CLASS_STRINGS  = {
     True: 'Y',  
     UNKNOWN: '?'
 }  
-classifier = do_classify.get_classifier_for_labelled_tweets()
+#classifier = do_classify.get_classifier_for_labelled_tweets()
 
 def get_class_str(model, message):
     if model:

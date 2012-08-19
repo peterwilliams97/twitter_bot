@@ -92,12 +92,14 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
                 #print 'Skipping because it\'s a mention: @%s - %s' % (statusObj.user.screen_name.encode('ascii', 'replace'), statusObj.text.encode('ascii', 'replace'))
                 continue
 
-            reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(user)             
-            print 'Incoming: %s' % str(message)
-            print 'Posting in reply to @%s: %s' % (user, str(reply_message))
+            
             # !@#$
-            if 'peter' in user:
+            if 'peter' in user or 'alec' in user:
+                reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(user)             
+                print 'Incoming: %s' % str(message)
+                print 'Posting in reply to @%s: %s' % (user, str(reply_message))
                 api.PostUpdate(reply_message, in_reply_to_status_id=id)
+                
             replied_tweets.append((id, user))
             fp.write('%s | %s\n' % (id, user))
             
@@ -166,7 +168,6 @@ def main_loop(do_reply):
                 num_relevant += 1
                 if is_replyable(model, message):
                     replyable_tweets.append((id, tm, user, message))
-                break # !@#$    
         fp.close()
         
         latest_tweet_id = max([x.id for x in results])  
