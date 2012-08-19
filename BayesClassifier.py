@@ -160,7 +160,7 @@ class BayesClassifier:
         """ 
             'message' is a string to classify. Return True or False classification.
             
-            Method is to calculate a posterior from a liklihood based on
+            Method is to calculate a log_odds from a liklihood based on
             trigram, bigram and unigram p,n counts in the training set
             For each trigram
                 return smoothed trigram score if trigram in training set, else
@@ -223,7 +223,7 @@ class BayesClassifier:
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
-        posterior = prior + likelihood
-        return posterior > 0, posterior, dict((k,trigram_score(k)) for k in trigrams)
+        log_odds = prior + likelihood
+        return log_odds > 0, log_odds, dict((k,trigram_score(k)) for k in trigrams)
   
 

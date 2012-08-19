@@ -21,7 +21,8 @@ TRAINING_EXCLUSIONS = [
 REPLYING_EXCLUSION = [
     'LOL'       # To be safe 
     'Sandpaper kisses',
-    'paper cut bliss'
+    'paper cut bliss',
+    'Bleeds to death'
 ] 
 
 L_TRAINING_EXCLUSIONS = [e.lower() for e in TRAINING_EXCLUSIONS]
@@ -70,9 +71,9 @@ AUTO_CLASS_STRINGS  = {
 
 def get_class_str(model, message):
     if model:
-        cls,posterior,llk = model.classify(message)
+        cls,log_odds,llk = model.classify(message)
     else:
-        cls,posterior,llk = UNKNOWN, 0.0, None
+        cls,log_odds,llk = UNKNOWN, 0.0, None
     return AUTO_CLASS_STRINGS[cls]
 
 def main():

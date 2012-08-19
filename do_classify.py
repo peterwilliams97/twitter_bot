@@ -61,11 +61,11 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     fn = []
     for i,t in enumerate(test_tweets):
         a = t[0]
-        p, posterior, ngrams = model.classify(t[1])
+        p, log_odds, ngrams = model.classify(t[1])
         score[(a,p)] += 1
         if p != a:
-            if p: fp.append((test_indexes[i], posterior, ngrams))
-            else: fn.append((test_indexes[i], posterior, ngrams))
+            if p: fp.append((test_indexes[i], log_odds, ngrams))
+            else: fn.append((test_indexes[i], log_odds, ngrams))
             #if p:  print '>>>', test_indexes[i], p, t
     return score, fp, fn
 
@@ -125,7 +125,7 @@ def validate_full(tweets, detailed):
                 print '%5d %6.2f: %s' % (i,p, tweets[i][1])
                 for k in sorted(g, key = lambda x: g[x]):
                     print '%12.2f %s' % (g[k], k)
-             
+ 
         print '-' * 80
         print 'FALSE NEGATIVE OUTLIERS'
         for i,p,g in sorted(false_negatives, key = lambda x: x[1]):
@@ -133,7 +133,7 @@ def validate_full(tweets, detailed):
                 print '%5d %6.2f: %s' % (i,p, tweets[i][1])
                 for k in sorted(g, key = lambda x: g[x]):
                     print '%12.2f %s' % (g[k], k)
-                
+
 def save_model(tweets):
     model = BayesClassifier(tweets)
     pickle.dump(model, open(MODEL_FILE, 'wb'))
@@ -141,8 +141,7 @@ def save_model(tweets):
 def load_model():
     model = pickle.load(open(MODEL_FILE, 'rb'))
     return model
-    
-                
+
 if __name__ == '__main__':
     tweets = get_labelled_tweets() 
     print '=' * 80

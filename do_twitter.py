@@ -35,30 +35,35 @@ def is_relevant(message):
     return RE_PAPERCUT.search(message) is not None
 
 def is_replyable(model, message):
-    """Return True if we are really sure the tweeter had a
-        paper cut
+    """Return replyable,log_odds
+       - replyable = True if we are really sure the tweeter had a
+                paper cut
+       - log_odds = is log(odds ratio) of tweet being positive 
     """
-    if not do_label.is_allowed_for_replying(message):
-        return False
-    return model.classify(message)
+    allowed = do_label.is_allowed_for_replying(message)
+    positive,log_odds,_ =  model.classify(message)
+    return allowed and positive, log_odds
 
 
 def load_replied_tweets():
     """Return a list of (id,user) of the tweets already replied to"""
     replied_tweets = []
-    
-    print 'load_replied_tweets'
-    
+      
     try:
         fp = open(REPLIES_FILE, 'rt')
-        for line in fp:
-            line = line.rstrip('\n').strip()
-            if line:
-                id,user = [pt.strip() for pt in line.split('|')]
-                replied_tweets.append((id, user))
-        fp.close()    
-    except:
-        print 'REPLIES_FILE "%s" does not exist' % REPLIES_FILE
+    except IOError:    
+        logging.error('Could not open %s', REPLIES_FILE)
+        return
+    
+#try:
+    for line in fp:
+        line = line.rstrip('\n').strip()
+        if line:
+            id,tm,_,_ = decode_tweet_line(line)
+            replied_tweets.append((id, user))
+    fp.close()    
+#except:
+#    print 'REPLIES_FILE "%s" does not exist' % REPLIES_FILE
     
     return replied_tweets    
     
@@ -89,9 +94,8 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
                 continue
             # Don't reply to mentions of tweets we have responded to    
             if any(A(u) in l_message for u in l_replied_users):
-                #print 'Skipping because it\'s a mention: @%s - %s' % (statusObj.user.screen_name.encode('ascii', 'replace'), statusObj.text.encode('ascii', 'replace'))
+                print "Skipping because it's a mention: @%s - %s" % (u, message)
                 continue
-
             
             # !@#$
             if 'peter' in user or 'alec' in user:
@@ -101,7 +105,7 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
                 api.PostUpdate(reply_message, in_reply_to_status_id=id)
                 
             replied_tweets.append((id, user))
-            fp.write('%s | %s\n' % (id, user))
+            fp.write('%s\n' % encode_tweet_line(id, tm, user, message))
             
             time.sleep(1)
     #except Exception:
@@ -163,10 +167,12 @@ def main_loop(do_reply):
             id, tm, user, message = t
             if is_relevant(message):
                 line = encode_tweet_line(id, tm, user, message)
-                print line
-                fp.write('%s\n' % line)
+                do_reply,score = is_replyable(model, message)
+                scored_line = '%7s %6.2f : %s' % (do_reply, score, message)
+                print scored_line
+                fp.write('%s\n' % scored_line)
                 num_relevant += 1
-                if is_replyable(model, message):
+                if do_reply:
                     replyable_tweets.append((id, tm, user, message))
         fp.close()
         
@@ -176,13 +182,15 @@ def main_loop(do_reply):
         logging.info(' Added %3d relevant of %3d results, latest_id=%d' % (
                  num_relevant, len(results), latest_tweet_id))
                  
+        logging.info(' %d replyable tweets' % len(replyable_tweets))
+        print ' %d replyable tweets' % len(replyable_tweets)
         if do_reply:
             # Reply to all the tweeets that we should reply to 
             if replyable_tweets:
-                print 'About to reply to %d tweets' % len(replyable_tweets)
+                print ' About to reply to %d tweets' % len(replyable_tweets)
                 reply_to_tweets(api, replied_tweets, replyable_tweets)
             else:
-                print 'No tweets to reply to'
+                print ' No tweets to reply to'
         time.sleep(10)
 
       
