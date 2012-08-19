@@ -53,7 +53,7 @@ def load_replied_tweets():
         fp = open(REPLIES_FILE, 'rt')
     except IOError:    
         logging.error('Could not open %s', REPLIES_FILE)
-        return
+        return replied_tweets
     
 #try:
     for line in fp:

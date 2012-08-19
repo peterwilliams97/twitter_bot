@@ -22,7 +22,7 @@ REPLYING_EXCLUSION = [
     'LOL'       # To be safe 
     'Sandpaper kisses',
     'paper cut bliss',
-    'Bleeds to death'
+    'Bleeds to death' 
 ] 
 
 L_TRAINING_EXCLUSIONS = [e.lower() for e in TRAINING_EXCLUSIONS]
@@ -45,14 +45,14 @@ if False:
 def is_allowed_for_training(message):
     l_message = message.lower()
     return not any(e in l_message for e in L_TRAINING_EXCLUSIONS) \
-        and not RE_RT.search(message)
+        and not RE_RT.search(l_message)
 
 def is_allowed_for_replying(message): 
     if not is_allowed_for_training(message):
         return False
     l_message = message.lower()
     return not any(e in l_message for e in L_REPLYING_EXCLUSION) \
-        and not RE_LOL.search(message)
+        and not RE_LOL.search(l_message)
         
 
 CLASS_STRINGS = {
