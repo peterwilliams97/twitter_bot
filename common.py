@@ -1,9 +1,17 @@
+# You will need to 
+#   - write your own credentials file
+#   - replace MY_TWITTER_NAME with your Twitter name
+#   -  replace APP_NAME with your Twitter app's name
+ 
 CREDENTIALS_FILE = 'credentials'
-
 MY_TWITTER_NAME = 'OwwwPapercut'
+APP_NAME = 'owww_papertcut'
+
+# The rest of the file names are derived
+# from the strings above
+
 TWITTER_ME = '@%s' % MY_TWITTER_NAME
 
-APP_NAME = 'owww_papertcut'
 TWEETS_FILE = '%s.tweets' % APP_NAME
 LATEST_FILE = '%s.latest' % APP_NAME
 

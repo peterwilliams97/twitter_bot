@@ -67,7 +67,7 @@ class BayesClassifier:
             self.cls = UNKNOWN
             self.words = []
 
-    def __init__(self):
+    def __init__(self, training_data):
         """BayesClassifier initialization
             *gram_counts are dicts of positive and negative
                 counts for each <n>gram
@@ -78,7 +78,7 @@ class BayesClassifier:
             class_count = [n,p] is the total counts of negative and
                 positive examples
         """
-       
+        
         self.unigram_counts = {}
         self.unigram_keys = set([]) 
         self.bigram_counts = {}
@@ -86,6 +86,9 @@ class BayesClassifier:
         self.trigram_counts = {}
         self.trigram_keys = set([])
         self.class_count = [0,0]
+
+        if training_data:
+            self.train(training_data)
 
     def _add_example(self, cls, message):
         """
@@ -123,17 +126,16 @@ class BayesClassifier:
         update_ngrams(bigrams,  self.bigram_counts,  self.bigram_keys)
         update_ngrams(trigrams, self.trigram_counts, self.trigram_keys)
 
-    def train(self, tweets):
-        for t in tweets:
-            self._add_example(t[0], t[1])
-            
+    def train(self, training_data):
+        for cls,message in training_data:
+            self._add_example(cls, message)
+
         self.cntv_unigrams = _get_cntv(self.unigram_counts)
         self.cntv_bigrams  = _get_cntv(self.bigram_counts)   
         self.cntv_trigrams = _get_cntv(self.trigram_counts)
 
-        
     def __repr__(self):    
-        
+
         def counts_str(counts):
             def n(k):  return -_cnt_positivity(counts[k]), k.lower()
             return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
@@ -222,6 +224,6 @@ class BayesClassifier:
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         posterior = prior + likelihood
-        return posterior > 0, posterior
+        return posterior > 0, posterior, dict((k,trigram_score(k)) for k in trigrams)
   
 

@@ -18,50 +18,54 @@ def clean(message):
     message = RE_HTTP.sub('[TAG_LINK]', message)
     return message
 
-
 def get_class(s):
     return STRING_CLASSES.get(s, UNKNOWN)
-   
-tweets = []
-fp = open(CLASS_FILE, 'rt')
-for i,ln in enumerate(fp):
-    parts = [pt.strip() for pt in ln.split('|')]
-    cls, message = get_class(parts[0]), parts[1]
-    if cls in set([False,True]):
-        tweets.append((cls, clean(message)))
-fp.close()
-
     
-classifier = BayesClassifier()
-classifier.train(tweets)
+def get_labelled_tweets():    
+    tweets = []
+    fp = open(CLASS_FILE, 'rt')
+    for i,ln in enumerate(fp):
+        parts = [pt.strip() for pt in ln.split('|')]
+        cls, message = get_class(parts[0]), parts[1]
+        if cls in set([False,True]):
+            tweets.append((cls, clean(message)))
+    fp.close()
+    return tweets
 
-file(NGRAM_FILE, 'wt').write(str(classifier))
+def get_classifier_for_labelled_tweets():
+    return BayesClassifier(get_labelled_tweets())
+    
+def validate_basic(tweets): 
+    assert tweets
+    classifier = BayesClassifier(tweets)
+    
+    file(NGRAM_FILE, 'wt').write(str(classifier))
 
-ratings = [(classifier.classify(t[1]), t) for t in tweets]
-ratings.sort()
-ratings.reverse()
+    ratings = [(classifier.classify(t[1]), t) for t in tweets]
+    ratings.sort()
+    ratings.reverse()
 
-fp = open(VALIDATION_FILE, 'wt')
-for r in ratings:
-    fp.write('%s\n' % str(r))
-fp.close()  
+    fp = open(VALIDATION_FILE, 'wt')
+    for r in ratings:
+        fp.write('%s\n' % str(r))
+    fp.close()  
 
 def make_score():
     return dict([((a,p),0) for p in (False,True) for a in (False,True)])
 
 def get_test_score(training_tweets, test_tweets, test_indexes):
-    classifier = BayesClassifier()
-    classifier.train(training_tweets)
+    classifier = BayesClassifier(training_tweets)
+
     score = make_score()
     fp = []
     fn = []
     for i,t in enumerate(test_tweets):
         a = t[0]
-        p, posterior = classifier.classify(t[1])
+        p, posterior, ngrams = classifier.classify(t[1])
         score[(a,p)] += 1
         if p != a:
-            if p: fp.append(test_indexes[i])
-            else: fn.append(test_indexes[i])
+            if p: fp.append((test_indexes[i], posterior, ngrams))
+            else: fn.append((test_indexes[i], posterior, ngrams))
             #if p:  print '>>>', test_indexes[i], p, t
     return score, fp, fn
 
@@ -82,18 +86,59 @@ def cross_validate(tweets, num_folds):
     false_positives.sort()
     false_negatives.sort()
     return confusion_matrix, false_positives, false_negatives
-    
-confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
-print confusion_matrix
-print false_positives
-print false_negatives
-for i in sorted(set(false_positives)):
-    print '%3d : %s' % (i, tweets[i][1])
-    
-    
+  
+def print_confusion_matrix(confusion_matrix):  
+    BAR = '-' * 5
+    print '%5s | %5s | %5s' % ('', False, True)
+    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+    print '%5s | %5s | %5s' % (False, confusion_matrix[(False,False)], confusion_matrix[(False,True)]) 
+    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+    print '%5s | %5s | %5s' % (True,  confusion_matrix[(True,False)],  confusion_matrix[(True,True)]) 
+    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
 
+def validate_full(tweets):
+    
+    confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
 
+    print_confusion_matrix(confusion_matrix)
 
+    print [i for i,p,g in false_positives]
+    print [i for i,p,g in false_negatives]
+
+    print '-' * 80
+    print 'FALSE POSITIVES'
+    for i,p in sorted(set([(i,p) for i,p,_ in false_positives]), key = lambda x: -x[1]):
+        print '%5d %6.2f: %s' % (i,p, tweets[i][1])
+
+    print '-' * 80
+    print 'FALSE NEGATIVES'
+    for i,p in sorted(set([(i,p) for i,p,_ in false_negatives]), key = lambda x: -x[1]):
+        print '%5d %6.2f: %s' % (i,p, tweets[i][1])   
+
+    POSTERIOR_LIMIT = 2.0  
+      
+    print '-' * 80
+    print 'FALSE POSITIVE OUTLIERS'
+    for i,p,g in sorted(false_positives, key = lambda x: x[1]):
+        if abs(p) > POSTERIOR_LIMIT:
+            print '%5d %6.2f: %s' % (i,p, tweets[i][1])
+            for k in sorted(g, key = lambda x: g[x]):
+                print '%12.2f %s' % (g[k], k)
+         
+    print '-' * 80
+    print 'FALSE NEGATIVE OUTLIERS'
+    for i,p,g in sorted(false_negatives, key = lambda x: x[1]):
+        if abs(p) > POSTERIOR_LIMIT:
+            print '%5d %6.2f: %s' % (i,p, tweets[i][1])
+            for k in sorted(g, key = lambda x: g[x]):
+                print '%12.2f %s' % (g[k], k)
+                
+if __name__ == '__main__':
+    tweets = get_labelled_tweets() 
+    print '=' * 80
+    validate_basic(tweets)
+    print '=' * 80
+    validate_full(tweets)
     
 
 
