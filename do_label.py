@@ -8,28 +8,33 @@ import do_classify
 # Also
 #   RT
 TRAINING_EXCLUSIONS = [
-    'only creatures on earth that will cut down trees',
-    'one final moment of glorious revenge',
-    'Paper cut. I don\'t like it lmao',
-    'holy cow balls Harry',
-    'receiving a papercut whilst signing his',
-    'The Gym Leader used a full restore.',
-    'Linkin',
-   
+    #'only creatures on earth that will cut down trees',
+    #'one final moment of glorious revenge',
+    #'Paper cut. I don\'t like it lmao',
+    #'holy cow balls Harry',
+    #'receiving a papercut whilst signing his',
+    #'The Gym Leader used a full restore.',
+    #'Linkin',
 ]
 
 REPLYING_EXCLUSION = [
     'LOL'       # To be safe 
     'Sandpaper kisses',
     'paper cut bliss',
-    'Bleeds to death' 
+    'Bleeds to death',
+    'Robin van Persie',
+    'hand sanitizer',
+    'glorious',
+    'revenge',   
+    'cruciatus'
+    'Papercut_Dolls'
 ] 
 
 L_TRAINING_EXCLUSIONS = [e.lower() for e in TRAINING_EXCLUSIONS]
 L_REPLYING_EXCLUSION = [e.lower() for e in REPLYING_EXCLUSION]
 
 RE_RT = re.compile(r'\brt(:|\b)')
-RE_LOL = re.compile(r'\blol\b')
+RE_LOL = re.compile(r'\blols?\b')
 
 if False:
     tests = ['rt message', 'log rt:message', 
@@ -67,7 +72,6 @@ AUTO_CLASS_STRINGS  = {
     True: 'Y',  
     UNKNOWN: '?'
 }  
-#classifier = do_classify.get_classifier_for_labelled_tweets()
 
 def get_class_str(model, message):
     if model:
@@ -93,7 +97,11 @@ def main():
         line = line.strip('\n').strip()
         if not line:
             continue
-        id_s,tm,user,message = [pt.strip() for pt in line.split('|')]
+        try:    
+            id_s,tm,user,message = [pt.strip() for pt in line.split('|')]
+        except ValueError:
+            print 'ValueError', line
+            exit()
         id = int(id_s)
         if id <= latest_labelled_tweet_id:
             continue

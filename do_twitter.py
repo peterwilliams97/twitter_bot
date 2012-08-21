@@ -44,26 +44,22 @@ def is_replyable(model, message):
     positive,log_odds,_ =  model.classify(message)
     return allowed and positive, log_odds
 
-
 def load_replied_tweets():
     """Return a list of (id,user) of the tweets already replied to"""
     replied_tweets = []
-      
+
     try:
         fp = open(REPLIES_FILE, 'rt')
     except IOError:    
         logging.error('Could not open %s', REPLIES_FILE)
         return replied_tweets
-    
-#try:
+
     for line in fp:
         line = line.rstrip('\n').strip()
         if line:
-            id,tm,_,_ = decode_tweet_line(line)
+            id,_,user,_ = decode_tweet_line(line)
             replied_tweets.append((id, user))
     fp.close()    
-#except:
-#    print 'REPLIES_FILE "%s" does not exist' % REPLIES_FILE
     
     return replied_tweets    
     
@@ -71,17 +67,19 @@ def get_replied_users(replied_tweets):
     return set(user.lower() for _,user in replied_tweets)
 
 def A(user):
-    return '@%s' % user.lower()
+    return '@%s' % user
     
 def reply_to_tweets(api, replied_tweets, replyable_tweets):
 
     l_replied_users = get_replied_users(replied_tweets)
     
-    try:
-        fp = open(REPLIES_FILE, 'at')
-    except IOError:    
-        logging.error('Could not open %s', REPLIES_FILE)
-        return
+    fp = open(REPLIES_FILE, 'at')
+    if False:
+        try:
+            fp = open(REPLIES_FILE, 'at')
+        except IOError:    
+            logging.error('Could not open %s', REPLIES_FILE)
+            return
     try:    
         for id, tm, user, message in replyable_tweets:
             l_message = message.lower()
@@ -93,7 +91,7 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
             if TWITTER_ME.lower() in message:
                 continue
             # Don't reply to mentions of tweets we have responded to    
-            if any(A(u) in l_message for u in l_replied_users):
+            if any(A(u).lower() in l_message for u in l_replied_users):
                 print "Skipping because it's a mention: @%s - %s" % (u, message)
                 continue
             
@@ -101,7 +99,7 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
             if 'peter' in user or 'alec' in user:
                 reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(user)             
                 print 'Incoming: %s' % str(message)
-                print 'Posting in reply to @%s: %s' % (user, str(reply_message))
+                print 'Posting in reply to %s: %s' % (A(user), str(reply_message))
                 api.PostUpdate(reply_message, in_reply_to_status_id=id)
                 
             replied_tweets.append((id, user))
@@ -113,9 +111,11 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
     finally:        
         fp.close()
 
-def main_loop(do_reply):  
+def main_loop(replying_enabled):  
 
     logging.info('Starting '+ sys.argv[0])
+    start_time = time.time()
+    delay = 1
 
     # Load the calibration model first
     model = do_classify.load_model()
@@ -135,65 +135,70 @@ def main_loop(do_reply):
       
     # Get access to Twitter APIs        
     api = twitter.Api(**credentials)
-
+    
     while True:
         # perform the search
         # until no matching tweets are found
         latest_tweet_id += 1
         results1 = api.GetSearch('paper cut', since_id = latest_tweet_id)
-        if False:
-            time.sleep(1)
-            results2 = api.GetSearch('papercut', since_id = latest_tweet_id)
-        else:
-            results2 = []
+        time.sleep(1)
+        results2 = api.GetSearch('papercut', since_id = latest_tweet_id)
         results = results1 + results2 
         print 'Found %d results = %d + %d' % (len(results), len(results1), len(results2))
-        if len(results) == 0:
-            logging.info(' No more matching tweets')
-            print ' No more matching tweets. Quitting.'
+        
+        if time.time() > start_time + 15 * 30:
+            print 'Time is up'
             return
+        if len(results) == 0:
+            delay = min(300, delay * 2)
+        else:    
+            delay = max(10, delay/2)
+            logging.info(' No more matching tweets')
+
+        if results:
+            tweets = [decode_result(r) for r in results]    
+            tweets.sort(key = lambda t: t[0])
             
-        tweets = [decode_result(r) for r in results]    
-        tweets.sort(key = lambda t: t[0])
-        
-        num_relevant = 0 
-        replyable_tweets = []
-        # Store the tweets in TWEETS_FILE
-        fp = open(TWEETS_FILE, 'at')
-        if not fp:
-            logging.error('Could not open %s' % TWEETS_FILE)
-        assert fp, 'Could not open %s' % TWEETS_FILE
-        for i,t in enumerate(tweets):
-            id, tm, user, message = t
-            if is_relevant(message):
-                line = encode_tweet_line(id, tm, user, message)
-                do_reply,score = is_replyable(model, message)
-                scored_line = '%7s %6.2f : %s' % (do_reply, score, message)
-                print scored_line
-                fp.write('%s\n' % scored_line)
-                num_relevant += 1
-                if do_reply:
-                    replyable_tweets.append((id, tm, user, message))
-        fp.close()
-        
-        latest_tweet_id = max([x.id for x in results])  
+            num_relevant = 0 
+            replyable_tweets = []
+            # Store the tweets in TWEETS_FILE
+            fp = open(TWEETS_FILE, 'at')
+            if not fp:
+                logging.error('Could not open %s' % TWEETS_FILE)
+            assert fp, 'Could not open %s' % TWEETS_FILE
+            for i,t in enumerate(tweets):
+                id, tm, user, message = t
+                if is_relevant(message):
+                    line = encode_tweet_line(id, tm, user, message)
+                    do_reply,score = is_replyable(model, message)
+                    scored_line = '%7s %6.2f : %s' % (do_reply, score, message)
+                    print scored_line
+                    logging.info(scored_line)
+                    fp.write('%s\n' % line)
+                    num_relevant += 1
+                    if do_reply:
+                        replyable_tweets.append((id, tm, user, message))
+            fp.close()
+            
+            latest_tweet_id = max([x.id for x in results])  
 
-        file(LATEST_FILE, 'wt').write(str(latest_tweet_id))
-        logging.info(' Added %3d relevant of %3d results, latest_id=%d' % (
-                 num_relevant, len(results), latest_tweet_id))
-                 
-        logging.info(' %d replyable tweets' % len(replyable_tweets))
-        print ' %d replyable tweets' % len(replyable_tweets)
-        if do_reply:
-            # Reply to all the tweeets that we should reply to 
-            if replyable_tweets:
-                print ' About to reply to %d tweets' % len(replyable_tweets)
-                reply_to_tweets(api, replied_tweets, replyable_tweets)
-            else:
-                print ' No tweets to reply to'
-        time.sleep(10)
+            file(LATEST_FILE, 'wt').write(str(latest_tweet_id))
+            logging.info(' Added %3d replyable of %3d relevant of %3d results, latest_id=%d' % (
+                    len(replyable_tweets), num_relevant, len(results), latest_tweet_id))
 
-      
+            print ' %d replyable tweets' % len(replyable_tweets)
+
+            if replying_enabled:
+                # Reply to all the tweeets that we should reply to 
+                if replyable_tweets:
+                    print ' About to reply to %d tweets' % len(replyable_tweets)
+                    reply_to_tweets(api, replied_tweets, replyable_tweets)
+                else:
+                    print ' No tweets to reply to'
+        
+        print '  Sleeping %.1f seconds' % delay
+        time.sleep(delay)
+
 if __name__ == '__main__':
     main_loop(True)
     

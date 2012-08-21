@@ -7,23 +7,36 @@ CREDENTIALS_FILE = 'credentials'
 MY_TWITTER_NAME = 'OwwwPapercut'
 APP_NAME = 'owww_papertcut'
 
+import os
+DATA_DIR = './data'
+
+try:
+    os.mkdir(DATA_DIR)
+except:
+    pass
+
+
+def _make_path(ext):
+    return os.path.join(DATA_DIR, '%s.%s' % (APP_NAME, ext))
+
+
 # The rest of the file names are derived
 # from the strings above
 
 TWITTER_ME = '@%s' % MY_TWITTER_NAME
 
-TWEETS_FILE = '%s.tweets' % APP_NAME
-LATEST_FILE = '%s.latest' % APP_NAME
+TWEETS_FILE = _make_path('tweets')
+LATEST_FILE = _make_path('latest')
 
-CLASS_FILE = '%s.cls' % APP_NAME
-LATEST_CLASS_FILE = '%s.cls_latest' % APP_NAME
-NGRAM_FILE = '%s.ngram' % APP_NAME
-VALIDATION_FILE = '%s.validation' % APP_NAME
-MODEL_FILE = '%s.model' % APP_NAME 
+CLASS_FILE= _make_path('cls')
+LATEST_CLASS_FILE = _make_path('cls_latest')
+NGRAM_FILE = _make_path('ngram')
+VALIDATION_FILE = _make_path('validation')
+MODEL_FILE = _make_path('model') 
 
-REPLIES_FILE = '%s.replies' % APP_NAME
+REPLIES_FILE= _make_path('replies')
 
-LOG_FILE = '%s.log' % APP_NAME
+LOG_FILE = _make_path('log')
 
 UNKNOWN = -1
 

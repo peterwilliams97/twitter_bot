@@ -1,13 +1,26 @@
 from __future__ import division
-import math
+import math, re
 from common import *
 
-def _tokenize(message):
-    return message.lower().split()
+RE_USER = re.compile(r'@\w+')
+RE_HTTP = re.compile(r'http://\S+')
 
-def _preprocess(words):
+# This should be a hook
+#
+def _pre_tokenize(message):
+    message = RE_USER.sub('[TAG_USER]', message)
+    message = RE_HTTP.sub('[TAG_LINK]', message)
+    return message
+
+def _post_tokenize(words):
     """ !@#$ Stub"""
     return words
+
+def _extract_words(message):
+    message = message.lower()
+    message = _pre_tokenize(message)
+    words = message.split()
+    return _post_tokenize(words)
 
 def _U(ngram):
     return ngram.split(' ')
@@ -17,9 +30,6 @@ def _B(w1, w2):
 
 def _T(w1, w2, w3):
     return '%s %s %s' % (w1, w2, w3)   
-    
-def _exclude(words):
-    return [w for w in words if w not in _EXCLUSIONS] 
 
 def _get_bigrams(words):    
     return [_B(words[i-1],words[i]) for i in range(1,len(words))]
@@ -97,8 +107,7 @@ class BayesClassifier:
 
         assert cls in set([False, True]), 'invalid cls=%s' % cls
             
-        words = _tokenize(message)
-        words = _preprocess(words)
+        words = _extract_words(message)
         unigrams = words
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
@@ -172,8 +181,7 @@ class BayesClassifier:
             get_score() shows the smoothed scoring    
             <n>gram_score() shows the backoff and smoothing factors    
         """
-        words = _tokenize(message)
-        words = _preprocess(words)
+        words = _extract_words(message)
         unigrams = words
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
@@ -224,6 +232,6 @@ class BayesClassifier:
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         log_odds = prior + likelihood
-        return log_odds > 0, log_odds, dict((k,trigram_score(k)) for k in trigrams)
+        return log_odds > 0.0, log_odds, dict((k,trigram_score(k)) for k in trigrams)
   
 

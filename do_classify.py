@@ -10,14 +10,6 @@ CLASS_STRINGS = {
 }
 STRING_CLASSES = dict([(v,k) for k,v in CLASS_STRINGS.items()])
 
-RE_USER = re.compile(r'@\w+')
-RE_HTTP = re.compile(r'http://\S+')
-
-def clean(message):
-    message = RE_USER.sub('[TAG_USER]', message)
-    message = RE_HTTP.sub('[TAG_LINK]', message)
-    return message
-
 def get_class(s):
     return STRING_CLASSES.get(s, UNKNOWN)
     
@@ -28,7 +20,7 @@ def get_labelled_tweets():
         parts = [pt.strip() for pt in ln.split('|')]
         cls, message = get_class(parts[0]), parts[1]
         if cls in set([False,True]):
-            tweets.append((cls, clean(message)))
+            tweets.append((cls, message))
     fp.close()
     return tweets
 
@@ -100,22 +92,24 @@ def validate_full(tweets, detailed):
     
     confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
 
-    print_confusion_matrix(confusion_matrix)
-
-    print [i for i,p,g in false_positives]
-    print [i for i,p,g in false_negatives]
+    #print [i for i,p,g in false_positives]
+    #print [i for i,p,g in false_negatives]
 
     print '-' * 80
-    print 'FALSE POSITIVES'
+    print 'FALSE NEGATIVES: %d' % len(set([(i,p) for i,p,_ in false_negatives]))
+    for i,p in sorted(set([(i,p) for i,p,_ in false_negatives]), key = lambda x: -x[1]):
+        print '%5d %6.2f: %s' % (i,p, tweets[i][1]) 
+        
+    print '-' * 80
+    print 'FALSE POSITIVES: %d' % len(set([(i,p) for i,p,_ in false_positives]))
     for i,p in sorted(set([(i,p) for i,p,_ in false_positives]), key = lambda x: -x[1]):
         print '%5d %6.2f: %s' % (i,p, tweets[i][1])
 
     print '-' * 80
-    print 'FALSE NEGATIVES'
-    for i,p in sorted(set([(i,p) for i,p,_ in false_negatives]), key = lambda x: -x[1]):
-        print '%5d %6.2f: %s' % (i,p, tweets[i][1])   
+    print_confusion_matrix(confusion_matrix)
 
-    if detailed:    
+    if detailed:  
+        print '-' * 80
         POSTERIOR_LIMIT = 2.0  
           
         print '-' * 80
