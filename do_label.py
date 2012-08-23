@@ -18,6 +18,13 @@ TRAINING_EXCLUSIONS = [
 ]
 
 REPLYING_EXCLUSION = [
+    'only creatures on earth that will cut down trees',
+    'one final moment of glorious revenge',
+    'Paper cut. I don\'t like it lmao',
+    'holy cow balls Harry',
+    'receiving a papercut whilst signing his',
+    'The Gym Leader used a full restore.',
+    'Linkin',
     'LOL'       # To be safe 
     'Sandpaper kisses',
     'paper cut bliss',
@@ -27,7 +34,10 @@ REPLYING_EXCLUSION = [
     'glorious',
     'revenge',   
     'cruciatus'
-    'Papercut_Dolls'
+    'Papercut_Dolls',
+    'birth',
+    '@papercut'
+   
 ] 
 
 L_TRAINING_EXCLUSIONS = [e.lower() for e in TRAINING_EXCLUSIONS]
@@ -35,6 +45,7 @@ L_REPLYING_EXCLUSION = [e.lower() for e in REPLYING_EXCLUSION]
 
 RE_RT = re.compile(r'\brt(:|\b)')
 RE_LOL = re.compile(r'\blols?\b')
+RE_EYE = re.compile(r'my\s+eye')  # I think I have a paper cut I my eye.
 
 if False:
     tests = ['rt message', 'log rt:message', 
@@ -48,16 +59,18 @@ if False:
     exit()
 
 def is_allowed_for_training(message):
-    l_message = message.lower()
+    l_message = message.lower().strip()
     return not any(e in l_message for e in L_TRAINING_EXCLUSIONS) \
         and not RE_RT.search(l_message)
 
 def is_allowed_for_replying(message): 
     if not is_allowed_for_training(message):
         return False
-    l_message = message.lower()
+    l_message = message.lower().strip()
     return not any(e in l_message for e in L_REPLYING_EXCLUSION) \
-        and not RE_LOL.search(l_message)
+        and not RE_LOL.search(l_message) \
+        and not RE_EYE.search(l_message) \
+        and message[0] != '"' 
         
 
 CLASS_STRINGS = {
