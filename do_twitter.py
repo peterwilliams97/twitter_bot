@@ -98,8 +98,8 @@ def reply_to_tweets(api, replied_tweets, replyable_tweets):
             # !@#$
            
             reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(user)             
-            print 'Incoming: %s' % str(message)
-            print 'Posting in reply to %s: %s' % (A(user), str(reply_message))
+            #print 'Incoming: %s' % str(message)
+            print '  Posting in reply to %s: %s' % (A(user), str(reply_message))
             api.PostUpdate(reply_message, in_reply_to_status_id=id)
                 
             replied_tweets.append((id, user))
@@ -164,7 +164,7 @@ def main_loop(replying_enabled):
     # Get access to Twitter APIs        
     api = twitter.Api(**credentials)
     
-    while time.time() < start_time + 105 * 30:
+    while time.time() < start_time + 25 * 30:
  
         latest_tweet_id += 1
         results1 = api.GetSearch('paper cut', since_id = latest_tweet_id)
@@ -178,16 +178,18 @@ def main_loop(replying_enabled):
 
             num_relevant, replyable_tweets = record_tweets(model, results)
 
+            # Reply to all the tweeets that we should reply to 
+            if replying_enabled and replyable_tweets:
+                reply_to_tweets(api, replied_tweets, replyable_tweets)
+
             logging.info(' Added %3d replyable of %3d relevant of %3d results, latest_id=%d' % (
                     len(replyable_tweets), num_relevant, len(results), latest_tweet_id))
             print' Added %3d replyable of %3d relevant of %3d results, latest_id=%d' % (
                     len(replyable_tweets), num_relevant, len(results), latest_tweet_id),
 
-            # Reply to all the tweeets that we should reply to 
-            if replying_enabled and replyable_tweets:
-                reply_to_tweets(api, replied_tweets, replyable_tweets)
         else:
-            print 'Found %d results = %d + %d' % (len(results), len(results1), len(results2)),
+            print ' Found %d results = %d + %d' % (len(results), len(results1), len(results2)),
+            
         delay =  max(10, delay/2) if results else min(300, delay * 2)
         print '  Sleeping %.1f seconds' % delay
         time.sleep(delay)
