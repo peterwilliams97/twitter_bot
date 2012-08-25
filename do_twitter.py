@@ -13,36 +13,47 @@ logging.basicConfig(filename = LOG_FILE,
             level = logging.INFO,
             format = '%(asctime)s %(message)s')
 
-def decode_result(result):
-    """Convert a result returned from the Twitter API
-        to id, tm, user, message
-            id: tweet id (globally unique integer)
-            tm: time of tweet
-            user: username of tweeter
-            message: text of tweet
-    """
-    tm0 = time.strptime(result.created_at[:-6], '%a, %d %b %Y %H:%M:%S')
-    tm = time.mktime(tm0)
-    user = result.user.screen_name
-    message = result.text.encode('ascii', 'replace')
-    id = result.id
-    return id, tm, user, message 
-
-print '-' * 80
+def A(user):
+    return '@%s' % user
+    
 RE_PAPERCUT = re.compile(r'paper\s*cut', re.IGNORECASE)
-def is_relevant(message):
+def is_relevant(twitter_status):
     """We are looking for tweets that contain 'papercut'"""
+    message = clean_text(twitter_status.text.encode('ascii', 'replace'))
     return RE_PAPERCUT.search(message) is not None
 
-def is_replyable(model, message):
-    """Return replyable,log_odds
-       - replyable = True if we are really sure the tweeter had a
+class ScoredTweet:
+    """Tweet plus a score
+        Tweet info
+            id: unique id of tweet
+            tm: time of tweet
+            user: user name of tweeter
+            message: text of tweet
+        Score        
+            replyable : True if we are really sure the tweeter had a
                 paper cut
-       - log_odds = is log(odds ratio) of tweet being positive 
+            sc = is log(odds ratio) of tweet being positive 
     """
-    allowed = do_label.is_allowed_for_replying(message)
-    positive,log_odds,_ =  model.classify(message)
-    return allowed and positive, log_odds
+    def __init__(self, model, twitter_status):
+        # Decode the twitter_status
+        tm0 = time.strptime(twitter_status.created_at[:-6], '%a, %d %b %Y %H:%M:%S')
+        self._time = time.mktime(tm0)
+        self._user = twitter_status._user.screen_name
+        self._message = clean_text(twitter_status.text.encode('ascii', 'replace'))
+        self._id = twitter_status._id
+        
+        # Score the decoded status
+        positive, self._score =  model.classify(self._message)
+        self._replyable = positive and do_label.is_allowed_for_replying(self._message) 
+
+    def __repr__(self):
+        return '%-5s|%6.2f|%s"' % (self._replyable, self._score, self.encode_tweet_line())  
+        
+    def get_tweet_line(self):
+        return encode_tweet_line(self._id, self._time, self._user, self._message)
+        
+    def get_score_line(self): 
+        return ' %-5s %6.2f %-15s : "%s"' % (self._replyable, self._score, A(self._user), self._message)  
 
 def load_replied_tweets():
     """Return a list of (id,user) of the tweets already replied to"""
@@ -54,97 +65,110 @@ def load_replied_tweets():
         logging.error('Could not open %s', REPLIES_FILE)
         return replied_tweets
 
-    for line in fp:
-        line = line.rstrip('\n').strip()
-        if line:
-            id,_,user,_ = decode_tweet_line(line)
-            replied_tweets.append((id, user))
-    fp.close()    
+    try:    
+        for line in fp:
+            line = line.rstrip('\n').strip()
+            if line:
+                id,_,user,_ = decode_tweet_line(line)
+                replied_tweets.append((id, user))
+    finally:
+        fp.close()    
     
     return replied_tweets    
     
 def get_replied_users(replied_tweets):
     return set(user.lower() for _,user in replied_tweets)
 
-def A(user):
-    return '@%s' % user
 
-def reply_to_tweets(api, replied_tweets, replyable_tweets):
+def get_latest_scored_tweets(api, model, latest_tweet_id): 
 
-    l_replied_users = get_replied_users(replied_tweets)
-    
-    fp = open(REPLIES_FILE, 'at')
-    if False:
+    def search_twitter(pattern):
         try:
-            fp = open(REPLIES_FILE, 'at')
-        except IOError:    
-            logging.error('Could not open %s', REPLIES_FILE)
-            return
-    try:    
-        for id, tm, user, message in replyable_tweets:
-            l_message = message.lower()
-            
-            # Don't reply to users more than once
-            if user in l_replied_users:
-                continue 
-            # Don't reply to responses    
-            if TWITTER_ME.lower() in message:
-                continue
-            # Don't reply to mentions of tweets we have responded to    
-            if any(A(u).lower() in l_message for u in l_replied_users):
-                print "Skipping because it's a mention: @%s - %s" % (u, message)
-                continue
-            
-            # !@#$
-           
-            reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(user)             
-            #print 'Incoming: %s' % str(message)
-            print '  Posting in reply to %s: %s' % (A(user), str(reply_message))
-            api.PostUpdate(reply_message, in_reply_to_status_id=id)
-                
-            replied_tweets.append((id, user))
-            fp.write('%s\n' % encode_tweet_line(id, tm, user, message))
-            
+            results = api.GetSearch(pattern, since_id = latest_tweet_id)
             time.sleep(1)
-    #except Exception:
-    #    print 'Unexpected error:', sys.exc_info()[0:2]   
-    finally:        
-        fp.close()
-        
-def record_tweets(model, results):
+            return results
+        except Exception:
+            errmsg = ' Twitter api error: %s for search "%s"' % (str(sys.exc_info()[0:2]), pattern) 
+            print errmsg
+            logging.error(errmsg)
+            return []
+    
+    results = search_twitter('paper cut') + search_twitter('papercut')
+    results = [r for r in results if is_relevant(r)]
+    return [ScoredTweet(model, r) for r in results] 
+ 
+def record_tweets(scored_tweets):
     """ Store the tweets in TWEETS_FILE
     """
-    tweets = sorted([decode_result(r) for r in results], key = lambda t: t[0])
-    num_relevant = 0 
-    replyable_tweets = []
-    
+       
     try:
         fp = open(TWEETS_FILE, 'at')
     except:     
         logging.error('Could not open %s' % TWEETS_FILE)
         return
 
-    for i,t in enumerate(tweets):
-        id, tm, user, message = t
-        if is_relevant(message):
-            line = encode_tweet_line(id, tm, user, message)
-            do_reply,score = is_replyable(model, message)
-            scored_line = '%7s %6.2f : %s' % (do_reply, score, message)
-            print scored_line
-            logging.info(scored_line)
-            fp.write('%s\n' % line)
-            num_relevant += 1
-            if do_reply:
-                replyable_tweets.append((id, tm, user, message))
-    fp.close()
-    return num_relevant, replyable_tweets    
+    try:    
+        for tweet in scored_tweets:
+            print tweet.get_score_line()
+            logging.info(tweet.get_score_line())
+            fp.write('%s\n' % tweet.get_tweet_line())
+    finally:
+        fp.close()
+        
+def reply_to_tweets(api, replied_tweets, scored_tweets):
 
-def main_loop(replying_enabled):  
+    l_replied_users = get_replied_users(replied_tweets)
+    
+    try:
+        fp = open(REPLIES_FILE, 'at')
+    except IOError:    
+        logging.error('Could not open %s', REPLIES_FILE)
+        return
+    try:    
+        for tweet in scored_tweets:
+            l_message = tweet._message.lower()
+            
+            # Don't reply to users more than once
+            if tweet._user.lower() in l_replied_users:
+                logging.info(' skipping: already replied to %s' % tweet._user)
+                continue 
+            # Don't reply to responses    
+            if TWITTER_ME.lower() in l_message:
+                logging.info('  skipping:  response "%s"' % tweet._message)
+                continue
+            # Don't reply to mentions of tweets we have responded to    
+            if any(A(u).lower() in l_message for u in l_replied_users):
+                logging.info('  skipping: mention: %s:"%s:' % (A(u), tweet._message))
+                continue
+           
+            reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(tweet._user)             
 
-    logging.info('Starting '+ sys.argv[0])
+            print '  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message))
+            logging.info('  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message)))
+            
+            try:
+                api.PostUpdate(reply_message, in_reply_to_status_id=tweet._id)
+                time.sleep(1)
+            except Exception:
+                print ' Twitter api error: %s' % str(sys.exc_info()[0:2])
+                logging.error(' Twitter api error: %s' % str(sys.exc_info()[0:2]))
+    
+            replied_tweets.append((tweet._id, tweet._user))
+            fp.write('%s\n' % tweet.get_tweet_line())
+            l_replied_users.add(tweet._user.lower())
+
+    finally:        
+        fp.close()        
+
+def main_loop(max_duration, replying_enabled):  
+
+    logging.info('max_duration=%d, replying_enabled=%s' % (max_duration, replying_enabled))
     start_time = time.time()
-    delay = 1
-
+    delay = 0.1
+    
+    def elapsed(): 
+        return time.time() - start_time
+        
     # Load the calibration model first
     model = do_classify.load_model()
     
@@ -159,42 +183,42 @@ def main_loop(replying_enabled):
     # Credentials are stored in CREDENTIALS_FILE as text lines of key='value' 
     # The keys are: consumer_key, consumer_secret, access_token_key, access_token_secret 
     RE_CREDENTIALS = re.compile(r"(\w+)='([^']+)'")
-    credentials = dict((m.group(1),m.group(2)) for m in RE_CREDENTIALS.finditer(file(CREDENTIALS_FILE,'rt').read()))
+    credentials = dict((m.group(1),m.group(2)) 
+        for m in RE_CREDENTIALS.finditer(file(CREDENTIALS_FILE,'rt').read()))
       
     # Get access to Twitter APIs        
     api = twitter.Api(**credentials)
     
-    while time.time() < start_time + 25 * 30:
- 
+    while elapsed() + delay < max_duration:
+        time.sleep(delay)
+        
         latest_tweet_id += 1
-        results1 = api.GetSearch('paper cut', since_id = latest_tweet_id)
-        time.sleep(1)
-        results2 = api.GetSearch('papercut', since_id = latest_tweet_id)
-        results = results1 + results2 
-       
-        if results:
-            latest_tweet_id = max([x.id for x in results])
+        scored_tweets = get_latest_scored_tweets(api, model, latest_tweet_id) 
+        
+        if scored_tweets:
+            scored_tweets.sort(key = lambda t: (not t._replyable, -t._score, t._id)) 
+            latest_tweet_id = max([t._id for t in scored_tweets])
             file(LATEST_FILE, 'wt').write(str(latest_tweet_id))
+            record_tweets(scored_tweets)
 
-            num_relevant, replyable_tweets = record_tweets(model, results)
-
+            replyable_tweets = [t for t in scored_tweets if t._replyable]
             # Reply to all the tweeets that we should reply to 
             if replying_enabled and replyable_tweets:
                 reply_to_tweets(api, replied_tweets, replyable_tweets)
-
-            logging.info(' Added %3d replyable of %3d relevant of %3d results, latest_id=%d' % (
-                    len(replyable_tweets), num_relevant, len(results), latest_tweet_id))
-            print' Added %3d replyable of %3d relevant of %3d results, latest_id=%d' % (
-                    len(replyable_tweets), num_relevant, len(results), latest_tweet_id),
-
-        else:
-            print ' Found %d results = %d + %d' % (len(results), len(results1), len(results2)),
-            
-        delay =  max(10, delay/2) if results else min(300, delay * 2)
-        print '  Sleeping %.1f seconds' % delay
-        time.sleep(delay)
+        
+        delay = 10 if scored_tweets else delay * 2
+        delay = max(10, min((abs(elapsed() - max_duration)/10), delay))
+        
+        msg = 'Found %3d replyable of %3d relevant results, latest_id=%d, sleeping %5.1f sec, running %4d sec' % (
+                    len([t for t in scored_tweets if t._replyable]), 
+                    len(scored_tweets), latest_tweet_id,
+                    delay, elapsed())
+        print msg
+        logging.info(msg)
 
 if __name__ == '__main__':
-    main_loop(True)
+    logging.info('-' * 80)
+    logging.info('Starting %s' % str(sys.argv[0]))
+    main_loop(25 * 60, True)
     
     

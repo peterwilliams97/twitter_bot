@@ -232,6 +232,6 @@ class BayesClassifier:
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         log_odds = prior + likelihood
-        return log_odds > 0.0, log_odds, dict((k,trigram_score(k)) for k in trigrams)
+        return log_odds > 0.0, log_odds 
   
 

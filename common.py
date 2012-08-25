@@ -40,7 +40,7 @@ LOG_FILE = _make_path('log')
 
 UNKNOWN = -1
 
-def _clean(message):
+def clean_text(message):
     """Process message so that it can be stored as
         lines of | separated fields
     """
@@ -51,12 +51,13 @@ def _clean(message):
     return message
  
 def encode_tweet_line(id, tm, user, message):
-    return '%s | %s | %-20s | %s' % (id, tm, user, _clean(message))
+    return '%s | %s | %-20s | %s' % (id, tm, user, clean_text(message))
    
 def decode_tweet_line(line):
     line = line.rstrip('\n').strip()
     id,tm,user,message = [pt.strip() for pt in line.split('|')]
-    return id,tm,user,message
+    return id,tm,user,clean_text(message)
+  
 
 
 

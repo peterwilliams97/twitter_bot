@@ -36,7 +36,12 @@ REPLYING_EXCLUSION = [
     'cruciatus'
     'Papercut_Dolls',
     'birth',
-    '@papercut'
+    '@papercut',
+    'nigger', 
+    'nigga',
+    'cunt',  
+    'death'
+    
    
 ] 
 
