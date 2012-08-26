@@ -1,3 +1,4 @@
+from __future__ import division
 import twitter, os, time, sys, re, pickle
 from common import *
 from BayesClassifier import BayesClassifier
@@ -53,12 +54,11 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     fn = []
     for i,t in enumerate(test_tweets):
         a = t[0]
-        p, log_odds, ngrams = model.classify(t[1])
+        p, log_odds = model.classify(t[1])
         score[(a,p)] += 1
         if p != a:
-            if p: fp.append((test_indexes[i], log_odds, ngrams))
-            else: fn.append((test_indexes[i], log_odds, ngrams))
-            #if p:  print '>>>', test_indexes[i], p, t
+            if p: fp.append((test_indexes[i], log_odds))
+            else: fn.append((test_indexes[i], log_odds))
     return score, fp, fn
 
 def cross_validate(tweets, num_folds):
@@ -79,34 +79,55 @@ def cross_validate(tweets, num_folds):
     false_negatives.sort()
     return confusion_matrix, false_positives, false_negatives
   
+def get_f(matrix):
+    precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
+    recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
+    return 2.0/(1.0/precision + 1.0/recall)
+    
 def print_confusion_matrix(confusion_matrix):  
     BAR = '-' * 5
-    print '%5s | %5s | %5s' % ('', False, True)
-    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
-    print '%5s | %5s | %5s' % (False, confusion_matrix[(False,False)], confusion_matrix[(False,True)]) 
-    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
-    print '%5s | %5s | %5s' % (True,  confusion_matrix[(True,False)],  confusion_matrix[(True,True)]) 
-    print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+    def print_matrix(matrix):
+        print '%5s + %5s + %5s' % (BAR, BAR, BAR) 
+        print '%5s | %5s | %5s' % ('', False, True)
+        print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+        print '%5s | %5s | %5s' % (False, matrix[(False,False)], matrix[(False,True)]) 
+        print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+        print '%5s | %5s | %5s' % (True,  matrix[(True,False)],  matrix[(True,True)]) 
+        print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+    
+    total = sum([confusion_matrix[a,p] for p in (False,True) for a in (False,True)])
 
-def validate_full(tweets, detailed):
+    percentage_matrix = {}
+    for p in (False,True):
+        for a in (False,True):
+            percentage_matrix[p,a] = '%2d%%' % int(confusion_matrix[a,p]/total * 100.0)
+            
+    print_matrix(confusion_matrix)  
+    print total    
+    print_matrix(percentage_matrix)        
+
+def validate_full(tweets, show_errors, show_confusion, detailed):
     
     confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
 
     #print [i for i,p,g in false_positives]
     #print [i for i,p,g in false_negatives]
 
-    print '-' * 80
-    print 'FALSE NEGATIVES: %d' % len(set([(i,p) for i,p,_ in false_negatives]))
-    for i,p in sorted(set([(i,p) for i,p,_ in false_negatives]), key = lambda x: -x[1]):
-        print '%5d %6.2f: %s' % (i,p, tweets[i][1]) 
-        
-    print '-' * 80
-    print 'FALSE POSITIVES: %d' % len(set([(i,p) for i,p,_ in false_positives]))
-    for i,p in sorted(set([(i,p) for i,p,_ in false_positives]), key = lambda x: -x[1]):
-        print '%5d %6.2f: %s' % (i,p, tweets[i][1])
+    if show_errors:
+        print '-' * 80
+        print 'FALSE NEGATIVES: %d' % len(set([(i,p) for i,p in false_negatives]))
+        for i,p in sorted(set([(i,p) for i,p in false_negatives]), key = lambda x: -x[1]):
+            print '%5d %6.2f: %s' % (i,p, tweets[i][1]) 
+            
+        print '-' * 80
+        print 'FALSE POSITIVES: %d' % len(set([(i,p) for i,p in false_positives]))
+        for i,p in sorted(set([(i,p) for i,p in false_positives]), key = lambda x: -x[1]):
+            print '%5d %6.2f: %s' % (i,p, tweets[i][1])
 
-    print '-' * 80
-    print_confusion_matrix(confusion_matrix)
+    if show_confusion:
+        print '-' * 80
+        print_confusion_matrix(confusion_matrix)
+        print get_f(confusion_matrix)
 
     if detailed:  
         print '-' * 80
@@ -141,11 +162,7 @@ if __name__ == '__main__':
     print '=' * 80
     validate_basic(tweets)
     print '=' * 80
-    validate_full(tweets, False)
+    validate_full(tweets, False, True, False)
 
-    save_model(tweets)
-    
-    
-
-
-
+    if False:
+        save_model(tweets)

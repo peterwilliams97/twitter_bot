@@ -219,6 +219,6 @@ def main_loop(max_duration, replying_enabled):
 if __name__ == '__main__':
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
-    main_loop(25 * 60, True)
+    main_loop(23.5 * 60 * 60, True)
     
     

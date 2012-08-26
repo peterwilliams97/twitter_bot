@@ -77,6 +77,16 @@ class BayesClassifier:
             self.cls = UNKNOWN
             self.words = []
 
+    def set_classification_params(self,
+            smooth_unigram = 3.5, smooth_bigram = 3.5, smooth_trigram = 3.5, 
+            backoff_bigram = 0.1, backoff_trigram = 0.5):
+        
+        self.smooth_unigram = smooth_unigram 
+        self.smooth_bigram = smooth_bigram   
+        self.smooth_trigram = smooth_trigram  
+        self.backoff_bigram = backoff_bigram
+        self.backoff_trigram = backoff_trigram
+    
     def __init__(self, training_data):
         """BayesClassifier initialization
             *gram_counts are dicts of positive and negative
@@ -88,6 +98,8 @@ class BayesClassifier:
             class_count = [n,p] is the total counts of negative and
                 positive examples
         """
+        
+        self.set_classification_params()    
         
         self.unigram_counts = {}
         self.unigram_keys = set([]) 
@@ -163,8 +175,9 @@ class BayesClassifier:
         return totals_string \
              + show_counts('trigrams', self.trigram_counts) \
              + show_counts('bigrams', self.bigram_counts) \
-             + show_counts('unigrams', self.unigram_counts) \
+             + show_counts('unigrams', self.unigram_counts) 
 
+   
     def classify(self, message):
         """ 
             'message' is a string to classify. Return True or False classification.
@@ -213,20 +226,22 @@ class BayesClassifier:
             cntn,cntp,v  = cntv
             return math.log((p+alpha)/(cntp+v*alpha)) - math.log((n+alpha)/(cntn+v*alpha)) 
 
+
+            
         def unigram_score(k):
-            return get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, 3.5)
+            return get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, self.smooth_unigram)
             
         def bigram_score(k):
             if k not in self.bigram_keys:
                 w1,w2 = _U(k) 
-                return (unigram_score(w1) + unigram_score(w2)) * 0.1 
-            return get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, 3.5)
+                return (unigram_score(w1) + unigram_score(w2)) * self.backoff_bigram 
+            return get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, self.smooth_bigram)
 
         def trigram_score(k):
             if k not in self.trigram_keys:
                 w1,w2,w3 = _U(k)
-                return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * 0.5 
-            return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, 3.5)
+                return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * self.backoff_trigram 
+            return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, self.backoff_trigram)
 
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    

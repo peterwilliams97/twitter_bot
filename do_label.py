@@ -28,6 +28,7 @@ REPLYING_EXCLUSION = [
     'LOL'       # To be safe 
     'Sandpaper kisses',
     'paper cut bliss',
+    'papercut bliss',
     'Bleeds to death',
     'Robin van Persie',
     'hand sanitizer',
@@ -35,22 +36,33 @@ REPLYING_EXCLUSION = [
     'revenge',   
     'cruciatus'
     'Papercut_Dolls',
+    'Papercut Magazine',
     'birth',
     '@papercut',
     'nigger', 
     'nigga',
-    'cunt',  
-    'death'
+    ' cunt',
+    ' clit'
+    'death',
+    'eyeball',
+    'imagine',
+    ' penis',
+    'YouTube',
+    'life gives you lemons',
+    '#moneyproblems',
+    'amputat',
+    '#np '
     
-   
+    
 ] 
 
-L_TRAINING_EXCLUSIONS = [e.lower() for e in TRAINING_EXCLUSIONS]
-L_REPLYING_EXCLUSION = [e.lower() for e in REPLYING_EXCLUSION]
+L_TRAINING_EXCLUSIONS = set([e.lower() for e in TRAINING_EXCLUSIONS])
+L_REPLYING_EXCLUSION = set([e.lower() for e in REPLYING_EXCLUSION])
 
 RE_RT = re.compile(r'\brt(:|\b)')
 RE_LOL = re.compile(r'\blols?\b')
 RE_EYE = re.compile(r'my\s+eye')  # I think I have a paper cut I my eye.
+RE_CUT = re.compile(r'cut\s*(out|back|art)\b')
 
 if False:
     tests = ['rt message', 'log rt:message', 
@@ -75,8 +87,9 @@ def is_allowed_for_replying(message):
     return not any(e in l_message for e in L_REPLYING_EXCLUSION) \
         and not RE_LOL.search(l_message) \
         and not RE_EYE.search(l_message) \
-        and message[0] != '"' 
-        
+        and not RE_CUT.search(l_message) \
+        and message[0] != '"'
+        and message[0] != '@'    
 
 CLASS_STRINGS = {
     False: 'n',
@@ -93,16 +106,16 @@ AUTO_CLASS_STRINGS  = {
 
 def get_class_str(model, message):
     if model:
-        cls,log_odds,llk = model.classify(message)
+        cls,log_odds = model.classify(message)
     else:
-        cls,log_odds,llk = UNKNOWN, 0.0, None
+        cls,log_odds = UNKNOWN, 0.0
     return AUTO_CLASS_STRINGS[cls]
 
 def main():
     
     # Lastest labelled tweet id (an integer) is stored as text in LATEST_CLASS_FILE
     # We use to prevent re-reading tweets
-    latest_labelled_tweet_id = int(file(LATEST_CLASS_FILE, 'rt').read().strip()) if os.path.exists(LATEST_CLASS_FILE) else 0    
+    latest_labelled_tweet_id = int(file(LATEST_CLASS_FILE, 'rt').read().strip())  if os.path.exists(LATEST_CLASS_FILE) else 0    
     previous_tweet_id = latest_labelled_tweet_id
       
     # Read the classification mode
@@ -119,14 +132,14 @@ def main():
             id_s,tm,user,message = [pt.strip() for pt in line.split('|')]
         except ValueError:
             print 'ValueError', line
-            exit()
+            continue
         id = int(id_s)
         if id <= latest_labelled_tweet_id:
             continue
         if not is_allowed_for_training(message):
             continue
         kls = get_class_str(model, message)
-        print kls, [id,tm,user,message]
+        #print kls, [id,tm,user,message]
             
         labelled_messages.append([kls, message])
         latest_labelled_tweet_id = max(id, latest_labelled_tweet_id)
