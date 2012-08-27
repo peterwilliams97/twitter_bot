@@ -13,6 +13,13 @@ logging.basicConfig(filename = LOG_FILE,
             level = logging.INFO,
             format = '%(asctime)s %(message)s')
 
+def E(msg):
+    """Log serious errors"""
+    full_msg = '%s : %s' % (msg, str(sys.exc_info()[0:2]))
+    print full_msg
+    logging.error(full_msg)
+    time.sleep(1)
+
 def A(user):
     return '@%s' % user
     
@@ -79,7 +86,6 @@ def load_replied_tweets():
 def get_replied_users(replied_tweets):
     return set(user.lower() for _,user in replied_tweets)
 
-
 def get_latest_scored_tweets(api, model, latest_tweet_id): 
 
     def search_twitter(pattern):
@@ -88,9 +94,7 @@ def get_latest_scored_tweets(api, model, latest_tweet_id):
             time.sleep(1)
             return results
         except Exception:
-            errmsg = ' Twitter api error: %s for search "%s"' % (str(sys.exc_info()[0:2]), pattern) 
-            print errmsg
-            logging.error(errmsg)
+            E(' Twitter api error for search "%s"' %  pattern) 
             return []
     
     results = search_twitter('paper cut') + search_twitter('papercut')
@@ -115,7 +119,89 @@ def record_tweets(scored_tweets):
     finally:
         fp.close()
         
-def reply_to_tweets(api, replied_tweets, scored_tweets):
+if True:
+    def read_summary():  
+        tweet_num, num_tweets, tm = 0, 0, 0.0
+        try:
+            text = file(TWEET_SUMMARY_FILE, 'rt').read().strip('\n')
+            print 'read_summary:', text
+            parts = [p.strip() for p in text.split('|')]
+            tweet_num = int(parts[0])
+            num_tweets = int(parts[1])
+            tm = float(parts[2])
+        except:
+            E('Could not read %s' % TWEET_SUMMARY_FILE) 
+        return tweet_num, num_tweets, tm  
+        
+    def write_summary(tweet_num, num_tweets, tm):
+        parts = tweet_num, num_tweets, tm
+        text = ' | '.join([str(p) for p in parts])        
+        print 'write_summary:', text
+        try:
+            file(TWEET_SUMMARY_FILE, 'wt').write(text)
+        except:
+            E(' Could not save summary')    
+        
+class Activity:
+
+    SUMMARY_TM_FORMAT = '%I:%M%p %a %d %b %Y' 
+    RE_SUMMARY = re.compile(r'I have empathised with (\d+) people since\s(.+)$')
+    
+    def encode_summary(num_tweets, tm): 
+        """
+            Twitter has been busier than Liebig St on a Friday afternoon.
+            I have empathised with 3 people since 11:43PM Fri 17 Aug 2012
+        """
+        tm_str = time.strftime(SUMMARY_TM_FORMAT, time.localtime(tm))    
+        summary = 'Twitter has been busier than Liebig St on a Friday afternoon. ' + \
+                  'I have empathised with %d people since %s''' % (num_tweets, tm_str)
+        return summary
+
+    def decode_summary(summary):
+        num_tweets, tm = 0, 0.0
+        try:
+            m = RE_SUMMARY.search(summary)
+            num_tweets = int(m.group(1))
+            tm = time.mktime(time.strptime(m.group(2), SUMMARY_TM_FORMAT))
+        except Exception:
+            E(' Could not decode summary "%s"' % summary) 
+        return num_tweets, tm
+        
+    def __init__(self, api):
+        self._api = api
+        self._last_tweet_num, self._last_num_tweets, self._last_time = read_summary()
+        write_summary(self._last_tweet_num, self._last_num_tweets, self._last_time)
+  
+    def __repr__(self):
+        return encode_summary(self._last_num_tweets, self._last_time)
+  
+    def post_summary_tweet(self, replied_tweets, tweet):
+        """Post a summary tweet from time to time.
+           
+        """
+        tweet_num = len(replied_tweets)
+        
+        # To keep this infrequent, we don't post until we have 
+        # exceeded the number of tweets in the last summary post
+        if tweet_num <= self._last_tweet_num + self._last_num_tweets:
+            return
+            
+        num_tweets = tweet_num > self._last_tweet_num
+        tm = tweet._time
+        if False:
+            try:
+                summary = encode_summary(num_tweets, tm)
+                self._api.PostUpdate(summary)
+                time.sleep(1)
+            except Exception:
+                E(' Twitter api error posting summary "%s"' % summary)
+             
+        parts = tweet_num, num_tweets, tm
+        write_summary(tweet_num, num_tweets, tm)        
+        self._last_tweet_num, self._last_num_tweets, self._last_time = tweet_num, num_tweets, tm
+ 
+
+def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
 
     l_replied_users = get_replied_users(replied_tweets)
     
@@ -146,16 +232,19 @@ def reply_to_tweets(api, replied_tweets, scored_tweets):
             print '  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message))
             logging.info('  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message)))
             
-            try:
-                api.PostUpdate(reply_message, in_reply_to_status_id=tweet._id)
-                time.sleep(1)
-            except Exception:
-                print ' Twitter api error: %s' % str(sys.exc_info()[0:2])
-                logging.error(' Twitter api error: %s' % str(sys.exc_info()[0:2]))
+            if False:
+                try:
+                    api.PostUpdate(reply_message, in_reply_to_status_id=tweet._id)
+                    time.sleep(1)
+                except Exception:
+                    print ' Twitter api error: %s' % str(sys.exc_info()[0:2])
+                    logging.error(' Twitter api error: %s' % str(sys.exc_info()[0:2]))
     
             replied_tweets.append((tweet._id, tweet._user))
             fp.write('%s\n' % tweet.get_tweet_line())
             l_replied_users.add(tweet._user.lower())
+            
+            activity.post_summary_tweet(replied_tweets, tweet)
 
     finally:        
         fp.close()        
@@ -189,6 +278,8 @@ def main_loop(max_duration, replying_enabled):
     # Get access to Twitter APIs        
     api = twitter.Api(**credentials)
     
+    activity = Activity(api)
+    
     while elapsed() + delay < max_duration:
         time.sleep(delay)
         
@@ -204,7 +295,7 @@ def main_loop(max_duration, replying_enabled):
             replyable_tweets = [t for t in scored_tweets if t._replyable]
             # Reply to all the tweeets that we should reply to 
             if replying_enabled and replyable_tweets:
-                reply_to_tweets(api, replied_tweets, replyable_tweets)
+                reply_to_tweets(api, activity, replied_tweets, replyable_tweets)
         
         delay = 10 if scored_tweets else delay * 2
         delay = max(10, min((abs(elapsed() - max_duration)/10), delay))
@@ -219,6 +310,6 @@ def main_loop(max_duration, replying_enabled):
 if __name__ == '__main__':
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
-    main_loop(23.5 * 60 * 60, True)
+    main_loop(10 * 60 * 60, True)
     
     

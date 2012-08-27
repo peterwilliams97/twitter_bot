@@ -88,7 +88,7 @@ def is_allowed_for_replying(message):
         and not RE_LOL.search(l_message) \
         and not RE_EYE.search(l_message) \
         and not RE_CUT.search(l_message) \
-        and message[0] != '"'
+        and message[0] != '"' \
         and message[0] != '@'    
 
 CLASS_STRINGS = {

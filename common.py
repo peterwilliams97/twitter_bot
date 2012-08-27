@@ -34,7 +34,8 @@ NGRAM_FILE = _make_path('ngram')
 VALIDATION_FILE = _make_path('validation')
 MODEL_FILE = _make_path('model') 
 
-REPLIES_FILE= _make_path('replies')
+REPLIES_FILE = _make_path('replies')
+TWEET_SUMMARY_FILE = _make_path('tweet_summary')
 
 LOG_FILE = _make_path('log')
 
