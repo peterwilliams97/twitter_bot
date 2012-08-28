@@ -35,7 +35,7 @@ VALIDATION_FILE = _make_path('validation')
 MODEL_FILE = _make_path('model') 
 
 REPLIES_FILE = _make_path('replies')
-TWEET_SUMMARY_FILE = _make_path('tweet_summary')
+ACTIVITY_FILE = _make_path('activity')
 
 LOG_FILE = _make_path('log')
 
