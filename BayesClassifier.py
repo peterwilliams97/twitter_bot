@@ -5,22 +5,54 @@ from common import *
 RE_USER = re.compile(r'@\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
-# This should be a hook
-#
-def _pre_tokenize(message):
-    message = RE_USER.sub('[TAG_USER]', message)
-    message = RE_HTTP.sub('[TAG_LINK]', message)
+RE_SYM = re.compile(r'&(\w+);')
+RE_SYM2 = re.compile(r'(\[TAG_SYMBOL\])\1\1*')
+
+RE_AMP = re.compile(r'&amp;')
+RE_GT = re.compile(r'&gt;')
+RE_LT = re.compile(r'&lt;')
+RE_PUNC = re.compile(r'[",.;:-]')
+RE_PUNC2 = re.compile(r'[!?\']{2.}')
+RE_SPACE = re.compile(r'\s+')
+RE_HASH = re.compile(r'#(\w+)')
+RE_REPEAT = re.compile(r'(.)\1\1*')
+RE_BANG = re.compile(r'(\w+)([!])')
+RE_NUMBER = re.compile('\d+(\s+\d)*')
+
+def _pre_process(message):
+    #message = RE_AMP.sub(' & ', message)
+    #message = RE_GT.sub(' < ', message)
+    #message = RE_LT.sub(' > ', message)
+    
+    #message = RE_SYM.sub(r' \1 ', message) 
+    message = RE_SYM.sub(r'[TAG_SYMBOL]', message) 
+    message = RE_SYM2.sub(r'[TAG_SYMBOL]', message) 
+    
+    message = RE_PUNC.sub(' ', message)
+    message = RE_PUNC2.sub('!', message)
+    #print message
+    message = RE_SPACE.sub(' ', message)
+    #print message
+    message = RE_HASH.sub(r'\1', message)
+    #print message
+    message = RE_REPEAT.sub(r'\1', message)
+    message = RE_BANG.sub(r'\1 \2', message)
+    
+    message = RE_NUMBER.sub('[TAG_NUMBER]', message)
     return message
-
-def _post_tokenize(words):
-    """ !@#$ Stub"""
-    return words
-
-def _extract_words(message):
-    message = message.lower()
-    message = _pre_tokenize(message)
-    words = message.split()
-    return _post_tokenize(words)
+    
+STOP_WORDS = set([
+    #'the',
+    #'and', 
+   # 'a',
+   # 'in', 'on', 'at'
+    ])    
+    
+if False:    
+    message = 'PaperCut owwwww. #hash'
+    print message
+    print _pre_process(message)
+    exit()
 
 def _U(ngram):
     return ngram.split(' ')
@@ -66,9 +98,48 @@ def _get_cntv(counts):
     cntp = sum([p for n,p in counts.values()])
     v = len(counts.keys())
     return cntn,cntp,v
-    
+
 class BayesClassifier:
     
+    # 0.825127334465 [ 4.664691    3.31914489  3.40044725  0.52437482  0.78608935]
+    smooth_unigram = 4.664 # 4.35  # 3.5
+    smooth_bigram =  3.319 # 3.5
+    smooth_trigram =  3.40 # 3.5 
+    backoff_bigram = 0.524 # 0.489 # 0.1 
+    backoff_trigram = 0.786 # 0.798 # 0.5
+
+    @staticmethod
+    def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
+        backoff_bigram, backoff_trigram):
+        
+        BayesClassifier.smooth_unigram = smooth_unigram 
+        BayesClassifier.smooth_bigram = smooth_bigram   
+        BayesClassifier.smooth_trigram = smooth_trigram  
+        BayesClassifier.backoff_bigram = backoff_bigram
+        BayesClassifier.backoff_trigram = backoff_trigram
+        
+    # This should be a hook
+    #
+    @staticmethod
+    def pre_tokenize(message):
+        message = RE_USER.sub('[TAG_USER]', message)
+        message = RE_HTTP.sub('[TAG_LINK]', message)
+        message = _pre_process(message)
+        return message
+
+    @staticmethod
+    def post_tokenize(words):
+        """ !@#$ Stub"""
+        #words = [w for w in words if w not in STOP_WORDS]
+        return words   
+        
+    @staticmethod
+    def extract_words(message):
+        message = message.lower()
+        message = BayesClassifier.pre_tokenize(message)
+        words = message.split()
+        return BayesClassifier.post_tokenize(words)    
+
     class Example:
         """Represents a document with a label. cls is True or False
             words is a list of strings.
@@ -76,16 +147,6 @@ class BayesClassifier:
         def __init__(self):
             self.cls = UNKNOWN
             self.words = []
-
-    def set_classification_params(self,
-            smooth_unigram = 3.5, smooth_bigram = 3.5, smooth_trigram = 3.5, 
-            backoff_bigram = 0.1, backoff_trigram = 0.5):
-        
-        self.smooth_unigram = smooth_unigram 
-        self.smooth_bigram = smooth_bigram   
-        self.smooth_trigram = smooth_trigram  
-        self.backoff_bigram = backoff_bigram
-        self.backoff_trigram = backoff_trigram
     
     def __init__(self, training_data):
         """BayesClassifier initialization
@@ -98,9 +159,7 @@ class BayesClassifier:
             class_count = [n,p] is the total counts of negative and
                 positive examples
         """
-        
-        self.set_classification_params()    
-        
+
         self.unigram_counts = {}
         self.unigram_keys = set([]) 
         self.bigram_counts = {}
@@ -119,7 +178,7 @@ class BayesClassifier:
 
         assert cls in set([False, True]), 'invalid cls=%s' % cls
             
-        words = _extract_words(message)
+        words = BayesClassifier.extract_words(message)
         unigrams = words
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
@@ -194,7 +253,7 @@ class BayesClassifier:
             get_score() shows the smoothed scoring    
             <n>gram_score() shows the backoff and smoothing factors    
         """
-        words = _extract_words(message)
+        words = BayesClassifier.extract_words(message)
         unigrams = words
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
@@ -226,22 +285,20 @@ class BayesClassifier:
             cntn,cntp,v  = cntv
             return math.log((p+alpha)/(cntp+v*alpha)) - math.log((n+alpha)/(cntn+v*alpha)) 
 
-
-            
         def unigram_score(k):
-            return get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, self.smooth_unigram)
+            return get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, BayesClassifier.smooth_unigram)
             
         def bigram_score(k):
             if k not in self.bigram_keys:
                 w1,w2 = _U(k) 
-                return (unigram_score(w1) + unigram_score(w2)) * self.backoff_bigram 
-            return get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, self.smooth_bigram)
+                return (unigram_score(w1) + unigram_score(w2)) * BayesClassifier.backoff_bigram 
+            return get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, BayesClassifier.smooth_bigram)
 
         def trigram_score(k):
             if k not in self.trigram_keys:
                 w1,w2,w3 = _U(k)
-                return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * self.backoff_trigram 
-            return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, self.backoff_trigram)
+                return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
+            return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.backoff_trigram)
 
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    

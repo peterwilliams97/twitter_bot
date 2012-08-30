@@ -29,17 +29,45 @@ def is_relevant(twitter_status):
     message = clean_text(twitter_status.text.encode('ascii', 'replace'))
     return RE_PAPERCUT.search(message) is not None
 
+"""
+-- "Wed, 29 Aug 2012 09:29:01 +0000" 1346196541
+-- "Wed, 29 Aug 2012 09:20:33 +0000" 1346196033
+-- "Wed, 29 Aug 2012 09:10:28 +0000" 1346195428
+-- "Wed, 29 Aug 2012 09:13:41 +0000" 1346195621
+-- "Wed, 29 Aug 2012 09:09:06 +0000" 1346195346
+-- "Wed, 29 Aug 2012 09:08:03 +0000" 1346195283
+-- "Wed, 29 Aug 2012 09:07:30 +0000" 1346195250
+-- "Wed, 29 Aug 2012 08:58:31 +0000" 1346194711
+-- "Wed, 29 Aug 2012 08:15:50 +0000" 1346192150
+-- "Wed, 29 Aug 2012 08:06:22 +0000" 1346191582
+-- "Wed, 29 Aug 2012 07:49:31 +0000" 1346190571
+-- "Wed, 29 Aug 2012 07:44:50 +0000" 1346190290
+-- "Wed, 29 Aug 2012 07:41:31 +0000" 1346190091
+-- "Wed, 29 Aug 2012 07:30:26 +0000" 1346189426
+-- "Wed, 29 Aug 2012 07:08:28 +0000" 1346188108
+-- "Wed, 29 Aug 2012 07:08:27 +0000" 1346188107
+-- "Wed, 29 Aug 2012 07:06:27 +0000" 1346187987
+-- "Wed, 29 Aug 2012 07:02:11 +0000" 1346187731
+"""
+from datetime import datetime
+LOCAL_TIME_DELTA = datetime.now() - datetime.utcnow()
+SUMMARY_TM_FORMAT = '%I:%M%p %a %d %b' 
+def get_local_time_str(tm):
+    gmt = datetime(*time.localtime(tm)[:6])
+    gmt += LOCAL_TIME_DELTA
+    return gmt.strftime(SUMMARY_TM_FORMAT)
+
 class ScoredTweet:
     """Tweet plus a score
         Tweet info
-            id: unique id of tweet
-            tm: time of tweet
-            user: user name of tweeter
-            message: text of tweet
+            _id: unique id of tweet
+            _time: time of tweet
+            _user: user name of tweeter
+            _message: text of tweet
         Score        
-            replyable : True if we are really sure the tweeter had a
+            _replyable : True if we are really sure the tweeter had a
                 paper cut
-            sc = is log(odds ratio) of tweet being positive 
+            _score: log(odds ratio) of tweet being positive 
     """
     def __init__(self, model, twitter_status):
         # Decode the twitter_status
@@ -48,6 +76,8 @@ class ScoredTweet:
         self._user = twitter_status._user.screen_name
         self._message = clean_text(twitter_status.text.encode('ascii', 'replace'))
         self._id = twitter_status._id
+        
+        print '-- "%s" %d' % (twitter_status.created_at, self._time) 
         
         # Score the decoded status
         positive, self._score =  model.classify(self._message)
@@ -121,14 +151,13 @@ def record_tweets(scored_tweets):
 
 class Activity:
     """Activity record
-    _api : Twitter api instance
-    _last_reply_num: The number of replies we had made the last time we tweeted a summary 
-    _reply_delta: The min number of replies between summary tweets 
-    _last_time: The time we last made a summary tweet
+        _api : Twitter api instance
+        _last_reply_num: The number of replies we had made the last time we tweeted a summary 
+        _reply_delta: The min number of replies between summary tweets 
+        _last_time: The time we last made a summary tweet
     """
   
     SUMMARY_TM_FORMAT = '%I:%M%p %a %d %b %Y' 
-    RE_SUMMARY = re.compile(r'I have empathised with (\d+) people since\s(.+)$')
     
     @staticmethod
     def encode_summary(tweet_delta, tm): 
@@ -136,23 +165,10 @@ class Activity:
         'Twitter has been busier than Liebig St on a Friday afternoon.
             I have empathised with 3 people since 11:43PM Fri 17 Aug 2012'
         """
-        tm_str = time.strftime(Activity.SUMMARY_TM_FORMAT, time.gmtime(tm))    
+        tm_str = get_local_time_str(tm)
         return 'Twitter has been busier than Liebig St on a Friday afternoon. ' + \
-                  'I have empathised with %d people since %s''' % (tweet_delta, tm_str)
+                  'I have empathised with %d people since %s.''' % (tweet_delta, tm_str)
 
-    
-    #@staticmethod
-    if False:
-        def decode_summary(summary):
-            tweet_delta, tm = 0, 0.0
-            try:
-                m = Activity.RE_SUMMARY.search(summary)
-                tweet_delta = int(m.group(1))
-                tm = time.mktime(time.strptime(m.group(2), Activity,SUMMARY_TM_FORMAT))
-            except Exception:
-                log_sys_err(' Could not decode summary "%s"' % summary) 
-            return tweet_delta, tm
-        
     @staticmethod
     def read_activity():  
         tweet_num, tweet_delta, tm = 0, 0, 0.0
@@ -192,11 +208,11 @@ class Activity:
         # exceeded the number of tweets in the last summary post
         if tweet_num <= self._last_reply_num + self._reply_delta:
             return
-            
-        tm = tweet._time
-        summary = Activity.encode_summary(tweet_num - self._last_reply_num, tm)
+
+        summary = Activity.encode_summary(tweet_num - self._last_reply_num, self._last_time)
         print 'summary="%s" %d' % (summary, len(summary))
         logging.info('summary="%s" %d' % (summary, len(summary)))
+        
         try:
             self._api.PostUpdate(summary)
             time.sleep(1)
@@ -207,7 +223,7 @@ class Activity:
         tweet_delta = self._reply_delta + 10 
         
         parts = tweet_num, tweet_delta, tm
-        self._last_reply_num, self._reply_delta, self._last_time = tweet_num, tweet_delta, tm
+        self._last_reply_num, self._reply_delta, self._last_time = tweet_num, tweet_delta, tweet._time
         Activity.write_activity(tweet_num, tweet_delta, tm) 
 
 def reply_to_tweets(api, activity, replied_tweets, scored_tweets):

@@ -1,5 +1,5 @@
 from __future__ import division
-import twitter, os, time, sys, re, pickle
+import twitter, os, time, sys, re, pickle, random
 from common import *
 from BayesClassifier import BayesClassifier
 
@@ -83,17 +83,67 @@ def get_f(matrix):
     precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
     recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
     return 2.0/(1.0/precision + 1.0/recall)
+
+def get_design(vals):
+    """Return design matrix for which each element has all values
+        in corresponding element of vals
+    """
     
+    def fill_design(design, row):
+        if len(row) == len(vals):
+            design.append(row)
+        else:
+            for v in vals[len(row)]:
+                fill_design(design, row + [v])    
+
+    design = []
+    row = []
+    fill_design(design, row)
+    
+    print '-' * 80
+    print vals
+    print '-' * 80
+    for i,row in enumerate(design):
+        print '%3d : %s' % (i, row)
+    print '-' * 80
+    
+    return design
+    
+def optimize_params(tweets):
+    from scipy import optimize
+    
+    def func(x):
+        BayesClassifier.set_params(*x)
+        f = -get_f(cross_validate(tweets, 10)[0])
+        print -f, x
+        return f
+    
+    smooth_unigram = 4.35  # 3.5
+    smooth_bigram = 3.5
+    smooth_trigram = 3.5 
+    backoff_bigram = 0.489 # 0.1 
+    backoff_trigram = 0.798 # 0.5
+    x0 = [
+        smooth_unigram,
+        smooth_bigram,
+        smooth_trigram, 
+        backoff_bigram, 
+        backoff_trigram
+    ]
+    x = optimize.fmin(func, x0)
+    print x
+ 
 def print_confusion_matrix(confusion_matrix):  
     BAR = '-' * 5
+    BAR2 = '=' * 5
     def print_matrix(matrix):
-        print '%5s + %5s + %5s' % (BAR, BAR, BAR) 
+        print '%5s = %5s = %5s' % (BAR2, BAR2, BAR2) 
         print '%5s | %5s | %5s' % ('', False, True)
         print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
         print '%5s | %5s | %5s' % (False, matrix[(False,False)], matrix[(False,True)]) 
         print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
         print '%5s | %5s | %5s' % (True,  matrix[(True,False)],  matrix[(True,True)]) 
-        print '%5s + %5s + %5s' % (BAR, BAR, BAR)  
+        print '%5s = %5s = %5s' % (BAR2, BAR2, BAR2)  
     
     total = sum([confusion_matrix[a,p] for p in (False,True) for a in (False,True)])
 
@@ -103,8 +153,11 @@ def print_confusion_matrix(confusion_matrix):
             percentage_matrix[p,a] = '%2d%%' % int(confusion_matrix[a,p]/total * 100.0)
             
     print_matrix(confusion_matrix)  
-    print total    
-    print_matrix(percentage_matrix)        
+    print 'Total = %d' % total   
+    print
+    print_matrix(percentage_matrix) 
+    print 'F2 = %.3f' % get_f(confusion_matrix)    
+    print
 
 def validate_full(tweets, show_errors, show_confusion, detailed):
     
@@ -127,7 +180,6 @@ def validate_full(tweets, show_errors, show_confusion, detailed):
     if show_confusion:
         print '-' * 80
         print_confusion_matrix(confusion_matrix)
-        print get_f(confusion_matrix)
 
     if detailed:  
         print '-' * 80
@@ -159,10 +211,14 @@ def load_model():
 
 if __name__ == '__main__':
     tweets = get_labelled_tweets() 
-    print '=' * 80
+   
+    if False:
+        optimize_params(tweets)
+        exit()
+    
     validate_basic(tweets)
     print '=' * 80
     validate_full(tweets, False, True, False)
 
-    if False:
+    if True:
         save_model(tweets)
