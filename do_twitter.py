@@ -77,7 +77,7 @@ class ScoredTweet:
         self._message = clean_text(twitter_status.text.encode('ascii', 'replace'))
         self._id = twitter_status._id
         
-        print '-- "%s" %d' % (twitter_status.created_at, self._time) 
+        #print '-- "%s" %d' % (twitter_status.created_at, self._time) 
         
         # Score the decoded status
         positive, self._score =  model.classify(self._message)
@@ -221,10 +221,9 @@ class Activity:
         
         # Increase the delta each time we make a summary post
         tweet_delta = self._reply_delta + 10 
-        
-        parts = tweet_num, tweet_delta, tm
+
         self._last_reply_num, self._reply_delta, self._last_time = tweet_num, tweet_delta, tweet._time
-        Activity.write_activity(tweet_num, tweet_delta, tm) 
+        Activity.write_activity(tweet_num, tweet_delta, tweet._time) 
 
 def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
 
@@ -335,6 +334,9 @@ def main_loop(max_duration, replying_enabled):
 if __name__ == '__main__':
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
-    main_loop(55 * 60, True)
-    
+    try:
+        main_loop(55 * 60, True)
+    except Exception:
+        log_sys_err('Uncaught error')
+    logging.info('Finished normally')    
     
