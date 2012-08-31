@@ -19,7 +19,7 @@ def get_labelled_tweets():
     fp = open(CLASS_FILE, 'rt')
     for i,ln in enumerate(fp):
         parts = [pt.strip() for pt in ln.split('|')]
-        cls, message = get_class(parts[0]), parts[1]
+        cls, message= get_class(parts[0]), parts[1]
         if cls in set([False,True]):
             tweets.append((cls, message))
     fp.close()
@@ -131,7 +131,9 @@ def optimize_params(tweets):
         backoff_trigram
     ]
     x = optimize.fmin(func, x0)
-    print x
+    print '^' * 80
+    print -func(x0), x0
+    print -func(x), x
  
 def print_confusion_matrix(confusion_matrix):  
     BAR = '-' * 5
@@ -210,15 +212,45 @@ def load_model():
     return model
 
 if __name__ == '__main__':
+
+    import optparse
+
+    parser = optparse.OptionParser('python ' + sys.argv[0] + ' [options] <text pattern> [<file pattern>]')
+    parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum back-offs and smoothings')
+    parser.add_option('-v', '--validate', action='store_true', dest='validate', default=False, help='do basic validation')
+    parser.add_option('-f', '--full-validate', action='store_true', dest='summary_stats', default=False, help='full cross-validation')
+    parser.add_option('-e', '--false-pos-neg', action='store_true', dest='false_pos_neg', default=False, help='show false positives and false negatives')
+    parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
+    parser.add_option('-t', '--test-string', dest='test_string', default='', help='show ngrams for string')
+    (options, args) = parser.parse_args()
+    
     tweets = get_labelled_tweets() 
    
-    if False:
+    if options.optimize:
         optimize_params(tweets)
-        exit()
+        
+    do_validate_full = options.summary_stats or options.false_pos_neg
     
-    validate_basic(tweets)
-    print '=' * 80
-    validate_full(tweets, False, True, False)
+    if options.validate or do_validate_full:
+        validate_basic(tweets)
+        
+    if do_validate_full:
+        print '=' * 80
+        validate_full(tweets, options.false_pos_neg, options.summary_stats, False)
+        
+    if options.test_string:
+        print options.test_string
+        test = [t for t in tweets if options.test_string in t[1]]
+        train =  [t for t in tweets if options.test_string not in t[1]]
+        print test
+        model = BayesClassifier(train)
+        for cls, message in test:
+            kls, log_odds, ngrams = model.classify(message, True)
+            print kls, cls, log_odds
+            for k in sorted(ngrams):
+                print '%6.3f : %s ' % (k, ngrams[k])
 
-    if True:
+    if options.model:
         save_model(tweets)
+
+        

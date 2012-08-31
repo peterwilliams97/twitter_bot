@@ -30,32 +30,33 @@ def is_relevant(twitter_status):
     return RE_PAPERCUT.search(message) is not None
 
 """
--- "Wed, 29 Aug 2012 09:29:01 +0000" 1346196541
--- "Wed, 29 Aug 2012 09:20:33 +0000" 1346196033
--- "Wed, 29 Aug 2012 09:10:28 +0000" 1346195428
--- "Wed, 29 Aug 2012 09:13:41 +0000" 1346195621
--- "Wed, 29 Aug 2012 09:09:06 +0000" 1346195346
--- "Wed, 29 Aug 2012 09:08:03 +0000" 1346195283
--- "Wed, 29 Aug 2012 09:07:30 +0000" 1346195250
--- "Wed, 29 Aug 2012 08:58:31 +0000" 1346194711
--- "Wed, 29 Aug 2012 08:15:50 +0000" 1346192150
--- "Wed, 29 Aug 2012 08:06:22 +0000" 1346191582
--- "Wed, 29 Aug 2012 07:49:31 +0000" 1346190571
--- "Wed, 29 Aug 2012 07:44:50 +0000" 1346190290
--- "Wed, 29 Aug 2012 07:41:31 +0000" 1346190091
--- "Wed, 29 Aug 2012 07:30:26 +0000" 1346189426
--- "Wed, 29 Aug 2012 07:08:28 +0000" 1346188108
--- "Wed, 29 Aug 2012 07:08:27 +0000" 1346188107
--- "Wed, 29 Aug 2012 07:06:27 +0000" 1346187987
--- "Wed, 29 Aug 2012 07:02:11 +0000" 1346187731
+    We want a date/tim format like
+        9:14pm for today
+        5:02pm Wed 29 Aug for past days
 """
 from datetime import datetime
 LOCAL_TIME_DELTA = datetime.now() - datetime.utcnow()
+SUMMARY_DAY_FORMAT = '%I:%M%p' 
 SUMMARY_TM_FORMAT = '%I:%M%p %a %d %b' 
+RE_TIME = re.compile(r'(\d+):(\d+)(AM|PM)', re.IGNORECASE)
+
+def _same_day(dt1, dt2):
+    return  dt1.year == dt2.year and dt1.month == dt2.month and dt1.day == dt2.day
+
+def _time_replacer(m):
+    hr,min,ap = m.groups()
+    return '%d:%02d%s' % (int(hr),int(min),ap.lower())
+        
 def get_local_time_str(tm):
     gmt = datetime(*time.localtime(tm)[:6])
     gmt += LOCAL_TIME_DELTA
-    return gmt.strftime(SUMMARY_TM_FORMAT)
+    format = SUMMARY_DAY_FORMAT if _same_day(gmt, datetime.now()) else SUMMARY_TM_FORMAT
+    return RE_TIME.sub(_time_replacer, gmt.strftime(format))
+ 
+if False:
+    print get_local_time_str(1346187731)
+    print get_local_time_str(1346375650.0)
+    exit()    
 
 class ScoredTweet:
     """Tweet plus a score

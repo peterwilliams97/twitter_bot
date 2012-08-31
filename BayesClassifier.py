@@ -15,7 +15,8 @@ RE_PUNC = re.compile(r'[",.;:-]')
 RE_PUNC2 = re.compile(r'[!?\']{2.}')
 RE_SPACE = re.compile(r'\s+')
 RE_HASH = re.compile(r'#(\w+)')
-RE_REPEAT = re.compile(r'(.)\1\1*')
+# Not sure why this is so effecitve f 0.821 -> 0.827
+RE_REPEAT = re.compile(r'(.)\1\1*') # RE_REPEAT = re.compile(r'(.)\1\1+')
 RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile('\d+(\s+\d)*')
 
@@ -35,7 +36,7 @@ def _pre_process(message):
     #print message
     message = RE_HASH.sub(r'\1', message)
     #print message
-    message = RE_REPEAT.sub(r'\1', message)
+    message = RE_REPEAT.sub(r'\1', message) # message = RE_REPEAT.sub(r'\1\1', message)
     message = RE_BANG.sub(r'\1 \2', message)
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
@@ -102,11 +103,12 @@ def _get_cntv(counts):
 class BayesClassifier:
     
     # 0.825127334465 [ 4.664691    3.31914489  3.40044725  0.52437482  0.78608935]
-    smooth_unigram = 4.664 # 4.35  # 3.5
-    smooth_bigram =  3.319 # 3.5
-    smooth_trigram =  3.40 # 3.5 
-    backoff_bigram = 0.524 # 0.489 # 0.1 
-    backoff_trigram = 0.786 # 0.798 # 0.5
+    # 0.828851899274 [ 4.75384442  3.20345303  3.21919898  0.53177478  0.82933903]
+    smooth_unigram = 4.754 # 4.35  # 3.5
+    smooth_bigram = 3.203 # 3.5
+    smooth_trigram = 3.219 # 3.5 
+    backoff_bigram = 0.532 # 0.489 # 0.1 
+    backoff_trigram = 0.829 # 0.798 # 0.5
 
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
@@ -237,7 +239,7 @@ class BayesClassifier:
              + show_counts('unigrams', self.unigram_counts) 
 
    
-    def classify(self, message):
+    def classify(self, message, detailed=False):
         """ 
             'message' is a string to classify. Return True or False classification.
             
@@ -285,25 +287,43 @@ class BayesClassifier:
             cntn,cntp,v  = cntv
             return math.log((p+alpha)/(cntp+v*alpha)) - math.log((n+alpha)/(cntn+v*alpha)) 
 
+        if detailed:
+            def _dbg(n, score, k):
+                spacer = '  ' * (5-n) 
+                print '%s%d %.2f:%s' % (spacer, n, score,k)
+        else:
+             def _dbg(n, score, k): pass
+            
         def unigram_score(k):
-            return get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, BayesClassifier.smooth_unigram)
+            score = get_score(self.unigram_counts.get(k, [0,0]), self.cntv_unigrams, BayesClassifier.smooth_unigram)
+            _dbg(1, score, k)
+            return score
             
         def bigram_score(k):
             if k not in self.bigram_keys:
                 w1,w2 = _U(k) 
                 return (unigram_score(w1) + unigram_score(w2)) * BayesClassifier.backoff_bigram 
-            return get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, BayesClassifier.smooth_bigram)
+            score = get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, BayesClassifier.smooth_bigram)
+            _dbg(2, score, k)
+            return score
 
         def trigram_score(k):
+            if detailed: print '-----', k
             if k not in self.trigram_keys:
                 w1,w2,w3 = _U(k)
                 return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
-            return get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.backoff_trigram)
+            score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.backoff_trigram)
+            _dbg(3, score, k)
+            return score
 
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    
         likelihood = sum([trigram_score(k) for k in trigrams])
         log_odds = prior + likelihood
-        return log_odds > 0.0, log_odds 
+        
+        if detailed:
+            return log_odds > 0.0, log_odds, dict((trigram_score(k),k) for k in trigrams) 
+        else:
+            return log_odds > 0.0, log_odds
   
 
