@@ -23,14 +23,26 @@ def log_sys_err(msg):
 def A(user):
     return '@%s' % user
     
-RE_PAPERCUT = re.compile(r'paper\s*cut', re.IGNORECASE)
+#RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[-\s]*cuts?(?!\S)', re.IGNORECASE)
+RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b', re.IGNORECASE)
+
+if False:
+    tests = ['a paper cut', 'papercut', 'the @papercut', 'papercut_', 'paper-cut', '#papercut']
+    for t in tests:
+        print t,
+        m = RE_PAPERCUT.search(t)
+        if m:
+            print '--', m.group(0),
+        print    
+    exit()
+        
 def is_relevant(twitter_status):
     """We are looking for tweets that contain 'papercut'"""
     message = clean_text(twitter_status.text.encode('ascii', 'replace'))
     return RE_PAPERCUT.search(message) is not None
 
 """
-    We want a date/tim format like
+    We want a date/time format like
         9:14pm for today
         5:02pm Wed 29 Aug for past days
 """

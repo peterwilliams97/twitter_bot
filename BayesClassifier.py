@@ -6,7 +6,9 @@ RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 
 # In Twitter 'some text @someone: some quote' is a way of quoting 'some quote'
 # You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?
-RE_QUOTE2 = re.compile(r'@\w+\s*:.+$')
+RE_QUOTE2 = re.compile(r'\[TAG_USER\]\s*:.+$')
+RE_QUOTE3 = re.compile(r'\brt\b.+$')
+
 
 def _remove_quoted_text(message):
     """Remove quoted text from message because it we presume it was 
@@ -14,20 +16,25 @@ def _remove_quoted_text(message):
         by some
     """
     
-    message = RE_QUOTE2.sub(' ', message)
+    if True:
+        message = RE_QUOTE2.sub(' ', message)
+        
+    if True:
+        message = RE_QUOTE3.sub(' ', message)    
     
-    # Split message by ' and "
-    parts = RE_QUOTE.split(message)
+    if True:
+        # Split message by ' and "
+        parts = RE_QUOTE.split(message)
 
-    # in_quote is true between quote marks
-    # discard these parts
-    in_quote = False
-    out_parts = []
-    for p in parts:
-        out_parts.append(' ' if in_quote else p)
-        in_quote = not in_quote
-  
-    return ' '.join(out_parts)    
+        # in_quote is true between quote marks
+        # discard these parts
+        in_quote = False
+        out_parts = []
+        for p in parts:
+            out_parts.append(' ' if in_quote else p)
+            in_quote = not in_quote
+        message = ' '.join(out_parts) 
+    return message    
 
 if False:   
    
@@ -37,14 +44,15 @@ if False:
         #    print m.start(), m.groups()
         print _remove_quoted_text(test) 
         print '-' * 80        
-    test1 = '''I'm out of here ' right now' like "now!"'''
-    test2 = '''I'm out of here 'right now' like "now!"'''
-    test3 = '''"I just gave myself a paper cut" "Congratulations how do you feel?"'''
-    test4 = ''' You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost? '''
-    
-    print RE_QUOTE2.search(test4).group(0)
+    tests = [
+        '''I'm out of here ' right now' like "now!"''',
+        '''I'm out of here 'right now' like "now!"''',
+        '''"I just gave myself a paper cut" "Congratulations how do you feel?"''',
+        ''' You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost? ''',
+        ''' life. ?@sockin_bxxches: just got a paper cut'''
+    ]    
     print '=' * 80
-    for test in (test1,test2,test4):
+    for test in tests:
         do_test(test)
     exit()   
 
@@ -70,8 +78,11 @@ RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile(r'\d+(\s+\d)*')
 
 RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
+#RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[\s]*cuts?(?!\S)', re.IGNORECASE)
+#RE_PAPERCUT2 = re.compile(r'(?<!\S)#?paper\s*cuts?(?!\S)', re.IGNORECASE)
+
 def _pre_process(message):
-    
+
     if not RE_PAPERCUT.search(message):
         return '[TAG_BOGUS]'
     
@@ -101,13 +112,14 @@ def _pre_process(message):
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
     
-    #message = _remove_quoted_text(message)
+    message = _remove_quoted_text(message)
     return message
     
 STOP_WORDS = set([
-    #'the',
-    #'and', 
-   # 'a',
+    'the',
+    'and', 
+    #'a',
+    #'of'
    # 'in', 'on', 'at'
     ])    
     
@@ -168,11 +180,12 @@ class BayesClassifier:
     # 0.828851899274 [ 4.75384442  3.20345303  3.21919898  0.53177478  0.82933903]
     # 0.831708350996 [ 4.95464452  3.2800687   3.08317047  0.52991956  0.82849809]
     # 0.839783603829 [ 5.09983195  3.33672827  3.18971037  0.48990963  0.83392737]
-    smooth_unigram = 5.010 #4.754 # 4.35  # 3.5
-    smooth_bigram = 3.337 #3.203 # 3.5
-    smooth_trigram = 3.190 #3.219 # 3.5 
-    backoff_bigram = 0.490 # 0.532 # 0.489 # 0.1 
-    backoff_trigram = 0.834 # 0.829 # 0.798 # 0.5
+    # 0.840591618735 [ 4.9403568  3.113316   3.1906728  0.5528544  0.8614968]
+    smooth_unigram = 4.94
+    smooth_bigram = 3.11
+    smooth_trigram = 3.190 
+    backoff_bigram = 0.553 
+    backoff_trigram = 0.861
 
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
@@ -193,7 +206,7 @@ class BayesClassifier:
     @staticmethod
     def post_tokenize(words):
         """ !@#$ Stub"""
-        #words = [w for w in words if w not in STOP_WORDS]
+        words = [w for w in words if w not in STOP_WORDS]
         return words   
         
     @staticmethod
@@ -317,6 +330,8 @@ class BayesClassifier:
             <n>gram_score() shows the backoff and smoothing factors    
         """
         words = BayesClassifier.extract_words(message)
+        if detailed:
+            print words
         unigrams = words
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
