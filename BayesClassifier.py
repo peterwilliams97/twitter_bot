@@ -3,34 +3,30 @@ import math, re
 from common import *
 
 RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
-#RE_QUOTE = re.compile(r'''('(?!\S))''')
 
+# In Twitter 'some text @someone: some quote' is a way of quoting 'some quote'
 # You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?
 RE_QUOTE2 = re.compile(r'@\w+\s*:.+$')
 
-
-def _quote(message):
-     
+def _remove_quoted_text(message):
+    """Remove quoted text from message because it we presume it was 
+        not written the author of message
+        by some
+    """
+    
     message = RE_QUOTE2.sub(' ', message)
-
-    #message = RE_QUOTE.sub('[TAG_QUOTE]', message)
+    
+    # Split message by ' and "
     parts = RE_QUOTE.split(message)
-    parts = [p.strip() for p in parts]
-    #print parts
-    out_parts = []
+
+    # in_quote is true between quote marks
+    # discard these parts
     in_quote = False
+    out_parts = []
     for p in parts:
-        prefix = 'Q_' if in_quote else ''
-        if p:
-            p = p.strip()
-            if in_quote:
-                p = p.replace('(', ' ').replace(')', ' ').replace('[TAG_SYMBOL]', ' ')
-            if in_quote:
-                out_parts.append(' ')
-            else:
-                out_parts.append(' '.join('%s%s' % (prefix,s) for s in p.split()))
+        out_parts.append(' ' if in_quote else p)
         in_quote = not in_quote
-        #print '--', p, in_quote    
+  
     return ' '.join(out_parts)    
 
 if False:   
@@ -39,7 +35,7 @@ if False:
         print test
         #for m in RE_QUOTE.finditer(test):
         #    print m.start(), m.groups()
-        print _quote(test) 
+        print _remove_quoted_text(test) 
         print '-' * 80        
     test1 = '''I'm out of here ' right now' like "now!"'''
     test2 = '''I'm out of here 'right now' like "now!"'''
@@ -105,7 +101,7 @@ def _pre_process(message):
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
     
-    message = _quote(message)
+    #message = _remove_quoted_text(message)
     return message
     
 STOP_WORDS = set([
