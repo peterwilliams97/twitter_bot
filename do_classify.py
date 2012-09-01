@@ -42,7 +42,9 @@ def validate_basic(tweets):
     for r in ratings:
         fp.write('%s\n' % str(r))
     fp.close()  
-
+#
+# confusion_matrix[(a,p)] is count of actual==a, predicted==p 
+#   
 def make_score():
     return dict([((a,p),0) for p in (False,True) for a in (False,True)])
 
@@ -71,18 +73,27 @@ def cross_validate(tweets, num_folds):
         test_tweets = tweets[begin:end]
         training_tweets = tweets[:begin] + tweets[end:]
         score,fp,fn = get_test_score(training_tweets, test_tweets, range(begin,end))
+        assert score[(False,True)] == len(fp)
+        assert score[(True,False)] == len(fn)
         for k in score.keys():
             confusion_matrix[k] += score[k]
         false_positives += fp   
         false_negatives += fn  
     false_positives.sort()
     false_negatives.sort()
+    assert confusion_matrix[(False,True)] == len(false_positives)
+    assert confusion_matrix[(True,False)] == len(false_negatives)
     return confusion_matrix, false_positives, false_negatives
   
 def get_f(matrix):
     precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
     recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
     return 2.0/(1.0/precision + 1.0/recall)
+    
+def get_f_safe(matrix):
+    precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
+    recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
+    return 4.0/(3.0/precision + 1.0/recall)    
 
 def get_design(vals):
     """Return design matrix for which each element has all values
@@ -114,22 +125,18 @@ def optimize_params(tweets):
     
     def func(x):
         BayesClassifier.set_params(*x)
-        f = -get_f(cross_validate(tweets, 10)[0])
+        #f = -get_f_safe(cross_validate(tweets, 10)[0])
+        f = -get_f_safe(cross_validate(tweets, 10)[0])
         print -f, x
         return f
-    
-    smooth_unigram = 4.754 # 4.35  # 3.5
-    smooth_bigram = 3.203 # 3.5
-    smooth_trigram = 3.219 # 3.5 
-    backoff_bigram = 0.532 # 0.489 # 0.1 
-    backoff_trigram = 0.829
-    
+  
     x0 = [
-        smooth_unigram,
-        smooth_bigram,
-        smooth_trigram, 
-        backoff_bigram, 
-        backoff_trigram
+        BayesClassifier.smooth_unigram,
+        BayesClassifier.smooth_bigram,
+        BayesClassifier.smooth_trigram, 
+        BayesClassifier.backoff_bigram, 
+        BayesClassifier.backoff_trigram,
+        BayesClassifier.threshold
     ]
     x = optimize.fmin(func, x0)
     print '^' * 80
@@ -153,7 +160,7 @@ def print_confusion_matrix(confusion_matrix):
     percentage_matrix = {}
     for p in (False,True):
         for a in (False,True):
-            percentage_matrix[p,a] = '%2d%%' % int(confusion_matrix[a,p]/total * 100.0)
+            percentage_matrix[a,p] = '%2d%%' % int(confusion_matrix[a,p]/total * 100.0)
             
     print_matrix(confusion_matrix)  
     print 'Total = %d' % total   

@@ -6,9 +6,8 @@ RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 
 # In Twitter 'some text @someone: some quote' is a way of quoting 'some quote'
 # You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?
-RE_QUOTE2 = re.compile(r'\[TAG_USER\]\s*:.+$')
+RE_QUOTE2 = re.compile(r'@\w+\s*:.+$')
 RE_QUOTE3 = re.compile(r'\brt\b.+$')
-
 
 def _remove_quoted_text(message):
     """Remove quoted text from message because it we presume it was 
@@ -86,6 +85,8 @@ def _pre_process(message):
     if not RE_PAPERCUT.search(message):
         return '[TAG_BOGUS]'
     
+    message = _remove_quoted_text(message)
+    
     message = RE_USER.sub('[TAG_USER]', message)
     message = RE_HTTP.sub('[TAG_LINK]', message)
     
@@ -111,9 +112,14 @@ def _pre_process(message):
     message = RE_BANG.sub(r'\1 \2', message)
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
-    
-    message = _remove_quoted_text(message)
+     
     return message
+  
+if False:  
+    message = '''You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?'''    
+    print message
+    print _pre_process(message)
+    exit()
     
 STOP_WORDS = set([
     'the',
@@ -181,22 +187,25 @@ class BayesClassifier:
     # 0.828851899274 [ 4.75384442  3.20345303  3.21919898  0.53177478  0.82933903]
     # 0.831708350996 [ 4.95464452  3.2800687   3.08317047  0.52991956  0.82849809]
     # 0.839783603829 [ 5.09983195  3.33672827  3.18971037  0.48990963  0.83392737]
-    # 0.840591618735 [ 4.9403568  3.113316   3.1906728  0.5528544  0.8614968]
-    smooth_unigram = 4.94
-    smooth_bigram = 3.11
-    smooth_trigram = 3.190 
-    backoff_bigram = 0.553 
-    backoff_trigram = 0.861
+    # 0.840591618735 [ 4.9403568   3.113316    3.1906728  0.5528544  0.8614968]
+    # 0.846646732166 [ 5.63838326  2.91727287  3.35302681  0.56146319  0.83882107  0.91434758]
+    smooth_unigram = 5.63
+    smooth_bigram = 2.917
+    smooth_trigram = 3.35 
+    backoff_bigram = 0.561
+    backoff_trigram = 0.839
+    threshold = 0.914
 
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
-        backoff_bigram, backoff_trigram):
+        backoff_bigram, backoff_trigram, threshold):
         
         BayesClassifier.smooth_unigram = smooth_unigram 
         BayesClassifier.smooth_bigram = smooth_bigram   
         BayesClassifier.smooth_trigram = smooth_trigram  
         BayesClassifier.backoff_bigram = backoff_bigram
         BayesClassifier.backoff_trigram = backoff_trigram
+        BayesClassifier.threshold = threshold
         
     # This should be a hook
     @staticmethod
@@ -208,7 +217,20 @@ class BayesClassifier:
     def post_tokenize(words):
         """ !@#$ Stub"""
         words = [w for w in words if w not in STOP_WORDS]
-        return words   
+        out_words = []
+        skip_from = -1
+        for i,w in enumerate(words):
+            if skip_from >= 0:
+                if i <= skip_from + 2:
+                    continue
+                else:
+                    skip_from = -1
+            if w in set(['almost']):
+                skip_from = i
+                continue
+            out_words.append(w)    
+        
+        return out_words   
         
     @staticmethod
     def extract_words(message):
@@ -399,8 +421,8 @@ class BayesClassifier:
         log_odds = prior + likelihood
         
         if detailed:
-            return log_odds > 0.0, log_odds, dict((trigram_score(k),k) for k in trigrams) 
+            return log_odds > BayesClassifier.threshold, log_odds, dict((trigram_score(k),k) for k in trigrams) 
         else:
-            return log_odds > 0.0, log_odds
+            return log_odds > BayesClassifier.threshold, log_odds
   
 
