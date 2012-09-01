@@ -171,12 +171,12 @@ def validate_full(tweets, show_errors, show_confusion, detailed):
     if show_errors:
         print '-' * 80
         print 'FALSE NEGATIVES: %d' % len(set([(i,p) for i,p in false_negatives]))
-        for i,p in sorted(set([(i,p) for i,p in false_negatives]), key = lambda x: -x[1]):
+        for i,p in sorted(set([(i,p) for i,p in false_negatives]), key = lambda x: x[1]):
             print '%5d %6.2f: %s' % (i,p, tweets[i][1]) 
             
         print '-' * 80
         print 'FALSE POSITIVES: %d' % len(set([(i,p) for i,p in false_positives]))
-        for i,p in sorted(set([(i,p) for i,p in false_positives]), key = lambda x: -x[1]):
+        for i,p in sorted(set([(i,p) for i,p in false_positives]), key = lambda x: x[1]):
             print '%5d %6.2f: %s' % (i,p, tweets[i][1])
 
     if show_confusion:

@@ -2,6 +2,44 @@ from __future__ import division
 import math, re
 from common import *
 
+RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
+#RE_QUOTE = re.compile(r'''('(?!\S))''')
+def _quote(message):
+    #message = RE_QUOTE.sub('[TAG_QUOTE]', message)
+    parts = RE_QUOTE.split(message)
+    parts = [p.strip() for p in parts]
+    #print parts
+    out_parts = []
+    in_quote = False
+    for p in parts:
+        prefix = 'Q_' if in_quote else ''
+        if p:
+            p = p.strip()
+            if in_quote:
+                p = p.replace('(', ' ').replace(')', ' ').replace('[TAG_SYMBOL]', ' ')
+            out_parts.append(' '.join('%s%s' % (prefix,s) for s in p.split()))
+        in_quote = not in_quote
+        #print '--', p, in_quote    
+    return ' '.join(out_parts)    
+    
+
+if False:   
+   
+    def do_test(test):
+        print test
+        #for m in RE_QUOTE.finditer(test):
+        #    print m.start(), m.groups()
+        print _quote(test) 
+        print '-' * 80        
+    test1 = '''I'm out of here ' right now' like "now!"'''
+    test2 = '''I'm out of here 'right now' like "now!"'''
+    test3 = '''"I just gave myself a paper cut" "Congratulations how do you feel?"'''
+    print '=' * 80
+    for test in (test1,test2,test3):
+        do_test(test)
+    exit()   
+
+
 RE_USER = re.compile(r'@\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
@@ -11,8 +49,10 @@ RE_SYM2 = re.compile(r'(\[TAG_SYMBOL\])\1\1*')
 RE_AMP = re.compile(r'&amp;')
 RE_GT = re.compile(r'&gt;')
 RE_LT = re.compile(r'&lt;')
-RE_PUNC = re.compile(r'[",.;:-]')
-RE_PUNC2 = re.compile(r'[!?\']{2.}')
+RE_PUNC = re.compile(r'[,.;:-]')
+RE_PUNC2 = re.compile(r'[!?\']{2,}')
+RE_PUNC3 = re.compile(r'\?')
+RE_PUNC4 = re.compile(r'\?[\s\?]+')
 RE_SPACE = re.compile(r'\s+')
 RE_HASH = re.compile(r'#(\w+)')
 # Not sure why this is so effecitve f 0.821 -> 0.827
@@ -21,6 +61,10 @@ RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile('\d+(\s+\d)*')
 
 def _pre_process(message):
+    
+    message = RE_USER.sub('[TAG_USER]', message)
+    message = RE_HTTP.sub('[TAG_LINK]', message)
+    
     #message = RE_AMP.sub(' & ', message)
     #message = RE_GT.sub(' < ', message)
     #message = RE_LT.sub(' > ', message)
@@ -31,6 +75,9 @@ def _pre_process(message):
     
     message = RE_PUNC.sub(' ', message)
     message = RE_PUNC2.sub('!', message)
+    message = RE_PUNC3.sub(r' ? ', message)
+    message = RE_PUNC4.sub(r' ? ', message)
+    
     #print message
     message = RE_SPACE.sub(' ', message)
     #print message
@@ -40,6 +87,8 @@ def _pre_process(message):
     message = RE_BANG.sub(r'\1 \2', message)
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
+    
+    #message = _quote(message)
     return message
     
 STOP_WORDS = set([
@@ -79,7 +128,7 @@ def _cnt_positivity(np):
     if n == 0 or p == 0:
         return p - n
     return (p - n)/(p + n) 
-            
+
 def _cnt_show(ngram, np):
     """Return a string for an ngram with np = (n,p)
         positive and negative counts
@@ -121,11 +170,8 @@ class BayesClassifier:
         BayesClassifier.backoff_trigram = backoff_trigram
         
     # This should be a hook
-    #
     @staticmethod
     def pre_tokenize(message):
-        message = RE_USER.sub('[TAG_USER]', message)
-        message = RE_HTTP.sub('[TAG_LINK]', message)
         message = _pre_process(message)
         return message
 
@@ -289,8 +335,8 @@ class BayesClassifier:
 
         if detailed:
             def _dbg(n, score, k):
-                spacer = '  ' * (5-n) 
-                print '%s%d %.2f:%s' % (spacer, n, score,k)
+                spacer = '  ' * (3-n) 
+                print '%d%s [%.2f] %s' % (n, spacer, score,k)
         else:
              def _dbg(n, score, k): pass
             
