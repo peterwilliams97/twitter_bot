@@ -79,7 +79,7 @@ if False:
 
 def is_allowed_for_training(message):
     l_message = message.lower().strip()
-    if not RE_PAPERCUT.search(message)
+    if not RE_PAPERCUT.search(message):
         return False
     return not any(e in l_message for e in L_TRAINING_EXCLUSIONS) \
         and not RE_RT.search(l_message)
