@@ -117,7 +117,8 @@ def _pre_process(message):
     
 STOP_WORDS = set([
     'the',
-    'and', 
+    'and',
+    #'got',
     #'a',
     #'of'
    # 'in', 'on', 'at'
