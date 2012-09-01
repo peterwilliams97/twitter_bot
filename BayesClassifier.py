@@ -189,13 +189,15 @@ class BayesClassifier:
     # 0.839783603829 [ 5.09983195  3.33672827  3.18971037  0.48990963  0.83392737]
     # 0.840591618735 [ 4.9403568   3.113316    3.1906728  0.5528544  0.8614968]
     # 0.846646732166 [ 5.63838326  2.91727287  3.35302681  0.56146319  0.83882107  0.91434758]
-    smooth_unigram = 5.63
-    smooth_bigram = 2.917
-    smooth_trigram = 3.35 
-    backoff_bigram = 0.561
-    backoff_trigram = 0.839
-    threshold = 0.914
-
+    
+    
+    smooth_unigram = 7.1117
+    smooth_bigram = 3.5613
+    smooth_trigram = 2.7131
+    backoff_bigram = 0.5582
+    backoff_trigram = 0.9106
+    threshold = 0.9105
+    
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
         backoff_bigram, backoff_trigram, threshold):

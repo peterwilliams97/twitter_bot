@@ -125,23 +125,36 @@ def optimize_params(tweets):
     
     def func(x):
         BayesClassifier.set_params(*x)
-        #f = -get_f_safe(cross_validate(tweets, 10)[0])
+        #f = -get_f(cross_validate(tweets, 10)[0])
         f = -get_f_safe(cross_validate(tweets, 10)[0])
-        print -f, x
+        print ' ', -f, x
         return f
   
     x0 = [
-        BayesClassifier.smooth_unigram,
-        BayesClassifier.smooth_bigram,
-        BayesClassifier.smooth_trigram, 
-        BayesClassifier.backoff_bigram, 
-        BayesClassifier.backoff_trigram,
-        BayesClassifier.threshold
+        smooth_unigram,
+        smooth_bigram,
+        smooth_trigram, 
+        backoff_bigram, 
+        backoff_trigram,
+        threshold
     ]
     x = optimize.fmin(func, x0)
     print '^' * 80
     print -func(x0), x0
-    print -func(x), x
+    print -func(x), list(x)
+    
+    PARAMS = ''' 
+        BayesClassifier.smooth_unigram
+        BayesClassifier.smooth_bigram
+        BayesClassifier.smooth_trigram 
+        BayesClassifier.backoff_bigram 
+        BayesClassifier.backoff_trigram
+        BayesClassifier.threshold
+    '''
+    param_names = [s.strip(' \n') for s in PARAMS.split('\n') if s.strip(' \n')]
+    for k,v in zip(param_names, x):
+        print '    %s = %.4f' % (k,v)
+        
  
 def print_confusion_matrix(confusion_matrix):  
     BAR = '-' * 5
