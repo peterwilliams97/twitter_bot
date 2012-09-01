@@ -4,7 +4,15 @@ from common import *
 
 RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 #RE_QUOTE = re.compile(r'''('(?!\S))''')
+
+# You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?
+RE_QUOTE2 = re.compile(r'@\w+\s*:.+$')
+
+
 def _quote(message):
+     
+    message = RE_QUOTE2.sub(' ', message)
+
     #message = RE_QUOTE.sub('[TAG_QUOTE]', message)
     parts = RE_QUOTE.split(message)
     parts = [p.strip() for p in parts]
@@ -17,11 +25,13 @@ def _quote(message):
             p = p.strip()
             if in_quote:
                 p = p.replace('(', ' ').replace(')', ' ').replace('[TAG_SYMBOL]', ' ')
-            out_parts.append(' '.join('%s%s' % (prefix,s) for s in p.split()))
+            if in_quote:
+                out_parts.append(' ')
+            else:
+                out_parts.append(' '.join('%s%s' % (prefix,s) for s in p.split()))
         in_quote = not in_quote
         #print '--', p, in_quote    
     return ' '.join(out_parts)    
-    
 
 if False:   
    
@@ -34,8 +44,11 @@ if False:
     test1 = '''I'm out of here ' right now' like "now!"'''
     test2 = '''I'm out of here 'right now' like "now!"'''
     test3 = '''"I just gave myself a paper cut" "Congratulations how do you feel?"'''
+    test4 = ''' You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost? '''
+    
+    print RE_QUOTE2.search(test4).group(0)
     print '=' * 80
-    for test in (test1,test2,test3):
+    for test in (test1,test2,test4):
         do_test(test)
     exit()   
 
@@ -58,9 +71,13 @@ RE_HASH = re.compile(r'#(\w+)')
 # Not sure why this is so effecitve f 0.821 -> 0.827
 RE_REPEAT = re.compile(r'(.)\1\1*') # RE_REPEAT = re.compile(r'(.)\1\1+')
 RE_BANG = re.compile(r'(\w+)([!])')
-RE_NUMBER = re.compile('\d+(\s+\d)*')
+RE_NUMBER = re.compile(r'\d+(\s+\d)*')
 
+RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
 def _pre_process(message):
+    
+    if not RE_PAPERCUT.search(message):
+        return '[TAG_BOGUS]'
     
     message = RE_USER.sub('[TAG_USER]', message)
     message = RE_HTTP.sub('[TAG_LINK]', message)
@@ -88,7 +105,7 @@ def _pre_process(message):
     
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
     
-    #message = _quote(message)
+    message = _quote(message)
     return message
     
 STOP_WORDS = set([
@@ -153,6 +170,7 @@ class BayesClassifier:
     
     # 0.825127334465 [ 4.664691    3.31914489  3.40044725  0.52437482  0.78608935]
     # 0.828851899274 [ 4.75384442  3.20345303  3.21919898  0.53177478  0.82933903]
+    # 0.831708350996 [ 4.95464452  3.2800687   3.08317047  0.52991956  0.82849809]
     smooth_unigram = 4.754 # 4.35  # 3.5
     smooth_bigram = 3.203 # 3.5
     smooth_trigram = 3.219 # 3.5 

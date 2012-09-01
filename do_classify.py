@@ -118,11 +118,12 @@ def optimize_params(tweets):
         print -f, x
         return f
     
-    smooth_unigram = 4.35  # 3.5
-    smooth_bigram = 3.5
-    smooth_trigram = 3.5 
-    backoff_bigram = 0.489 # 0.1 
-    backoff_trigram = 0.798 # 0.5
+    smooth_unigram = 4.754 # 4.35  # 3.5
+    smooth_bigram = 3.203 # 3.5
+    smooth_trigram = 3.219 # 3.5 
+    backoff_bigram = 0.532 # 0.489 # 0.1 
+    backoff_trigram = 0.829
+    
     x0 = [
         smooth_unigram,
         smooth_bigram,
@@ -218,8 +219,8 @@ if __name__ == '__main__':
     parser = optparse.OptionParser('python ' + sys.argv[0] + ' [options] <text pattern> [<file pattern>]')
     parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum back-offs and smoothings')
     parser.add_option('-v', '--validate', action='store_true', dest='validate', default=False, help='do basic validation')
-    parser.add_option('-f', '--full-validate', action='store_true', dest='summary_stats', default=False, help='full cross-validation')
-    parser.add_option('-e', '--false-pos-neg', action='store_true', dest='false_pos_neg', default=False, help='show false positives and false negatives')
+    parser.add_option('-s', '--summary', action='store_true', dest='summary_stats', default=False, help='full cross-validation')
+    parser.add_option('-f', '--false-predictions', action='store_true', dest='false_predictions', default=False, help='show false positives and false negatives')
     parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
     parser.add_option('-t', '--test-string', dest='test_string', default='', help='show ngrams for string')
     (options, args) = parser.parse_args()
@@ -229,14 +230,14 @@ if __name__ == '__main__':
     if options.optimize:
         optimize_params(tweets)
         
-    do_validate_full = options.summary_stats or options.false_pos_neg
+    do_validate_full = options.summary_stats or options.false_predictions
     
     if options.validate or do_validate_full:
         validate_basic(tweets)
         
     if do_validate_full:
         print '=' * 80
-        validate_full(tweets, options.false_pos_neg, options.summary_stats, False)
+        validate_full(tweets, options.false_predictions, options.summary_stats, False)
         
     if options.test_string:
         print options.test_string

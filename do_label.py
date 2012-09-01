@@ -64,6 +64,8 @@ RE_LOL = re.compile(r'\blols?\b')
 RE_EYE = re.compile(r'my\s+eye')  # I think I have a paper cut I my eye.
 RE_CUT = re.compile(r'cut\s*(out|back|art)\b')
 
+RE_PAPERCUT = re.compile(r'\bpaper\s*cuts?\b')
+
 if False:
     tests = ['rt message', 'log rt:message', 
         'lol rt: message', 'rt: message', 'rt hi',
@@ -77,6 +79,8 @@ if False:
 
 def is_allowed_for_training(message):
     l_message = message.lower().strip()
+    if not RE_PAPERCUT.search(message)
+        return False
     return not any(e in l_message for e in L_TRAINING_EXCLUSIONS) \
         and not RE_RT.search(l_message)
 
@@ -92,6 +96,7 @@ def is_allowed_for_replying(message):
         and message[0] != '@'    
 
 CLASS_STRINGS = {
+
     False: 'n',
     True: 'y',  
     UNKNOWN: '?'
