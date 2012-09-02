@@ -97,9 +97,9 @@ The columns are the predicted classifications of the tweets and rows ares the ac
 
 In this result 3225 tweets were evaluated and
 * 1876 were _correctly_ predicted as people tweeting about their paper cuts.   
-* 995 were _correctly_ predicted as *not* people tweeting about their paper cuts. 
+* 995 were _correctly_ predicted as __not__ people tweeting about their paper cuts. 
 * 165 were _incorrectly_ predicted as people tweeting about their paper cuts.   
-* 189 were incorrectly predicted as *not* people tweeting about their paper cuts. 
+* 189 were incorrectly predicted as __not__ people tweeting about their paper cuts. 
 
 [F1](http://en.wikipedia.org/wiki/F1_score) is a score between 0 and 1 that we want to be as close to 1 as possible. 
 
@@ -109,7 +109,7 @@ of 0.86 means that 86% of the tweets predicted to be people tweeting about the p
 This is important. It means that 14% of the replies we make could be wrong. We calls these 
 [false positives](http://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_error).
 
-We therefore run +do_classify.py -e+ to see what these false positives are.
+We therefore run `do_classify.py -e` to see what these false positives are.
 
       27    0.95: #ItHurts when I get a paper cut. :/ Those little cuts KILL!
      2115   0.98: @crimescript Sounds pretty nasty. The worst, medically, I face in my job is a paper cut :o) But then my job is dull &amp; not good book material
@@ -123,9 +123,9 @@ Another filter we use (tweets starting with @) will reomove 2115.
 Based on this analysis of 5 tweets the twitter-bot's replies may not be too inappropriate. (Using 5 tweets was for illustration
 only. In a real analysis we would evaluate all 165 false positive tweets.)
 
-When our classification model is peforming well enough we run do_classify.py -m to save it.
+When our classification model is peforming well enough we run `do_classify.py -m` to save it.
 
-At this stage we run +do_twitter.py 30 -r+ and see how the twitter-bot performs 
+At this stage we run `do_twitter.py 30 -r` and see how the twitter-bot performs 
 [interacting with people](http://twitter.com/OwwwPapercut/favorites) on twitter.
 
   
