@@ -46,11 +46,13 @@ do_label.py
 [do_label.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_label.py) is used to label tweets as indicating tweeter has a papercut.
 It creates a text file of tweets where each line has a placehold for classification and the text of the tweet.     
 e.g.
+
     ? | If I see one more back to school commercial I'm giving my eyes a paper cut.
     ? | i got lemon on my finger and it stings .-. stupid paper cut -.-
 
 You should edit this file and replce the ? with the correct classfication.  
 e.g.    
+
     n | If I see one more back to school commercial I'm giving my eyes a paper cut.
     y | i got lemon on my finger and it stings .-. stupid paper cut -.-    
 
