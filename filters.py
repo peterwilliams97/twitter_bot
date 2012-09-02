@@ -1,5 +1,4 @@
-import os, time, sys, re, shutil
-from common import *
+import  re
 
 # This list is used to exclude whole tweets that have already been seen
 # It is NOT used to exclude phrases like 'Sandpaper kisses, paper cut bliss'
@@ -41,7 +40,8 @@ REPLYING_EXCLUSION = [
     'nigger', 
     'nigga',
     ' cunt',
-    ' clit'
+    ' clit',
+    ' pape',
     'death',
     'eyeball',
     'imagine',
@@ -52,8 +52,6 @@ REPLYING_EXCLUSION = [
     '#moneyproblems',
     'amputat',
     '#np '
-    
-    
 ] 
 
 L_TRAINING_EXCLUSIONS = set([e.lower() for e in TRAINING_EXCLUSIONS])
@@ -99,7 +97,6 @@ def is_papercut(message):
     return RE_PAPERCUT.search(message) is not None
     
 def is_allowed_for_training(message):
-
     l_message = message.lower()
     if not RE_PAPERCUT.search(message):
         return False

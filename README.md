@@ -3,8 +3,9 @@ A Twitter Bot to Offer Sympathy to Paper Cut Sufferers
 
 This is an exercise in writing a [Twitter-bot](http://twitter.com/OwwwPapercut). 
 I am attempting to find out if it is possible
-to determine with sufficient accuracy from the text of a tweet if the tweeter has suffered a 
-paper cut to be able to confidentally reply with a sympathetic message.
+to determine from the text of a tweet alone if the tweeter has suffered a 
+paper cut. My goal is to this with sufficient accuracy to be able to confidentally reply 
+with a [sympathetic message](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py#L292).
 
 If that is possible then I may be able to write some useful twitter bots.
 
@@ -70,7 +71,7 @@ Options:
     -o, --optimize        find optimum threshold, back-offs and smoothings
     -m, --model           save calibration model
     
-You should run do_classify.py -c to see how well the classification predicts new tweets based on 
+You should run `python do_classify.py -c` to see how well the classification predicts new tweets based on 
 [cross-validation](http://en.wikipedia.org/wiki/Cross-validation_\(statistics\))
 
 It will produce some output like this
@@ -106,10 +107,10 @@ In this result 3225 tweets were evaluated and
 In this example an F1 of 0.85 is reasonable but not great. The 
 [precision](http://en.wikipedia.org/wiki/Precision_\(information_retrieval\))
 of 0.86 means that 86% of the tweets predicted to be people tweeting about the paper cuts are so, and therefore that 14% are not.
-This is important. It means that 14% of the replies we make could be wrong. We calls these 
+This is important. It means that 14% of the replies we make could be wrong. We call these replies 
 [false positives](http://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_error).
 
-We therefore run `do_classify.py -e` to see what these false positives are.
+We therefore run `python do_classify.py -e` to see what these false positives are.
 
       27    0.95: #ItHurts when I get a paper cut. :/ Those little cuts KILL!
      2115   0.98: @crimescript Sounds pretty nasty. The worst, medically, I face in my job is a paper cut :o) But then my job is dull &amp; not good book material
@@ -123,9 +124,9 @@ Another filter we use (tweets starting with @) will reomove 2115.
 Based on this analysis of 5 tweets the twitter-bot's replies may not be too inappropriate. (Using 5 tweets was for illustration
 only. In a real analysis we would evaluate all 165 false positive tweets.)
 
-When our classification model is peforming well enough we run `do_classify.py -m` to save it.
+When our classification model is peforming well enough we run `python do_classify.py -m` to save it.
 
-At this stage we run `do_twitter.py 30 -r` and see how the twitter-bot performs 
+At this stage we run `python do_twitter.py 30 -r` and see how the twitter-bot performs 
 [interacting with people](http://twitter.com/OwwwPapercut/favorites) on twitter.
 
   
