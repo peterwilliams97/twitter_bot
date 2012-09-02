@@ -1,7 +1,8 @@
 A Twitter Bot to Offer Sympathy to Paper Cut Sufferers
 ======================================================
 
-This is an exercise in writing a Twitter-bot. I am attempting to find out if it is possible
+This is an exercise in writing a [Twitter-bot](http://twitter.com/OwwwPapercut). 
+I am attempting to find out if it is possible
 to determine with sufficient accuracy from the text of a tweet if the tweeter has suffered a 
 paper cut to be able to confidentally reply with a sympathetic message.
 
@@ -25,7 +26,20 @@ which tweets to reply to.
 
 The following explains each of these steps in more detail.
 
-[do_twitter.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) Monitors and replies to tweets on Twitter 
-------------------------------
+do_twitter.py
+-------------
+do_twitter.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) monitors and replies to tweets on Twitter.
+
+Monitoring comprises
+    Making Twitter queries
+    Doing some extra filtering on these queries
+    Saving the tweets to file
+    
+Replying is somewhat more involved
+    Care is taken to avoid replying more than once to a person or a conversation.
+    Tweets are checked against the classification model
+    Replies are made and saved to file.
+    Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked by following it on Twitter
+    
 
 
