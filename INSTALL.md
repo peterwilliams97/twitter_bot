@@ -36,4 +36,11 @@ Replace ??? with the values from your twitter account
     access_token_key='???' 
     access_token_secret='???'
   
+Create a Data Directory and Files
+---------------------------------
+Edit the directory and file names in [common.py](https://github.com/peterwilliams97/twitter_bot/blob/master/common.py) 
+
+Run [do_setup.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_setup.py) to create the data directory.
+
+ 
 

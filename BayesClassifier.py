@@ -14,10 +14,10 @@ def _remove_quoted_text(message):
         not written the author of message
         by some
     """
-    
+
     if True:
         message = RE_QUOTE2.sub(' ', message)
-        
+
     if True:
         message = RE_QUOTE3.sub(' ', message)    
     
@@ -135,6 +135,28 @@ if False:
     print message
     print _pre_process(message)
     exit()
+    
+def _post_process(words):
+    """Post-process list of words created from tokenization
+        Remove stop words
+        Remove words after indicators that they are not meants
+    """
+    words = [w for w in words if w not in STOP_WORDS]
+    
+    out_words = []
+    skip_from = -1
+    for i,w in enumerate(words):
+        if skip_from >= 0:
+            if i <= skip_from + 2:
+                continue
+            else:
+                skip_from = -1
+        if w in set(['almost']):
+            skip_from = i
+            continue
+        out_words.append(w)    
+    
+    return out_words      
 
 def _U(ngram):
     return ngram.split(' ')
@@ -189,8 +211,7 @@ class BayesClassifier:
     # 0.839783603829 [ 5.09983195  3.33672827  3.18971037  0.48990963  0.83392737]
     # 0.840591618735 [ 4.9403568   3.113316    3.1906728  0.5528544  0.8614968]
     # 0.846646732166 [ 5.63838326  2.91727287  3.35302681  0.56146319  0.83882107  0.91434758]
-    
-    
+
     smooth_unigram = 7.1117
     smooth_bigram = 3.5613
     smooth_trigram = 2.7131
@@ -212,27 +233,11 @@ class BayesClassifier:
     # This should be a hook
     @staticmethod
     def pre_tokenize(message):
-        message = _pre_process(message)
-        return message
+        return _pre_process(message)
 
     @staticmethod
     def post_tokenize(words):
-        """ !@#$ Stub"""
-        words = [w for w in words if w not in STOP_WORDS]
-        out_words = []
-        skip_from = -1
-        for i,w in enumerate(words):
-            if skip_from >= 0:
-                if i <= skip_from + 2:
-                    continue
-                else:
-                    skip_from = -1
-            if w in set(['almost']):
-                skip_from = i
-                continue
-            out_words.append(w)    
-        
-        return out_words   
+        return _post_process(words)
         
     @staticmethod
     def extract_words(message):

@@ -94,7 +94,10 @@ class ScoredTweet:
         self._id = twitter_status._id
         
         # Score the decoded status
-        positive, self._score =  model.classify(self._message) if model else False, 0.0
+        if model:
+            positive, self._score =  model.classify(self._message)
+        else: 
+            positive, self._score = False, 0.0
         self._replyable = positive and filters.is_allowed_for_replying(self._message) 
 
     def __repr__(self):
@@ -204,7 +207,7 @@ class Activity:
         except:
             log_sys_err('Could not read %s' %  common.ACTIVITY_FILE) 
         return tweet_num, tweet_delta, tm  
-        
+
     @staticmethod    
     def write_activity(tweet_num, tweet_delta, tm):
         parts = tweet_num, tweet_delta, tm
@@ -213,7 +216,7 @@ class Activity:
             file(common.ACTIVITY_FILE, 'wt').write(text)
         except:
             log_sys_err(' Could not save activity')     
-        
+
     def __init__(self, api):
         self._api = api
         self._last_reply_num, self._reply_delta, self._last_time = Activity.read_activity()
@@ -277,7 +280,7 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
                 logging.info(' skipping: already replied to %s' % tweet._user)
                 continue 
             # Don't reply to responses    
-            if TWITTER_ME.lower() in l_message:
+            if common.TWITTER_ME.lower() in l_message:
                 logging.info('  skipping:  response "%s"' % tweet._message)
                 continue
             # Don't reply to mentions of tweets we have responded to
