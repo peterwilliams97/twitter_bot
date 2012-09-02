@@ -71,7 +71,7 @@ Options:
     -m, --model           save calibration model
     
 You should run do_classify.py -c to see how well the classification predicts new tweets based on 
-[cross-validation](http://en.wikipedia.org/wiki/Cross-validation_(statistics))
+[cross-validation](http://en.wikipedia.org/wiki/Cross-validation_\(statistics\))
 
 It will produce some output like this
 
@@ -104,7 +104,7 @@ In this result 3225 tweets were evaluated and
 [F1](http://en.wikipedia.org/wiki/F1_score) is a score between 0 and 1 that we want to be as close to 1 as possible. 
 
 In this example an F1 of 0.85 is reasonable but not great. The 
-[precision](http://en.wikipedia.org/wiki/Precision_(information_retrieval))
+[precision](http://en.wikipedia.org/wiki/Precision_\(information_retrieval\))
 of 0.86 means that 86% of the tweets predicted to be people tweeting about the paper cuts are so, and therefore that 14% are not.
 This is important. It means that 14% of the replies we make could be wrong. We calls these 
 [false positives](http://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_error).
