@@ -179,7 +179,7 @@ def print_confusion_matrix(confusion_matrix):
     print 'Total = %d' % total   
     print
     print_matrix(percentage_matrix) 
-    print 'Precision = %.3f, Recall = %.3f, F2 = %.3f' % (
+    print 'Precision = %.3f, Recall = %.3f, F1 = %.3f' % (
         get_precision(confusion_matrix), get_recall(confusion_matrix), get_f(confusion_matrix))    
     print
 
@@ -222,13 +222,14 @@ if __name__ == '__main__':
     import optparse
 
     parser = optparse.OptionParser(usage = 'Usage: python %prog [options]')
-    parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum back-offs and smoothings')
+    
     parser.add_option('-n', '--ngrams', action='store_true', dest='ngrams', default=False, help='show ngrams')
-    parser.add_option('-s', '--basic-validate', action='store_true', dest='self_validate', default=False, help='do basic validation')
-    parser.add_option('-c', '--cross-validate', action='store_true', dest='cross_validate', default=False, help='full cross-validation')
-    parser.add_option('-e', '--show-prediction-error', action='store_true', dest='show_errors', default=False, help='show false positives and false negatives')
-    parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
+    parser.add_option('-s', '--self-validate', action='store_true', dest='self_validate', default=False, help='do self=validation')
+    parser.add_option('-c', '--cross-validate', action='store_true', dest='cross_validate', default=False, help='do cross-validation')
+    parser.add_option('-e', '--show-errors', action='store_true', dest='show_errors', default=False, help='show false positives and false negatives')
     parser.add_option('-t', '--test-string', dest='test_string', default='', help='show ngrams for string')
+    parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum threshold, back-offs and smoothings')
+    parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
     
     (options, args) = parser.parse_args()
     
