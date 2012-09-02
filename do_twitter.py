@@ -1,21 +1,22 @@
 """
-    Uses 
-    http://code.google.com/p/python-twitter/
+    Program to monitor Twitter for people tweeting about their paper cuts
+     and optionally reply to them.
+     
+    Uses http://code.google.com/p/python-twitter/
 """
 import twitter, os, time, sys, re
 
-# Get all the file names *_FILE
-from common import *
-import do_classify, do_label
+# Our shared modules
+import common, filters
 
 import logging
-logging.basicConfig(filename = LOG_FILE, 
+logging.basicConfig(filename = common.LOG_FILE, 
             level = logging.INFO,
             format = '%(asctime)s %(message)s')
 
 def log_sys_err(msg):
     """Log serious errors with print system exceptions"""
-    full_msg = '%s : %s' % (msg, str(sys.exc_info()[0:2]))
+    full_msg = '%s : %s' % (msg, str([sys.exc_info()[:2]]))
     print full_msg
     logging.error(full_msg)
     time.sleep(1)
@@ -24,7 +25,7 @@ def A(user):
     return '@%s' % user
     
 #RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[-\s]*cuts?(?!\S)', re.IGNORECASE)
-RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b', re.IGNORECASE)
+#RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b', re.IGNORECASE)
 
 if False:
     tests = ['a paper cut', 'papercut', 'the @papercut', 'papercut_', 'paper-cut', '#papercut']
@@ -38,8 +39,8 @@ if False:
         
 def is_relevant(twitter_status):
     """We are looking for tweets that contain 'papercut'"""
-    message = clean_text(twitter_status.text.encode('ascii', 'replace'))
-    return RE_PAPERCUT.search(message) is not None
+    message = filters.clean_text(twitter_status.text.encode('ascii', 'replace'))
+    return filters.is_papercut(message)
 
 """
     We want a date/time format like
@@ -71,13 +72,15 @@ if False:
     exit()    
 
 class ScoredTweet:
-    """Tweet plus a score
-        Tweet info
+    """A ScoredTweet contains information about a tweet and a score for that
+        tweet
+        
+        Tweet info:
             _id: unique id of tweet
             _time: time of tweet
             _user: user name of tweeter
             _message: text of tweet
-        Score        
+        Score:        
             _replyable : True if we are really sure the tweeter had a
                 paper cut
             _score: log(odds ratio) of tweet being positive 
@@ -87,39 +90,39 @@ class ScoredTweet:
         tm0 = time.strptime(twitter_status.created_at[:-6], '%a, %d %b %Y %H:%M:%S')
         self._time = time.mktime(tm0)
         self._user = twitter_status._user.screen_name
-        self._message = clean_text(twitter_status.text.encode('ascii', 'replace'))
+        self._message = filters.clean_text(twitter_status.text.encode('ascii', 'replace'))
         self._id = twitter_status._id
         
-        #print '-- "%s" %d' % (twitter_status.created_at, self._time) 
-        
         # Score the decoded status
-        positive, self._score =  model.classify(self._message)
-        self._replyable = positive and do_label.is_allowed_for_replying(self._message) 
+        positive, self._score =  model.classify(self._message) if model else False, 0.0
+        self._replyable = positive and filters.is_allowed_for_replying(self._message) 
 
     def __repr__(self):
         return '%-5s|%6.2f|%s"' % (self._replyable, self._score, self.get_tweet_line())  
-        
+
     def get_tweet_line(self):
-        return encode_tweet_line(self._id, self._time, self._user, self._message)
-        
-    def get_score_line(self): 
+        return filters.encode_tweet_line(self._id, self._time, self._user, self._message)
+
+    def get_scored_line(self): 
         return ' %-5s %6.2f %-15s : "%s"' % (self._replyable, self._score, A(self._user), self._message)  
 
 def load_replied_tweets():
-    """Return a list of (id,user) of the tweets already replied to"""
+    """Returns a list of (id,user) of the tweets already replied to
+    """
+    
     replied_tweets = []
 
     try:
-        fp = open(REPLIES_FILE, 'rt')
+        fp = open( common.REPLIES_FILE, 'rt')
     except IOError:    
-        logging.error('Could not open %s', REPLIES_FILE)
+        logging.error('Could not open %s',  common.REPLIES_FILE)
         return replied_tweets
 
     try:    
         for line in fp:
             line = line.rstrip('\n').strip()
             if line:
-                id,_,user,_ = decode_tweet_line(line)
+                id,_,user,_ = filters.decode_tweet_line(line)
                 replied_tweets.append((id, user))
     finally:
         fp.close()    
@@ -127,9 +130,15 @@ def load_replied_tweets():
     return replied_tweets    
     
 def get_replied_users(replied_tweets):
+    """Given the list of tweets replied to,
+        returns the set of users replied to in lower case
+    """ 
     return set(user.lower() for _,user in replied_tweets)
 
-def get_latest_scored_tweets(api, model, latest_tweet_id): 
+def fetch_latest_scored_tweets(api, model, latest_tweet_id): 
+    """Fetch some tweets containing 'paper cut' from
+        Twitter and return them as a list of ScoredTweets
+    """    
 
     def search_twitter(pattern):
         try:
@@ -145,25 +154,28 @@ def get_latest_scored_tweets(api, model, latest_tweet_id):
     return [ScoredTweet(model, r) for r in results] 
  
 def record_tweets(scored_tweets):
-    """ Store the tweets in TWEETS_FILE
+    """Store the ScoredTweets in scored_tweets in  common.TWEETS_FILE
     """
-       
+ 
     try:
-        fp = open(TWEETS_FILE, 'at')
+        fp = open( common.TWEETS_FILE, 'at')
     except:     
-        logging.error('Could not open %s' % TWEETS_FILE)
+        logging.error('Could not open %s' %  common.TWEETS_FILE)
         return
 
     try:    
         for tweet in scored_tweets:
-            print tweet.get_score_line()
-            logging.info(tweet.get_score_line())
+            print tweet.get_scored_line()
+            logging.info(tweet.get_scored_line())
             fp.write('%s\n' % tweet.get_tweet_line())
     finally:
         fp.close()
 
 class Activity:
-    """Activity record
+    """An activity record.
+        This is used for generating summary tweets based on our tweet reply 
+        activity
+    
         _api : Twitter api instance
         _last_reply_num: The number of replies we had made the last time we tweeted a summary 
         _reply_delta: The min number of replies between summary tweets 
@@ -186,11 +198,11 @@ class Activity:
     def read_activity():  
         tweet_num, tweet_delta, tm = 0, 0, 0.0
         try:
-            text = file(ACTIVITY_FILE, 'rt').read().strip('\n')
+            text = file( common.ACTIVITY_FILE, 'rt').read().strip('\n')
             parts = [p.strip() for p in text.split('|')]
             tweet_num, tweet_delta, tm = int(parts[0]), int(parts[1]),float(parts[2])
         except:
-            log_sys_err('Could not read %s' % ACTIVITY_FILE) 
+            log_sys_err('Could not read %s' %  common.ACTIVITY_FILE) 
         return tweet_num, tweet_delta, tm  
         
     @staticmethod    
@@ -198,7 +210,7 @@ class Activity:
         parts = tweet_num, tweet_delta, tm
         text = ' | '.join([str(p) for p in parts])        
         try:
-            file(ACTIVITY_FILE, 'wt').write(text)
+            file(common.ACTIVITY_FILE, 'wt').write(text)
         except:
             log_sys_err(' Could not save activity')     
         
@@ -239,14 +251,23 @@ class Activity:
         Activity.write_activity(tweet_num, tweet_delta, tweet._time) 
 
 def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
+    """Make Twitter replies to scored_tweets
+        api: Twitter API object
+        activity: An Activity record
+        replied_tweets: List of all tweets that we have ever replied to
+        scored_tweets: List of recently tweets that are candidates for replying to/
+    """
 
     l_replied_users = get_replied_users(replied_tweets)
-    
+
     try:
-        fp = open(REPLIES_FILE, 'at')
+        fp = open(common.REPLIES_FILE, 'at')
     except IOError:    
-        logging.error('Could not open %s', REPLIES_FILE)
+        # We MUST bail out here as we risk replying to tweets more than once
+        # if we don't record who we have replied to.
+        logging.error('Could not open %s', common.REPLIES_FILE)
         return
+
     try:    
         for tweet in scored_tweets:
             l_message = tweet._message.lower()
@@ -270,63 +291,83 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
             print '  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message))
             logging.info('  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message)))
 
+            # Update replied list before replying in case something goes wrong 
+            # in updating list or replying
+            replied_tweets.append((tweet._id, tweet._user))
+            fp.write('%s\n' % tweet.get_tweet_line())
+            l_replied_users.add(tweet._user.lower())
+
             try:
                 api.PostUpdate(reply_message, in_reply_to_status_id=tweet._id)
                 time.sleep(1)
             except Exception:
                 print ' Twitter api error: %s' % str(sys.exc_info()[0:2])
                 logging.error(' Twitter api error: %s' % str(sys.exc_info()[0:2]))
-    
-            replied_tweets.append((tweet._id, tweet._user))
-            fp.write('%s\n' % tweet.get_tweet_line())
-            l_replied_users.add(tweet._user.lower())
-            
+
             activity.post_summary_tweet(replied_tweets, tweet)
 
     finally:        
         fp.close()        
 
-def main_loop(max_duration, replying_enabled):  
+def run_main_loop(max_duration, replying_enabled): 
+    """The out monitor/reply loop for communicating with Twitter
+        max_duration: Maximum time to run this loop for (seconds)
+        replying_enabled: Reply to tweets?
+    """    
 
     logging.info('max_duration=%d, replying_enabled=%s' % (max_duration, replying_enabled))
     start_time = time.time()
+    # Delay between loops
     delay = 0.1
     
     def elapsed(): 
+        """Elapsed time since start"""
         return time.time() - start_time
         
-    # Load the calibration model first
-    model = do_classify.load_model()
+    # Load the classification model first
+    # This is critical for classifying tweets for reply
+    # It is helpful for seeing which tweets would be replied to 
+    #  when we are running in non-replying mode
+    # The model will not be available in early stage of development
+    #  before tweets have been saved and labeled
+    model = common.load_model() 
+    if replying_enabled:
+        assert model, 'Cannot reply with a classification model'
     
     # Lastest tweet id (an integer) is stored as text in LATEST_FILE
     # We use to prevent re-reading tweets
-    latest_tweet_id = int(file(LATEST_FILE, 'rt').read().strip()) if os.path.exists(LATEST_FILE) else 0
+    latest_tweet_id = int(file(common.LATEST_FILE, 'rt').read().strip()) if os.path.exists(common.LATEST_FILE) else 0
     logging.info('latest_tweet_id=%d' % latest_tweet_id)
     
-    # Load the tweets replied to
+    # Load the tweets that have already been replied to
     replied_tweets = load_replied_tweets()
 
     # Credentials are stored in CREDENTIALS_FILE as text lines of key='value' 
     # The keys are: consumer_key, consumer_secret, access_token_key, access_token_secret 
     RE_CREDENTIALS = re.compile(r"(\w+)='([^']+)'")
     credentials = dict((m.group(1),m.group(2)) 
-        for m in RE_CREDENTIALS.finditer(file(CREDENTIALS_FILE,'rt').read()))
+        for m in RE_CREDENTIALS.finditer(file(common.CREDENTIALS_FILE,'rt').read()))
       
-    # Get access to Twitter APIs        
+    # Create an object that gives access to the Twitter APIs        
     api = twitter.Api(**credentials)
     
+    # Create an Activity object for generating summary tweets
     activity = Activity(api)
     
+    # The main loop. Runs for max_duration seconds with delay seconds
+    #  between iterations.
     while elapsed() + delay < max_duration:
         time.sleep(delay)
         
+        # Fetch tweets that were created since the last time we checked
         latest_tweet_id += 1
-        scored_tweets = get_latest_scored_tweets(api, model, latest_tweet_id) 
+        scored_tweets = fetch_latest_scored_tweets(api, model, latest_tweet_id) 
         
         if scored_tweets:
+            # Record all tweets
             scored_tweets.sort(key = lambda t: (not t._replyable, -t._score, t._id)) 
             latest_tweet_id = max([t._id for t in scored_tweets])
-            file(LATEST_FILE, 'wt').write(str(latest_tweet_id))
+            file(common.LATEST_FILE, 'wt').write(str(latest_tweet_id))
             record_tweets(scored_tweets)
 
             replyable_tweets = [t for t in scored_tweets if t._replyable]
@@ -334,6 +375,7 @@ def main_loop(max_duration, replying_enabled):
             if replying_enabled and replyable_tweets:
                 reply_to_tweets(api, activity, replied_tweets, replyable_tweets)
         
+        # Back off if there were no matching tweets
         delay = 10 if scored_tweets else delay * 2
         delay = max(10, min((abs(elapsed() - max_duration)/10), delay))
         
@@ -345,10 +387,26 @@ def main_loop(max_duration, replying_enabled):
         logging.info(msg)
 
 if __name__ == '__main__':
+    """Run the main loop for a specified amount of time
+        and catch all fatal exceptions.
+       This progam is expected to be run by a scheduler that restarts it 
+        after max_duration + 5 minutes
+    """
+    import optparse
+
+    parser = optparse.OptionParser('python %prog [options] <duration(min)>')
+    parser.add_option('-r', '--reply', action='store_true', dest='replying_enabled', default=False, help='reply to tweets')
+    (options, args) = parser.parse_args()
+    if len(args) < 1:
+        parser.error('Duration not specified') 
+
+    max_duration = int(args[0]) * 60   
+       
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
+    run_main_loop(max_duration, options.replying_enabled)
     try:
-        main_loop(55 * 60, True)
+        run_main_loop(max_duration, options.replying_enabled)
     except Exception:
         log_sys_err('Uncaught error')
     logging.info('Finished normally')    

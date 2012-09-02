@@ -1,57 +1,56 @@
 from __future__ import division
-import twitter, os, time, sys, re, pickle, random
-from common import *
+"""
+    Peform various statistical tests on the labelled tweets in CLASS_FILE
+
+""" 
+import sys, re, random
+
+# Our shared modules
 from BayesClassifier import BayesClassifier
+import common, definitions
 
-UNKNOWN = -1    
-CLASS_STRINGS = {
-    False: 'n',
-    True: 'y',  
-    UNKNOWN: '?'
-}
-STRING_CLASSES = dict([(v,k) for k,v in CLASS_STRINGS.items()])
-
-def get_class(s):
-    return STRING_CLASSES.get(s, UNKNOWN)
-    
-def get_labelled_tweets():    
+def get_labelled_tweets():  
+    """Load the labelled tweets we analyze from common.CLASS_FILE"""
     tweets = []
-    fp = open(CLASS_FILE, 'rt')
+    fp = open(common.CLASS_FILE, 'rt')
     for i,ln in enumerate(fp):
         parts = [pt.strip() for pt in ln.split('|')]
-        cls, message= get_class(parts[0]), parts[1]
+        cls, message = definitions.get_class(parts[0]), parts[1]
         if cls in set([False,True]):
             tweets.append((cls, message))
     fp.close()
     return tweets
-
-def get_classifier_for_labelled_tweets():
-    return BayesClassifier(get_labelled_tweets())
     
-def validate_basic(tweets): 
-    assert tweets
+def show_ngrams(tweets): 
+    """Print all the ngrams that the BayesClassifier saves for 
+        a list of tweets
+    """
+    print BayesClassifier(tweets)
+
+def show_self_validation(tweets):
+    """Create a classification model based on tweets
+        then classify all the entries in tweets with
+        that model and print the results to stdout.
+    """
     model = BayesClassifier(tweets)
     
-    file(NGRAM_FILE, 'wt').write(str(model))
-
     ratings = [(model.classify(t[1]), t) for t in tweets]
     ratings.sort()
     ratings.reverse()
+    
+    for (pred,log_lik),(actual,message) in ratings:
+        print '%5.2f %5s %5s "%s"' % (log_lik, pred, actual, message)
 
-    fp = open(VALIDATION_FILE, 'wt')
-    for r in ratings:
-        fp.write('%s\n' % str(r))
-    fp.close()  
 #
 # confusion_matrix[(a,p)] is count of actual==a, predicted==p 
 #   
-def make_score():
+def get_empty_score():
     return dict([((a,p),0) for p in (False,True) for a in (False,True)])
 
 def get_test_score(training_tweets, test_tweets, test_indexes):
     model = BayesClassifier(training_tweets)
 
-    score = make_score()
+    score = get_empty_score()
     fp = []
     fn = []
     for i,t in enumerate(test_tweets):
@@ -64,7 +63,7 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     return score, fp, fn
 
 def cross_validate(tweets, num_folds):
-    confusion_matrix = make_score()
+    confusion_matrix = get_empty_score()
     false_positives = []
     false_negatives = []
     boundaries = [int(i*len(tweets)/num_folds) for i in range(num_folds + 1)]
@@ -85,15 +84,17 @@ def cross_validate(tweets, num_folds):
     assert confusion_matrix[(True,False)] == len(false_negatives)
     return confusion_matrix, false_positives, false_negatives
   
+def get_precision(matrix):
+    return matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
+
+def get_recall(matrix):
+    return matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])  
+    
 def get_f(matrix):
-    precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
-    recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
-    return 2.0/(1.0/precision + 1.0/recall)
+    return 2.0/(1.0/get_precision(matrix) + 1.0/get_recall(matrix))
     
 def get_f_safe(matrix):
-    precision = matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
-    recall = matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])
-    return 4.0/(3.0/precision + 1.0/recall)    
+    return 4.0/(3.0/get_precision(matrix) + 1.0/get_recall(matrix))    
 
 def get_design(vals):
     """Return design matrix for which each element has all values
@@ -154,7 +155,6 @@ def optimize_params(tweets):
     param_names = [s.strip(' \n') for s in PARAMS.split('\n') if s.strip(' \n')]
     for k,v in zip(param_names, x):
         print '    %s = %.4f' % (k,v)
-        
  
 def print_confusion_matrix(confusion_matrix):  
     BAR = '-' * 5
@@ -179,15 +179,13 @@ def print_confusion_matrix(confusion_matrix):
     print 'Total = %d' % total   
     print
     print_matrix(percentage_matrix) 
-    print 'F2 = %.3f' % get_f(confusion_matrix)    
+    print 'Precision = %.3f, Recall = %.3f, F2 = %.3f' % (
+        get_precision(confusion_matrix), get_recall(confusion_matrix), get_f(confusion_matrix))    
     print
 
-def validate_full(tweets, show_errors, show_confusion, detailed):
+def show_cross_validation(tweets, show_errors):
     
     confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
-
-    #print [i for i,p,g in false_positives]
-    #print [i for i,p,g in false_negatives]
 
     if show_errors:
         print '-' * 80
@@ -200,78 +198,62 @@ def validate_full(tweets, show_errors, show_confusion, detailed):
         for i,p in sorted(set([(i,p) for i,p in false_positives]), key = lambda x: x[1]):
             print '%5d %6.2f: %s' % (i,p, tweets[i][1])
 
-    if show_confusion:
         print '-' * 80
-        print_confusion_matrix(confusion_matrix)
-
-    if detailed:  
-        print '-' * 80
-        POSTERIOR_LIMIT = 2.0  
-          
-        print '-' * 80
-        print 'FALSE POSITIVE OUTLIERS'
-        for i,p,g in sorted(false_positives, key = lambda x: x[1]):
-            if abs(p) > POSTERIOR_LIMIT:
-                print '%5d %6.2f: %s' % (i,p, tweets[i][1])
-                for k in sorted(g, key = lambda x: g[x]):
-                    print '%12.2f %s' % (g[k], k)
- 
-        print '-' * 80
-        print 'FALSE NEGATIVE OUTLIERS'
-        for i,p,g in sorted(false_negatives, key = lambda x: x[1]):
-            if abs(p) > POSTERIOR_LIMIT:
-                print '%5d %6.2f: %s' % (i,p, tweets[i][1])
-                for k in sorted(g, key = lambda x: g[x]):
-                    print '%12.2f %s' % (g[k], k)
-
-def save_model(tweets):
-    model = BayesClassifier(tweets)
-    pickle.dump(model, open(MODEL_FILE, 'wb'))
-
-def load_model():
-    model = pickle.load(open(MODEL_FILE, 'rb'))
-    return model
+    
+    print_confusion_matrix(confusion_matrix)
+    
+def show_classification_details(test_pattern):
+    """Show the inner calculations the classifier uses to classify
+        strings containing test_string
+    """
+    print 'Pattern = "%s"' % test_pattern
+    test_data = [t for t in tweets if test_pattern in t[1]]
+    train_data = [t for t in tweets if test_pattern not in t[1]]
+    print test_data
+    model = BayesClassifier(train_data)
+    for cls, message in test_data:
+        kls, log_odds, ngrams = model.classify(message, True)
+        print kls, cls, log_odds
+        for k in sorted(ngrams):
+            print '%6.3f : %s ' % (k, ngrams[k])    
 
 if __name__ == '__main__':
 
     import optparse
 
-    parser = optparse.OptionParser('python ' + sys.argv[0] + ' [options] <text pattern> [<file pattern>]')
+    parser = optparse.OptionParser(usage = 'Usage: python %prog [options]')
     parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum back-offs and smoothings')
-    parser.add_option('-v', '--validate', action='store_true', dest='validate', default=False, help='do basic validation')
-    parser.add_option('-s', '--summary', action='store_true', dest='summary_stats', default=False, help='full cross-validation')
-    parser.add_option('-f', '--false-predictions', action='store_true', dest='false_predictions', default=False, help='show false positives and false negatives')
+    parser.add_option('-n', '--ngrams', action='store_true', dest='ngrams', default=False, help='show ngrams')
+    parser.add_option('-s', '--basic-validate', action='store_true', dest='self_validate', default=False, help='do basic validation')
+    parser.add_option('-c', '--cross-validate', action='store_true', dest='cross_validate', default=False, help='full cross-validation')
+    parser.add_option('-e', '--show-prediction-error', action='store_true', dest='show_errors', default=False, help='show false positives and false negatives')
     parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
     parser.add_option('-t', '--test-string', dest='test_string', default='', help='show ngrams for string')
+    
     (options, args) = parser.parse_args()
     
+    if not any(options.__dict__.values()): 
+        parser.error('No options specified')
+ 
     tweets = get_labelled_tweets() 
-   
+ 
     if options.optimize:
         optimize_params(tweets)
+       
+    if options.ngrams:
+        show_ngrams(tweets)
         
-    do_validate_full = options.summary_stats or options.false_predictions
-    
-    if options.validate or do_validate_full:
-        validate_basic(tweets)
-        
-    if do_validate_full:
-        print '=' * 80
-        validate_full(tweets, options.false_predictions, options.summary_stats, False)
-        
+    if options.self_validate:
+        show_self_validation(tweets)
+
+    if options.cross_validate or options.show_errors:
+        show_cross_validation(tweets, options.show_errors)
+
     if options.test_string:
-        print options.test_string
-        test = [t for t in tweets if options.test_string in t[1]]
-        train =  [t for t in tweets if options.test_string not in t[1]]
-        print test
-        model = BayesClassifier(train)
-        for cls, message in test:
-            kls, log_odds, ngrams = model.classify(message, True)
-            print kls, cls, log_odds
-            for k in sorted(ngrams):
-                print '%6.3f : %s ' % (k, ngrams[k])
+        show_classification_details(options.test_string)
 
     if options.model:
-        save_model(tweets)
+        model = BayesClassifier(tweets)
+        common.save_model(model)
 
         

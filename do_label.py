@@ -1,70 +1,70 @@
 import twitter, os, time, sys, re, shutil
-from common import *
-"""
-    We classify tweets as one of 
-       - True : We should reply to the tweet
-       - False: We should not reply to the tweets
-       - UNKNOWN: We don't know
-       
-    In all our text files we encode True/False/Unknown as 
+# Our shared modules
+import common, definitions, filters  
+
+def update_class_file():
+    """We store list of labelled tweets in *.cls files in the format
+            class label | message
+        e.g.
+            n | If I see one more back to school commercial I'm giving my eyes a paper cut.
+            y | i got lemon on my finger and it stings .-. stupid paper cut -.-
+            
+        (Only the tweet text is stored here. The other tweet infornation
+         is not stored as we used only the tweet text for classification)  
+             
+        common.LATEST_CLASS_FILE (see common.py for actual name) is the
+            file where we keep our most up-to-list of labelled tweets
+         
+        This function updates common.LATEST_CLASS_FILE using common.TWEETS_FILE,
+        which contains all the tweets that have undergone simple screening and
+        we have saved.
         
+        It also guesses labels for each new tweet using the latest classification
+        model.
+        
+        (We track the tweet id of the latest tweet in common.LATEST_CLASS_FILE)
+    """
     
-""" 
-CLASS_STRINGS = {
-    True: 'y',  
-    False: 'n',
-    UNKNOWN: '?'
-}
-STRING_CLASSES = dict([(v,k) for k,v in CLASS_STRINGS.items()])
-
-AUTO_CLASS_STRINGS  = {
-    False: 'N',
-    True: 'Y',  
-    UNKNOWN: '?'
-}  
-
-def get_class_str(model, message):
-    if model:
-        cls,log_odds = model.classify(message)
-    else:
-        cls,log_odds = UNKNOWN, 0.0
-    return AUTO_CLASS_STRINGS[cls]
-
-def main():
-    
-    # Lastest labelled tweet id (an integer) is stored as text in LATEST_CLASS_FILE
-    # We use to prevent re-reading tweets
-    latest_labelled_tweet_id = int(file(LATEST_CLASS_FILE, 'rt').read().strip())  if os.path.exists(LATEST_CLASS_FILE) else 0    
+    # The lastest labelled tweet id (an integer) is stored as text in LATEST_CLASS_FILE
+    latest_labelled_tweet_id = int(file(common.LATEST_CLASS_FILE, 'rt').read().strip()) if os.path.exists(common.LATEST_CLASS_FILE) else 0    
     previous_tweet_id = latest_labelled_tweet_id
       
-    # Read the classification mode
-    model = do_classify.get_classifier_for_labelled_tweets()
+    # Read the classification model. This will be used to guess tweet classifications
+    model = common.load_model()
          
-    # Read the tweets
+    # Read the tweets from TWEETS_FILE, label them and store them
+    # in labelled_messages
     labelled_messages = []
-    fp = open(TWEETS_FILE, 'rt')
+    fp = open(common.TWEETS_FILE, 'rt')
     for line in fp:
-        line = line.strip('\n').strip()
+        line = line.strip(' \n')
+        
+        # Skip empty lines
         if not line:
             continue
+            
+        # Skip incorrectly formatted lines
         try:    
-            id_s,tm,user,message = [pt.strip() for pt in line.split('|')]
+            id_s,_,_,message = [pt.strip() for pt in line.split('|')]
+            id = int(id_s)
         except ValueError:
             print 'ValueError', line
             continue
-        id = int(id_s)
+        
+        # Skip tweets we have already saved
         if id <= latest_labelled_tweet_id:
             continue
-        if not is_allowed_for_training(message):
-            continue
-        kls = get_class_str(model, message)
-        #print kls, [id,tm,user,message]
             
-        labelled_messages.append([kls, message])
+        # Filter out messages that are not even allowed for training    
+        if not filters.is_allowed_for_training(message):
+            continue
+        cls,_ = model.classify(message)    
+                   
+        labelled_messages.append([definitions.AUTO_CLASSES_LABELS[cls], message])
         latest_labelled_tweet_id = max(id, latest_labelled_tweet_id)
     fp.close()
 
-    print 'added %d labelled_messages' % len(labelled_messages)
+    print 'found %d new tweets' % len(labelled_messages)
     print 'before: latest_labelled_tweet_id=%d' % previous_tweet_id
     print 'after:  latest_labelled_tweet_id=%d' % latest_labelled_tweet_id
 
@@ -73,19 +73,21 @@ def main():
         exit()
      
     # Save the current labelled data file
-    shutil.copyfile(CLASS_FILE, '%s.%d' % (CLASS_FILE, previous_tweet_id))
+    shutil.copyfile(common.CLASS_FILE, '%s.%d' % (common.CLASS_FILE, previous_tweet_id))
 
     # Add the new entries to the labelled data file
-    fp = open(CLASS_FILE, 'at')
+    fp = open(common.CLASS_FILE, 'at')
     for i,t in enumerate(labelled_messages):
         fp.write('%s | %s\n' % (t[0], t[1]))
     fp.close()
+    
+    print 'Added %d new labelled messages to %s' % (len(labelled_messages), common.CLASS_FILE)
 
     # Update the latest labelled entry id
-    file(LATEST_CLASS_FILE, 'wt').write(str(latest_labelled_tweet_id))
+    file(common.LATEST_CLASS_FILE, 'wt').write(str(latest_labelled_tweet_id))
 
 if __name__ == '__main__':
-     main()
+    update_class_file()
 
     
 
