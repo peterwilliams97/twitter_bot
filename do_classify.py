@@ -94,7 +94,7 @@ def get_f(matrix):
     return 2.0/(1.0/get_precision(matrix) + 1.0/get_recall(matrix))
     
 def get_f_safe(matrix):
-    return 4.0/(3.0/get_precision(matrix) + 1.0/get_recall(matrix))    
+    return 10.0/(9.0/get_precision(matrix) + 1.0/get_recall(matrix))    
 
 def get_design(vals):
     """Return design matrix for which each element has all values
@@ -127,9 +127,10 @@ def optimize_params(tweets):
     def get_params(x):
         #return x
         return (x[0], 
-            BayesClassifier.smooth_bigram,
-            BayesClassifier.smooth_trigram,
-            x[3], x[4], x[5])  
+            #BayesClassifier.smooth_bigram,
+            #BayesClassifier.smooth_trigram,
+            x[1], x[2], x[3],
+            x[4], x[5])  
     
     def func(x):
         #BayesClassifier.set_params(*x)
@@ -153,12 +154,12 @@ def optimize_params(tweets):
     print -func(x), list(x)
     
     PARAMS = ''' 
-        BayesClassifier.smooth_unigram
-        #BayesClassifier.smooth_bigram
-        #BayesClassifier.smooth_trigram 
-        BayesClassifier.backoff_bigram 
-        BayesClassifier.backoff_trigram
-        BayesClassifier.threshold
+        smooth_unigram
+        smooth_bigram
+        smooth_trigram 
+        backoff_bigram 
+        backoff_trigram
+        threshold
     '''
     param_names = [s.strip(' \n') for s in PARAMS.split('\n') if s.strip(' \n')]
     for k,v in zip(param_names, get_params(x)):

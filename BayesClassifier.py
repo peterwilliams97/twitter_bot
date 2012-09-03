@@ -1,6 +1,31 @@
 from __future__ import division
+"""
+    Simple bag of n-grams classifier for tweets
+    
+    Classifies messages based on their bigrams. 
+    If a trigram in message is not in model then backs off to bigrams.
+    If a bigram in message is not in model then backs off to unigrams.
+
+    Trigram, bigram and unigram likliehoods are all smooothed
+    
+    A tunable threshold is classifying based on posterior probabalities
+    
+    The paramates for all these things are at the start of BayesClassifier
+    
+    class BayesClassifier:
+    
+        smooth_unigram = 7.1117
+        smooth_bigram = 3.5613
+        smooth_trigram = 2.7131
+        backoff_bigram = 0.5582
+        backoff_trigram = 0.9106
+        threshold = 0.9105
+    
+"""
 import math, re
-from common import *
+
+
+
 
 RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 
@@ -219,6 +244,22 @@ class BayesClassifier:
     backoff_bigram = 0.5582
     backoff_trigram = 0.9106
     threshold = 0.9105
+    
+    
+    
+    smooth_unigram = 7.0610
+    smooth_bigram = 3.5613
+    smooth_trigram = 2.7131
+    backoff_bigram = 0.6039
+    backoff_trigram = 0.8973
+    threshold = 4.0319
+    
+    smooth_unigram = 7.2237
+    smooth_bigram = 4.0466
+    smooth_trigram = 2.6867
+    backoff_bigram = 0.6276
+    backoff_trigram = 0.4914
+    threshold = 4.9734
     
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
