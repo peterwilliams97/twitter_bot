@@ -156,6 +156,7 @@ def _post_process(words):
             continue
         out_words.append(w)    
     
+    out_words = ['[TAG_START]'] + out_words +  ['[TAG_END]'] 
     return out_words      
 
 def _U(ngram):

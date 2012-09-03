@@ -61,7 +61,7 @@ e.g.
 do_classify.py
 --------------    
 [do_classify.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_classify.py) builds a tweet classification model from 
-the labelled tweets end evaluates it. The classifier is discussed later under the heading
+the labelled tweets end evaluates it. The classifier is discussed later under the heading [The Classifier](#the-classifier).
 
 Options:
     -n, --ngrams          show ngrams
@@ -138,3 +138,6 @@ At this stage we run `python do_twitter.py 30 -r` and see how the twitter-bot pe
 
 The Classifier
 --------------  
+The classifier we use to predict whether tweets are about paper cuts is 
+[BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py). This is a simple
+[n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier

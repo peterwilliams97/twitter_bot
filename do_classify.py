@@ -124,20 +124,28 @@ def get_design(vals):
 def optimize_params(tweets):
     from scipy import optimize
     
+    def get_params(x):
+        #return x
+        return (x[0], 
+            BayesClassifier.smooth_bigram,
+            BayesClassifier.smooth_trigram,
+            x[3], x[4], x[5])  
+    
     def func(x):
-        BayesClassifier.set_params(*x)
+        #BayesClassifier.set_params(*x)
+        BayesClassifier.set_params(*get_params(x))
         #f = -get_f(cross_validate(tweets, 10)[0])
         f = -get_f_safe(cross_validate(tweets, 10)[0])
         print ' ', -f, x
         return f
   
     x0 = [
-        smooth_unigram,
-        smooth_bigram,
-        smooth_trigram, 
-        backoff_bigram, 
-        backoff_trigram,
-        threshold
+        BayesClassifier.smooth_unigram,
+        BayesClassifier.smooth_bigram,
+        BayesClassifier.smooth_trigram, 
+        BayesClassifier.backoff_bigram, 
+        BayesClassifier.backoff_trigram,
+        BayesClassifier.threshold
     ]
     x = optimize.fmin(func, x0)
     print '^' * 80
@@ -146,14 +154,14 @@ def optimize_params(tweets):
     
     PARAMS = ''' 
         BayesClassifier.smooth_unigram
-        BayesClassifier.smooth_bigram
-        BayesClassifier.smooth_trigram 
+        #BayesClassifier.smooth_bigram
+        #BayesClassifier.smooth_trigram 
         BayesClassifier.backoff_bigram 
         BayesClassifier.backoff_trigram
         BayesClassifier.threshold
     '''
     param_names = [s.strip(' \n') for s in PARAMS.split('\n') if s.strip(' \n')]
-    for k,v in zip(param_names, x):
+    for k,v in zip(param_names, get_params(x)):
         print '    %s = %.4f' % (k,v)
  
 def print_confusion_matrix(confusion_matrix):  
