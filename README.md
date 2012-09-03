@@ -141,3 +141,19 @@ The Classifier
 The classifier we use to predict whether tweets are about paper cuts is 
 [BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py). This is a simple
 [n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier
+
+
+Results
+-------
+
+[My week on twitter](https://twitter.com/OwwwPapercut/status/242424216367034370): 
+* 408 retweets received
+* 54 new followers
+* 303 mentions. 
+
+Some [positive tweets](https://twitter.com/OwwwPapercut/favorites)
+
+Someone [tweeting](http://bit.ly/RAq4hG) about the Twitter-bot
+
+Recent [mentions](https://twitter.com/#!/search/realtime/%40owwwpapercut)
+
