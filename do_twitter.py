@@ -23,20 +23,11 @@ def log_sys_err(msg):
 
 def A(user):
     return '@%s' % user
-    
-#RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[-\s]*cuts?(?!\S)', re.IGNORECASE)
-#RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b', re.IGNORECASE)
+  
+def get_reply_message(user):
+    """Our reply to people who have tweeted about their paper cuts"""
+    return '@%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % user 
 
-if False:
-    tests = ['a paper cut', 'papercut', 'the @papercut', 'papercut_', 'paper-cut', '#papercut']
-    for t in tests:
-        print t,
-        m = RE_PAPERCUT.search(t)
-        if m:
-            print '--', m.group(0),
-        print    
-    exit()
-        
 def is_relevant(twitter_status):
     """We are looking for tweets that contain 'papercut'"""
     message = filters.clean_text(twitter_status.text.encode('ascii', 'replace'))
@@ -298,7 +289,7 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
                 logging.info('  skipping: mention: %s:"%s:' % (A(responded_user), tweet._message))
                 continue
            
-            reply_message = '%s Yes, paper cuts sure do hurt. I hope it gets better soon.' % A(tweet._user)             
+            reply_message = get_reply_message(tweet._user)             
 
             print '  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message))
             logging.info('  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message)))

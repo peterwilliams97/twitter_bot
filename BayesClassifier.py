@@ -167,25 +167,30 @@ def _post_tokenize(words):
     out_words = ['[TAG_START]'] + out_words +  ['[TAG_END]'] 
     return out_words      
 
+# We store ngrams as WORD_DELIMITER separated strings internally as
+#  Python's string processing is fast. 
+# Use the following functions to split ngrams into words and join 
+#  words into ngrams.
+#    
+WORD_DELIMITER = ' '    
 def _U(ngram):
-    return ngram.split(' ')
+    return ngram.split(WORD_DELIMITER)
 
 def _B(w1, w2):
-    return '%s %s' % (w1, w2)
-
-def _T(w1, w2, w3):
-    return '%s %s %s' % (w1, w2, w3)   
+    return WORD_DELIMITER.join((w1, w2))
 
 def _get_bigrams(words):    
-    return [_B(words[i-1],words[i]) for i in range(1,len(words))]
+    """Return all the bigrams in the list of words"""
+    return [WORD_DELIMITER.join(words[i-1:i+1]) for i in range(1,len(words))]
 
 def _get_trigrams(words):    
-    return [_T(words[i-2],words[i-1],words[i]) for i in range(2,len(words))]
+    """Return all the trigrams in the list of words"""
+    return [WORD_DELIMITER.join(words[i-2:i+1]) for i in range(2,len(words))]
 
 def _cnt_positivity(np):
-    """np is (n.p) where p is num positives and n
+    """np is (n,p) where p is num positives and n
         is number of negatives
-        return how positive this resultit
+        Return how positive this result is
     """
     n,p = np
     if n == 0 or p == 0:
@@ -239,6 +244,7 @@ class BayesClassifier:
         backoff_trigram = 0.2452
         threshold = 4.0944
     
+    # The values we currently use
     # Precision = 0.937, Recall = 0.741, F1 = 0.827
     smooth_unigram = 8.4423
     smooth_bigram = 4.4690
@@ -361,8 +367,6 @@ class BayesClassifier:
                 count[cls] += 1
                 ngram_counts[k] = count
                 ngram_keys.add(k)
-                #if k == 'papercut':
-                #    print cls, ngram_counts[k], ngrams
 
         self.class_count[cls] += 1
         update_ngrams(unigrams, self.unigram_counts, self.unigram_keys)
@@ -472,7 +476,7 @@ class BayesClassifier:
 
         def trigram_score(k):
             if detailed: print '-----', k
-            if k not in self.trigram_keys:http://aws.amazon.com/python/
+            if k not in self.trigram_keys:
                 w1,w2,w3 = _U(k)
                 return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
             score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.smooth_trigram)
@@ -481,16 +485,16 @@ class BayesClassifier:
 
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    
-        likelihood = sum([trigram_score(k) for k in trigrams])
+        likelihood = sum(trigram_score(k) for k in trigrams)
         log_odds = prior + likelihood
         
         if detailed:
             return log_odds > BayesClassifier.threshold, log_odds, dict((trigram_score(k),k) for k in trigrams) 
         else:
             return log_odds > BayesClassifier.threshold, log_odds
-  
-# Just dump the BayesClassifier class   
+
 if __name__ == '__main__':
+    # Just dump the BayesClassifier class to stdout  
     for k in sorted(BayesClassifier.__dict__):
         print '%20s : %s' % (k, BayesClassifier.__dict__[k])
     
