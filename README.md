@@ -41,7 +41,8 @@ Replying is somewhat more involved
     Care is taken to avoid replying more than once to a person or a conversation.
     Tweets are checked against the classification model
     Replies are made and saved to file.
-    Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked by following it on Twitter.
+    Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked with a 
+    [Twitter query](http://twitter.com/#!/search/%40owwwpapercut%20liebig).
  
 do_label.py
 ----------- 
@@ -146,14 +147,21 @@ The classifier we use to predict whether tweets are about paper cuts is
 Results
 -------
 
-[My week on twitter](https://twitter.com/OwwwPapercut/status/242424216367034370): 
+Results from the 
+[My week on twitter](https://twitter.com/OwwwPapercut/status/242424216367034370) bot: 
 * 408 retweets received
 * 54 new followers
-* 303 mentions. 
+* 303 mentions 
 
-Some [positive tweets](https://twitter.com/OwwwPapercut/favorites)
+Recent [mentions](https://twitter.com/#!/search/realtime/%40owwwpapercut).
 
-Someone [tweeting](http://bit.ly/RAq4hG) about the Twitter-bot
+Some [positive tweets](https://twitter.com/OwwwPapercut/favorites).
 
-Recent [mentions](https://twitter.com/#!/search/realtime/%40owwwpapercut)
+Someone [tweeting](http://bit.ly/RAq4hG) about the Twitter-bot. 
 
+A [man](http://twitter.com/devinkieper/status/242828432306745344) telling the Twitter-bot not to tweet
+to his girlfried
+
+A comparison with a [tweeter from the office](http://twitter.com/OwwwPapercut/status/242785630243938304).
+
+Paper cut empathee's [remorse](http://twitter.com/skyformation/status/243065180781674496)

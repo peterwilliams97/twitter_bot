@@ -253,6 +253,13 @@ class Activity:
         self._last_reply_num, self._reply_delta, self._last_time = tweet_num, tweet_delta, tweet._time
         Activity.write_activity(tweet_num, tweet_delta, tweet._time) 
 
+FRIENDLIES = [
+    'peter_c_william',
+    'alecthegeek',
+    'PaperCutDev'
+]
+l_friendly_users = set(user.lower() for user in FRIENDLIES)
+        
 def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
     """Make Twitter replies to scored_tweets
         api: Twitter API object
@@ -277,8 +284,10 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
       
             # Don't reply to users more than once
             if tweet._user.lower() in l_replied_users:
-                logging.info(' skipping: already replied to %s' % tweet._user)
-                continue 
+                # unless they are friendly
+                if tweet._user.lower() not in l_friendly_users:
+                    logging.info(' skipping: already replied to %s' % tweet._user)
+                    continue 
             # Don't reply to responses    
             if common.TWITTER_ME.lower() in l_message:
                 logging.info('  skipping:  response "%s"' % tweet._message)

@@ -1,7 +1,6 @@
 from __future__ import division
 """
     Peform various statistical tests on the labelled tweets in CLASS_FILE
-
 """ 
 import sys, re, random
 
@@ -63,6 +62,9 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     return score, fp, fn
 
 def cross_validate(tweets, num_folds):
+    """Perform num_folds-fold cross-validations on tweets and return
+        confusion_matrix, false_positives, false_negatives
+    """    
     confusion_matrix = get_empty_score()
     false_positives = []
     false_negatives = []
@@ -72,17 +74,10 @@ def cross_validate(tweets, num_folds):
         test_tweets = tweets[begin:end]
         training_tweets = tweets[:begin] + tweets[end:]
         score,fp,fn = get_test_score(training_tweets, test_tweets, range(begin,end))
-        assert score[(False,True)] == len(fp)
-        assert score[(True,False)] == len(fn)
-        for k in score.keys():
-            confusion_matrix[k] += score[k]
+        for k in score.keys(): confusion_matrix[k] += score[k]
         false_positives += fp   
         false_negatives += fn  
-    false_positives.sort()
-    false_negatives.sort()
-    assert confusion_matrix[(False,True)] == len(false_positives)
-    assert confusion_matrix[(True,False)] == len(false_negatives)
-    return confusion_matrix, false_positives, false_negatives
+    return confusion_matrix, sorted(false_positives), sorted(false_negatives)
   
 def get_precision(matrix):
     return matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
@@ -92,9 +87,14 @@ def get_recall(matrix):
     
 def get_f(matrix):
     return 2.0/(1.0/get_precision(matrix) + 1.0/get_recall(matrix))
-    
-def get_f_safe(matrix):
-    return 10.0/(9.0/get_precision(matrix) + 1.0/get_recall(matrix))    
+
+ALPHA = 0.9
+ALPHA = 0.8     
+assert 0.0 <= ALPHA <= 1.0, 'ALPHA = %f is invalid' % ALPHA
+def get_opt_target(matrix):
+    """The objective function that we aim to maximize"""
+    return 1.0/(ALPHA/get_precision(matrix) + (1.0-ALPHA)/get_recall(matrix)) 
+    #return 0.9 * get_precision(matrix) + 0.1 * get_recall(matrix)     
 
 def get_design(vals):
     """Return design matrix for which each element has all values
@@ -120,7 +120,17 @@ def get_design(vals):
     print '-' * 80
     
     return design
+
+def matrix_str(matrix):
+    total = sum([matrix[a,p] for p in (False,True) for a in (False,True)])
+    vals = ', '.join(['%4.1f' % (matrix[a,p]/total * 100.0)
+                    for p in (False,True) for a in (False,True)])
+    return '{%s}' % vals
     
+def arr_str(arr):
+    vals = ','.join(['%6.3f' % x for x in arr])
+    return '[%s]' % vals    
+
 def optimize_params(tweets):
     from scipy import optimize
     
@@ -129,17 +139,20 @@ def optimize_params(tweets):
         return (x[0], 
             #BayesClassifier.smooth_bigram,
             #BayesClassifier.smooth_trigram,
-            x[1], x[2], x[3],
-            x[4], x[5])  
+            x[1], x[2],
+            x[3], x[4], x[5]
+            )  
     
     def func(x):
-        #BayesClassifier.set_params(*x)
         BayesClassifier.set_params(*get_params(x))
-        #f = -get_f(cross_validate(tweets, 10)[0])
-        f = -get_f_safe(cross_validate(tweets, 10)[0])
-        print ' ', -f, x
+        matrix,_,_ = cross_validate(tweets, 10)
+        f = -get_opt_target(matrix)
+        print ' %.4f %s %s' % (-f, matrix_str(matrix), 
+            arr_str(BayesClassifier.get_params())
+            #x
+            )
         return f
-  
+
     x0 = [
         BayesClassifier.smooth_unigram,
         BayesClassifier.smooth_bigram,
@@ -148,21 +161,20 @@ def optimize_params(tweets):
         BayesClassifier.backoff_trigram,
         BayesClassifier.threshold
     ]
+    
+    print 'ALPHA = %.3f' % ALPHA
     x = optimize.fmin(func, x0)
     print '^' * 80
     print -func(x0), x0
     print -func(x), list(x)
     
-    PARAMS = ''' 
-        smooth_unigram
-        smooth_bigram
-        smooth_trigram 
-        backoff_bigram 
-        backoff_trigram
-        threshold
-    '''
-    param_names = [s.strip(' \n') for s in PARAMS.split('\n') if s.strip(' \n')]
-    for k,v in zip(param_names, get_params(x)):
+    # Reinstall the best params
+    BayesClassifier.set_params(*get_params(x))
+    matrix,_,_ = cross_validate(tweets, 10)
+    
+    print '    # Precision = %.3f, Recall = %.3f, F1 = %.3f' % (
+        get_precision(matrix), get_recall(matrix), get_f(matrix))  
+    for k,v in zip(BayesClassifier.get_param_names(), BayesClassifier.get_params()):
         print '    %s = %.4f' % (k,v)
  
 def print_confusion_matrix(confusion_matrix):  
@@ -182,7 +194,7 @@ def print_confusion_matrix(confusion_matrix):
     percentage_matrix = {}
     for p in (False,True):
         for a in (False,True):
-            percentage_matrix[a,p] = '%2d%%' % int(confusion_matrix[a,p]/total * 100.0)
+            percentage_matrix[a,p] = '%2d%%' % int(round(confusion_matrix[a,p]/total * 100.0))
             
     print_matrix(confusion_matrix)  
     print 'Total = %d' % total   

@@ -24,9 +24,6 @@ from __future__ import division
 """
 import math, re
 
-
-
-
 RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 
 # In Twitter 'some text @someone: some quote' is a way of quoting 'some quote'
@@ -80,7 +77,6 @@ if False:
         do_test(test)
     exit()   
 
-
 RE_USER = re.compile(r'@\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
@@ -105,7 +101,7 @@ RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
 #RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[\s]*cuts?(?!\S)', re.IGNORECASE)
 #RE_PAPERCUT2 = re.compile(r'(?<!\S)#?paper\s*cuts?(?!\S)', re.IGNORECASE)
 
-def _pre_process(message):
+def _pre_tokenize(message):
 
     if not RE_PAPERCUT.search(message):
         return '[TAG_BOGUS]'
@@ -143,7 +139,7 @@ def _pre_process(message):
 if False:  
     message = '''You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?'''    
     print message
-    print _pre_process(message)
+    print _pre_tokenize(message)
     exit()
     
 STOP_WORDS = set([
@@ -158,10 +154,10 @@ STOP_WORDS = set([
 if False:    
     message = 'PaperCut owwwww. #hash'
     print message
-    print _pre_process(message)
+    print _pre_tokenize(message)
     exit()
     
-def _post_process(words):
+def _post_tokenize(words):
     """Post-process list of words created from tokenization
         Remove stop words
         Remove words after indicators that they are not meants
@@ -245,8 +241,6 @@ class BayesClassifier:
     backoff_trigram = 0.9106
     threshold = 0.9105
     
-    
-    
     smooth_unigram = 7.0610
     smooth_bigram = 3.5613
     smooth_trigram = 2.7131
@@ -261,25 +255,91 @@ class BayesClassifier:
     backoff_trigram = 0.4914
     threshold = 4.9734
     
+    smooth_unigram = 7.5768
+    smooth_bigram = 4.2423
+    smooth_trigram = 0.5245
+    backoff_bigram = 0.6903
+    backoff_trigram = 0.5245
+    threshold = 3.7438
+  
+    # Precision = 0.957, Recall = 0.668, F1 = 0.787
+    smooth_unigram = 6.2510
+    smooth_bigram = 1.2650
+    smooth_trigram = 1.1530
+    backoff_bigram = 1.2490
+    backoff_trigram = 0.1730
+    threshold = 3.8590
+    
+    # Precision = 0.883, Recall = 0.848, F1 = 0.865
+    smooth_unigram = 7.1519
+    smooth_bigram = 1.3351
+    smooth_trigram = 1.1283
+    backoff_bigram = 1.3406
+    backoff_trigram = 0.2189
+    threshold = 1.2989
+    
+    # Precision = 0.956, Recall = 0.673, F1 = 0.790
+    smooth_unigram = 8.8799
+    smooth_bigram = 1.4472
+    smooth_trigram = 1.0871
+    backoff_bigram = 1.6691
+    backoff_trigram = 0.2452
+    threshold = 4.0944
+    
+    # Precision = 0.937, Recall = 0.741, F1 = 0.827
+    smooth_unigram = 8.4423
+    smooth_bigram = 4.4690
+    smooth_trigram = 0.5298
+    backoff_bigram = 0.7356
+    backoff_trigram = 0.3505
+    threshold = 3.7898
+  
+    
+    @staticmethod
+    def make_valid(param):
+        return max(param, 0.01)
+    
     @staticmethod
     def set_params(smooth_unigram, smooth_bigram, smooth_trigram, 
         backoff_bigram, backoff_trigram, threshold):
         
-        BayesClassifier.smooth_unigram = smooth_unigram 
-        BayesClassifier.smooth_bigram = smooth_bigram   
-        BayesClassifier.smooth_trigram = smooth_trigram  
-        BayesClassifier.backoff_bigram = backoff_bigram
-        BayesClassifier.backoff_trigram = backoff_trigram
+        BayesClassifier.smooth_unigram = BayesClassifier.make_valid(smooth_unigram) 
+        BayesClassifier.smooth_bigram = BayesClassifier.make_valid(smooth_bigram)   
+        BayesClassifier.smooth_trigram = BayesClassifier.make_valid(smooth_trigram)  
+        BayesClassifier.backoff_bigram = BayesClassifier.make_valid(backoff_bigram)
+        BayesClassifier.backoff_trigram = BayesClassifier.make_valid(backoff_trigram)
         BayesClassifier.threshold = threshold
-        
+
+    @staticmethod    
+    def get_params():
+        return (
+            BayesClassifier.smooth_unigram,
+            BayesClassifier.smooth_bigram,    
+            BayesClassifier.smooth_trigram,  
+            BayesClassifier.backoff_bigram, 
+            BayesClassifier.backoff_trigram,
+            BayesClassifier.threshold
+        )
+    
+    @staticmethod    
+    def get_param_names(): 
+        return (
+            'smooth_unigram',
+            'smooth_bigram',
+            'smooth_trigram', 
+            'backoff_bigram', 
+            'backoff_trigram',
+            'threshold'
+        )
+
     # This should be a hook
     @staticmethod
     def pre_tokenize(message):
-        return _pre_process(message)
+        return _pre_tokenize(message)
 
     @staticmethod
     def post_tokenize(words):
-        return _post_process(words)
+        return _post_tokenize(words)
         
     @staticmethod
     def extract_words(message):
@@ -460,7 +520,7 @@ class BayesClassifier:
             if k not in self.trigram_keys:
                 w1,w2,w3 = _U(k)
                 return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
-            score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.backoff_trigram)
+            score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.smooth_trigram)
             _dbg(3, score, k)
             return score
 
@@ -474,4 +534,8 @@ class BayesClassifier:
         else:
             return log_odds > BayesClassifier.threshold, log_odds
   
-
+# Just dump the BayesClassifier class   
+if __name__ == '__main__':
+    for k in sorted(BayesClassifier.__dict__):
+        print '%20s : %s' % (k, BayesClassifier.__dict__[k])
+    
