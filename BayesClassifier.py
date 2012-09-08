@@ -12,15 +12,7 @@ from __future__ import division
     
     The paramates for all these things are at the start of BayesClassifier
     
-    class BayesClassifier:
-    
-        smooth_unigram = 7.1117
-        smooth_bigram = 3.5613
-        smooth_trigram = 2.7131
-        backoff_bigram = 0.5582
-        backoff_trigram = 0.9106
-        threshold = 0.9105
-    
+   
 """
 import math, re
 
@@ -114,7 +106,6 @@ def _pre_tokenize(message):
     #message = RE_AMP.sub(' & ', message)
     #message = RE_GT.sub(' < ', message)
     #message = RE_LT.sub(' > ', message)
-    
     #message = RE_SYM.sub(r' \1 ', message) 
     message = RE_SYM.sub(r'[TAG_SYMBOL]', message) 
     message = RE_SYM2.sub(r'[TAG_SYMBOL]', message) 
@@ -123,15 +114,11 @@ def _pre_tokenize(message):
     message = RE_PUNC2.sub('!', message)
     message = RE_PUNC3.sub(r' ? ', message)
     message = RE_PUNC4.sub(r' ? ', message)
-    
-    #print message
     message = RE_SPACE.sub(' ', message)
-    #print message
     message = RE_HASH.sub(r'\1', message)
-    #print message
     message = RE_REPEAT.sub(r'\1', message) # message = RE_REPEAT.sub(r'\1\1', message)
     message = RE_BANG.sub(r'\1 \2', message)
-    
+  
     message = RE_NUMBER.sub('[TAG_NUMBER]', message)
      
     return message
@@ -226,65 +213,31 @@ def _get_cntv(counts):
     return cntn,cntp,v
 
 class BayesClassifier:
-    
-    # 0.825127334465 [ 4.664691    3.31914489  3.40044725  0.52437482  0.78608935]
-    # 0.828851899274 [ 4.75384442  3.20345303  3.21919898  0.53177478  0.82933903]
-    # 0.831708350996 [ 4.95464452  3.2800687   3.08317047  0.52991956  0.82849809]
-    # 0.839783603829 [ 5.09983195  3.33672827  3.18971037  0.48990963  0.83392737]
-    # 0.840591618735 [ 4.9403568   3.113316    3.1906728  0.5528544  0.8614968]
-    # 0.846646732166 [ 5.63838326  2.91727287  3.35302681  0.56146319  0.83882107  0.91434758]
 
-    smooth_unigram = 7.1117
-    smooth_bigram = 3.5613
-    smooth_trigram = 2.7131
-    backoff_bigram = 0.5582
-    backoff_trigram = 0.9106
-    threshold = 0.9105
-    
-    smooth_unigram = 7.0610
-    smooth_bigram = 3.5613
-    smooth_trigram = 2.7131
-    backoff_bigram = 0.6039
-    backoff_trigram = 0.8973
-    threshold = 4.0319
-    
-    smooth_unigram = 7.2237
-    smooth_bigram = 4.0466
-    smooth_trigram = 2.6867
-    backoff_bigram = 0.6276
-    backoff_trigram = 0.4914
-    threshold = 4.9734
-    
-    smooth_unigram = 7.5768
-    smooth_bigram = 4.2423
-    smooth_trigram = 0.5245
-    backoff_bigram = 0.6903
-    backoff_trigram = 0.5245
-    threshold = 3.7438
-  
-    # Precision = 0.957, Recall = 0.668, F1 = 0.787
-    smooth_unigram = 6.2510
-    smooth_bigram = 1.2650
-    smooth_trigram = 1.1530
-    backoff_bigram = 1.2490
-    backoff_trigram = 0.1730
-    threshold = 3.8590
-    
-    # Precision = 0.883, Recall = 0.848, F1 = 0.865
-    smooth_unigram = 7.1519
-    smooth_bigram = 1.3351
-    smooth_trigram = 1.1283
-    backoff_bigram = 1.3406
-    backoff_trigram = 0.2189
-    threshold = 1.2989
-    
-    # Precision = 0.956, Recall = 0.673, F1 = 0.790
-    smooth_unigram = 8.8799
-    smooth_bigram = 1.4472
-    smooth_trigram = 1.0871
-    backoff_bigram = 1.6691
-    backoff_trigram = 0.2452
-    threshold = 4.0944
+    if False: # The values tried in the past
+        # Precision = 0.957, Recall = 0.668, F1 = 0.787
+        smooth_unigram = 6.2510
+        smooth_bigram = 1.2650
+        smooth_trigram = 1.1530
+        backoff_bigram = 1.2490
+        backoff_trigram = 0.1730
+        threshold = 3.8590
+        
+        # Precision = 0.883, Recall = 0.848, F1 = 0.865
+        smooth_unigram = 7.1519
+        smooth_bigram = 1.3351
+        smooth_trigram = 1.1283
+        backoff_bigram = 1.3406
+        backoff_trigram = 0.2189
+        threshold = 1.2989
+        
+        # Precision = 0.956, Recall = 0.673, F1 = 0.790
+        smooth_unigram = 8.8799
+        smooth_bigram = 1.4472
+        smooth_trigram = 1.0871
+        backoff_bigram = 1.6691
+        backoff_trigram = 0.2452
+        threshold = 4.0944
     
     # Precision = 0.937, Recall = 0.741, F1 = 0.827
     smooth_unigram = 8.4423
@@ -293,10 +246,10 @@ class BayesClassifier:
     backoff_bigram = 0.7356
     backoff_trigram = 0.3505
     threshold = 3.7898
-  
-    
+
     @staticmethod
     def make_valid(param):
+        """This keeps values sane when running an optimizer on set_params()"""
         return max(param, 0.01)
     
     @staticmethod
@@ -332,7 +285,6 @@ class BayesClassifier:
             'threshold'
         )
 
-    # This should be a hook
     @staticmethod
     def pre_tokenize(message):
         return _pre_tokenize(message)
@@ -343,6 +295,9 @@ class BayesClassifier:
         
     @staticmethod
     def extract_words(message):
+        """The word extractor that is run over every message that is trained on or
+            classified
+        """
         message = message.lower()
         message = BayesClassifier.pre_tokenize(message)
         words = message.split()
@@ -517,7 +472,7 @@ class BayesClassifier:
 
         def trigram_score(k):
             if detailed: print '-----', k
-            if k not in self.trigram_keys:
+            if k not in self.trigram_keys:http://aws.amazon.com/python/
                 w1,w2,w3 = _U(k)
                 return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
             score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.smooth_trigram)

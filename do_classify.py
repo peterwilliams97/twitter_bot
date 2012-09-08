@@ -89,7 +89,6 @@ def get_f(matrix):
     return 2.0/(1.0/get_precision(matrix) + 1.0/get_recall(matrix))
 
 ALPHA = 0.9
-ALPHA = 0.8     
 assert 0.0 <= ALPHA <= 1.0, 'ALPHA = %f is invalid' % ALPHA
 def get_opt_target(matrix):
     """The objective function that we aim to maximize"""
