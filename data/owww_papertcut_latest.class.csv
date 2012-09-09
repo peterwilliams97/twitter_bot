@@ -1,0 +1,28 @@
+import twitter, os, time, sys,re
+
+# The blog article explaining how this script works is here: http://inventwithpython.com/blog/2012/03/25/how-to-code-a-twitter-bot-in-python-on-dreamhost/
+
+# You will have to replace the values in the call to twitter.Api() to get this code to work for you.
+
+MY_TWITTER_NAME = 'OwwwPapercut'
+TWITTER_ME = '@%s' % MY_TWITTER_NAME
+LATEST_FILE = 'owww_papertcut_latest.txt'
+TWEETS_FILE = 'owww_papertcut_latest.tweets.csv'
+CLASS_FILE = 'owww_papertcut_latest.class.csv'
+REPLIES_FILE = 'owww_papertcut_log.replies.csv'
+
+
+# Read the tweets
+tweets = []
+fp = open(TWEETS_FILE, 'rt')
+tweets = [(message, None) for _,_,_.message in fp.read()]
+fp.close()
+
+fp = open(CLASS_FILE, 'rt')
+for i,ln in enumerate(fp):
+    tweets[i][1] = ln
+fp.close()
+    
+
+
+
