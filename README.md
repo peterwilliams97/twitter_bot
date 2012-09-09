@@ -8,7 +8,7 @@ paper cut.
 
 The Twitter-bot also gratuitouslty ests the acccuracy of its predictions by replying to 
 those tweets it has determined to be from paper cut sufferers with a 
-[sympathetic message](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py#L292).
+[sympathetic message](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py#L27-29).
 
 How it Works
 ------------
@@ -104,6 +104,9 @@ In this result 3225 tweets were evaluated and
 * 165 were __incorrectly__ predicted as people tweeting about their paper cuts.   
 * 189 were __incorrectly__ predicted as _not_ people tweeting about their paper cuts. 
 
+(These numbers are from the start of development. Scores for the current code are 
+[here](https://github.com/peterwilliams97/twitter_bot/blob/master/results/cv.latest).)
+
 The measures _Precision_, _Recall_ and _F1_ are explained 
 [here](http://tomazkovacic.com/blog/74/evaluation-metrics-for-text-extraction-algorithms/)
 * Precision is the fraction of tweets predicted to be about paper cuts that actually were.
@@ -129,8 +132,13 @@ We therefore run `python do_classify.py -e` to see what these false positives ar
 27, 2116 amd 764 seem ambiguous and could be mistaken as being tweets from people with paper cuts. The other two are definitely not. 
 Another filter we use (tweets starting with @) will reomove 2115. 
 
-Based on this analysis of 5 tweets the twitter-bot's replies may not be too inappropriate. (Using 5 tweets was for illustration
-only. In a real analysis we would evaluate all 165 false positive tweets.)
+Based on this analysis of 5 tweets the twitter-bot's replies may not be too inappropriate. 
+
+(Using 5 tweets was for illustration only. In a real analysis we would evaluate all 165 false positive tweets.
+You can see the false positives in the current version of the classfier 
+[before](https://github.com/peterwilliams97/twitter_bot/blob/master/results/false.negatives.latest) and
+[after](https://github.com/peterwilliams97/twitter_bot/blob/master/results/false.negatives.filtered.latest) 
+filtering.)
 
 When our classification model is peforming well enough we run `python do_classify.py -m` to save it.
 
@@ -143,9 +151,11 @@ The classifier we use to predict whether tweets are about paper cuts is
 [BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py). This is a simple
 [n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier
 
-
 Results
 -------
+
+The latest internal test results are 
+[here](https://github.com/peterwilliams97/twitter_bot/blob/master/results/).
 
 Results from the 
 [My week on twitter](https://twitter.com/OwwwPapercut/status/242424216367034370) bot: 

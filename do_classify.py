@@ -6,7 +6,7 @@ import sys, re, random
 
 # Our shared modules
 from BayesClassifier import BayesClassifier
-import common, definitions
+import common, definitions, filters
 
 def get_labelled_tweets():  
     """Load the labelled tweets we analyze from common.CLASS_FILE"""
@@ -46,6 +46,7 @@ def show_self_validation(tweets):
 def get_empty_score():
     return dict([((a,p),0) for p in (False,True) for a in (False,True)])
 
+do_filter = False    
 def get_test_score(training_tweets, test_tweets, test_indexes):
     model = BayesClassifier(training_tweets)
 
@@ -55,6 +56,8 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     for i,t in enumerate(test_tweets):
         a = t[0]
         p, log_odds = model.classify(t[1])
+        if do_filter:
+            p = p and filters.is_allowed_for_replying(t[1])
         score[(a,p)] += 1
         if p != a:
             if p: fp.append((test_indexes[i], log_odds))
@@ -93,7 +96,6 @@ assert 0.0 <= ALPHA <= 1.0, 'ALPHA = %f is invalid' % ALPHA
 def get_opt_target(matrix):
     """The objective function that we aim to maximize"""
     return 1.0/(ALPHA/get_precision(matrix) + (1.0-ALPHA)/get_recall(matrix)) 
-    #return 0.9 * get_precision(matrix) + 0.1 * get_recall(matrix)     
 
 def get_design(vals):
     """Return design matrix for which each element has all values
@@ -134,7 +136,6 @@ def optimize_params(tweets):
     from scipy import optimize
     
     def get_params(x):
-        #return x
         return (x[0], 
             #BayesClassifier.smooth_bigram,
             #BayesClassifier.smooth_trigram,
@@ -148,7 +149,6 @@ def optimize_params(tweets):
         f = -get_opt_target(matrix)
         print ' %.4f %s %s' % (-f, matrix_str(matrix), 
             arr_str(BayesClassifier.get_params())
-            #x
             )
         return f
 
@@ -205,7 +205,7 @@ def print_confusion_matrix(confusion_matrix):
 
 def show_cross_validation(tweets, show_errors):
     
-    confusion_matrix,false_positives,false_negatives = cross_validate(tweets, 10)
+    confusion_matrix, false_positives, false_negatives = cross_validate(tweets, 10)
 
     if show_errors:
         print '-' * 80
@@ -250,6 +250,8 @@ if __name__ == '__main__':
     parser.add_option('-t', '--test-string', dest='test_string', default='', help='show ngrams for string')
     parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum threshold, back-offs and smoothings')
     parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
+    parser.add_option('-f', '--filter', action='store_true', dest='filter', default=False, help='apply filter')
+    do_filter
     
     (options, args) = parser.parse_args()
     
@@ -258,6 +260,8 @@ if __name__ == '__main__':
  
     tweets = get_labelled_tweets() 
  
+    do_filter = options.filter
+
     if options.optimize:
         optimize_params(tweets)
        

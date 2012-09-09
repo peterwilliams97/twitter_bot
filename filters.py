@@ -15,7 +15,7 @@ TRAINING_EXCLUSIONS = [
     #'Linkin',
 ]
 
-REPLYING_EXCLUSION = [
+REPLYING_EXCLUSIONS = [
     'only creatures on earth that will cut down trees',
     'one final moment of glorious revenge',
     'Paper cut. I don\'t like it lmao',
@@ -35,46 +35,50 @@ REPLYING_EXCLUSION = [
     'cruciatus'
     'Papercut_Dolls',
     'Papercut Magazine',
-    'birth',
     '@papercut',
-    'nigger', 
-    'nigga',
-    ' cunt',
-    ' clit',
-    ' pape',
-    'death',
-    'eyeball',
     'imagine',
-    ' penis',
+    'penis',
     'vagina',
     'YouTube',
     'life gives you lemons',
     '#moneyproblems',
     'amputat',
-    '#np '
 ] 
 
+EXCLUDED_WORDS = [
+    'glorious',
+    'revenge',   
+    'cruciatus'
+    'Papercut_Dolls',
+    'birth',
+    '@papercut',
+    'niggers?', 
+    'niggas?',
+    'cunts?',
+    'clits?',
+    'rape[sd]?',
+    'deaths?',
+    'eye[ -]*balls?',
+    'imagine',
+    'penis',
+    'vaginas?',
+    'YouTube',
+    '#moneyproblems',
+    '#np'
+]
+
 L_TRAINING_EXCLUSIONS = set([e.lower() for e in TRAINING_EXCLUSIONS])
-L_REPLYING_EXCLUSION = set([e.lower() for e in REPLYING_EXCLUSION])
+L_REPLYING_EXCLUSIONS = set([e.lower() for e in REPLYING_EXCLUSIONS])
+L_EXCLUDED_WORDS = set([e.lower() for e in EXCLUDED_WORDS])
+L_REPLYING_EXCLUSIONS -= L_EXCLUDED_WORDS
 
 RE_RT = re.compile(r'\brt(:|\b)')
 RE_LOL = re.compile(r'\blols?\b')
 RE_EYE = re.compile(r'my\s+eye')  # I think I have a paper cut I my eye.
 RE_CUT = re.compile(r'cut\s*(out|back|art)\b')
+RE_EXCLUDED_WORDS = re.compile(r'\b(%s)\b' % '|'.join(sorted(L_EXCLUDED_WORDS)))
 
 RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b', re.IGNORECASE)
-
-if False:
-    tests = ['rt message', 'log rt:message', 
-        'lol rt: message', 'rt: message', 'rt hi',
-        'dirt', 'rtere']
-    for t in tests:
-        print t, RE_RT.search(t) is not None
-    tests = ['lol papercut', 'hi lol x', 'hollow']  
-    for t in tests:
-        print t, RE_LOL.search(t) is not None  
-    exit()
-
 
 RE_BAD_CHARS = re.compile(r'[\n\r\t|]')
 def clean_text(message):
@@ -107,11 +111,38 @@ def is_allowed_for_replying(message):
     if not is_allowed_for_training(message):
         return False
     l_message = message.lower().strip()
-    return not any(e in l_message for e in L_REPLYING_EXCLUSION) \
+    return not any(e in l_message for e in L_REPLYING_EXCLUSIONS) \
         and not RE_LOL.search(l_message) \
         and not RE_EYE.search(l_message) \
         and not RE_CUT.search(l_message) \
+        and not RE_EXCLUDED_WORDS.search(l_message) \
         and message[0] != '"' \
         and message[0] != '@'    
 
-
+if __name__ == '__main__':
+       
+    # Print out the variables used for exclusion
+    for k in sorted(globals()):
+        v = globals()[k]
+        if k[:2] == 'L_':
+            print '%21s : %s' % (k, sorted(v))
+        elif k[:3] == 'RE_':
+            print '%21s : %s' % (k, v.pattern)
+            
+    # Run some tests  
+    tests_1 = ['paper cut on my eyeball',
+               'paper cut on my eyeballs',
+               'paper cut on my eye-balls']
+    for message in tests_1:
+        print '%6s : %s' % (is_allowed_for_replying(message), message)
+    
+    tests_2 = ['rt message', 'log rt:message', 
+        'lol rt: message', 'rt: message', 'rt hi',
+        'dirt', 'rtere']
+    for message in tests_2:
+        print '%6s : %s' % (RE_RT.search(message) is None, message)
+    
+    tests_3 = ['lol papercut', 'hi lol x', 'hollow']  
+    for message in tests_3:
+        print '%6s : %s' % (RE_LOL.search(message) is None, message)
+   
