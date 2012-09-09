@@ -11,8 +11,6 @@ from __future__ import division
     A tunable threshold is classifying based on posterior probabalities
     
     The paramates for all these things are at the start of BayesClassifier
-    
-   
 """
 import math, re
 
@@ -132,10 +130,18 @@ if False:
 STOP_WORDS = set([
     'the',
     'and',
+    #'did',
+    #'it',
+    #'is',
+    #'get',
     #'got',
-    #'a',
+    
+    #'a', # Excluding 'a' increases precision and decreases recall
+    #'have', 
+    #'my',
+    
     #'of'
-   # 'in', 'on', 'at'
+    # 'in', 'on', 'at'
     ])    
     
 if False:    
@@ -388,10 +394,10 @@ class BayesClassifier:
             return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
 
         def show_counts(name, counts):
-            return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
+            return '%s\n%s\n%s\n' % (' ' * 80, name, counts_str(counts))
 
         totals = [
-            '         (neg,   pos,   cnt)',
+            '          neg,   pos,   cnt',
             'TRIGRAMS %s' % str(self.cntv_trigrams),
             ' BIGRAMS %s' % str(self.cntv_bigrams),
             'UNIGRAMS %s' % str(self.cntv_unigrams),
