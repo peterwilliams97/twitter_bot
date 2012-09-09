@@ -149,11 +149,40 @@ The Classifier
 --------------  
 The classifier we use to predict whether tweets are about paper cuts is 
 [BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py). This is a simple
-[n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier
+[n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier.
+
+The n-grams for the paper cut tweets are 
+[here](https://github.com/peterwilliams97/twitter_bot/blob/master/data/owwwpapercut.ngram). The most influential are
+    
+    __TRIGRAMS__
+    [  0, 98] 98.0 '[TAG_START] i got'
+    [  0, 47] 47.0 '[TAG_START] just got'
+    [  0, 34] 34.0 'on my finger'
+    ...
+    [347,  0] -347.0 'featured in papercut'
+    [348,  0] -348.0 'in papercut magazine'
+    [350,  0] -350.0 'papercut magazine !'
+    
+    __BIGRAMS__
+    [  0, 34] 34.0 'gave myself'
+    [  0, 18] 18.0 'cut ouch'
+    [  0, 17] 17.0 'gota paper'
+    ...
+    [347,  0] -347.0 'featured in'
+    [350,  0] -350.0 'magazine !'
+    [373,  0] -373.0 'papercut magazine'
+    
+    __UNIGRAMS__
+    [  0, 14] 14.0 'remover'
+    [  0,  9]  9.0 'fuckin'
+    [  0,  8]  8.0 'polish'
+    ...
+    [338,  0] -338.0 'hoping'
+    [347,  0] -347.0 'featured'
+    [347,  0] -347.0 'request'
 
 Results
 -------
-
 The latest internal test results are 
 [here](https://github.com/peterwilliams97/twitter_bot/blob/master/results/).
 

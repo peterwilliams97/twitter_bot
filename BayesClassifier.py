@@ -386,22 +386,22 @@ class BayesClassifier:
         def counts_str(counts):
             def n(k):  return -_cnt_positivity(counts[k]), k.lower()
             return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
-            
+
         def show_counts(name, counts):
             return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
-        
+
         totals = [
-            '        (neg, pos, cnt)'
-            'unigrams %s' % str(self.cntv_unigrams),
-            ' bigrams %s' % str(self.cntv_bigrams),
-            'trigrams %s' % str(self.cntv_trigrams),
+            '         (neg,   pos,   cnt)',
+            'TRIGRAMS %s' % str(self.cntv_trigrams),
+            ' BIGRAMS %s' % str(self.cntv_bigrams),
+            'UNIGRAMS %s' % str(self.cntv_unigrams),
         ]   
         totals_string = '\n'.join(totals) + '\n'
         
         return totals_string \
-             + show_counts('trigrams', self.trigram_counts) \
-             + show_counts('bigrams', self.bigram_counts) \
-             + show_counts('unigrams', self.unigram_counts) 
+             + show_counts('TRIGRAMS', self.trigram_counts) \
+             + show_counts('BIGRAMS', self.bigram_counts) \
+             + show_counts('UNIGRAMS', self.unigram_counts) 
 
    
     def classify(self, message, detailed=False):
