@@ -136,7 +136,7 @@ STOP_WORDS = set([
     #'get',
     #'got',
     
-    'a', # Excluding 'a' increases precision and decreases recall
+    #'a', # Excluding 'a' increases precision and decreases recall
     #'have', 
     #'my',
     
@@ -249,6 +249,14 @@ class BayesClassifier:
         backoff_bigram = 1.6691
         backoff_trigram = 0.2452
         threshold = 4.0944
+        
+        # Experiment with 'a' as a stop word
+        smooth_unigram = 8.1441
+        smooth_bigram = 4.3253
+        smooth_trigram = 0.5536
+        backoff_bigram = 0.7237
+        backoff_trigram = 0.3509
+        threshold = 4.1927
     
     # The values we currently use
     # Precision = 0.937, Recall = 0.741, F1 = 0.827
@@ -258,14 +266,6 @@ class BayesClassifier:
     backoff_bigram = 0.7356
     backoff_trigram = 0.3505
     threshold = 3.7898
-    
-    if False: # Experiment with 'a' as a stop word
-        smooth_unigram = 8.1441
-        smooth_bigram = 4.3253
-        smooth_trigram = 0.5536
-        backoff_bigram = 0.7237
-        backoff_trigram = 0.3509
-        threshold = 4.1927
 
     @staticmethod
     def make_valid(param):

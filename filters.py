@@ -22,7 +22,7 @@ REPLYING_EXCLUSIONS = [
     'holy cow balls Harry',
     'receiving a papercut whilst signing his',
     'The Gym Leader used a full restore.',
-    'Linkin',
+    
     'LOL'       # To be safe 
     'Sandpaper kisses',
     'paper cut bliss',
@@ -46,12 +46,16 @@ REPLYING_EXCLUSIONS = [
 ] 
 
 EXCLUDED_WORDS = [
+    'Sandpaper\s+kisses',
+    'Linkin',
+    'linkin\s*park',
     'glorious',
     'revenge',   
     'cruciatus'
     'Papercut_Dolls',
     'birth',
     '@papercut',
+    'papercut\s+magazine',
     'niggers?', 
     'niggas?',
     'cunts?',
