@@ -136,7 +136,7 @@ STOP_WORDS = set([
     #'get',
     #'got',
     
-    #'a', # Excluding 'a' increases precision and decreases recall
+    'a', # Excluding 'a' increases precision and decreases recall
     #'have', 
     #'my',
     
@@ -258,6 +258,14 @@ class BayesClassifier:
     backoff_bigram = 0.7356
     backoff_trigram = 0.3505
     threshold = 3.7898
+    
+    if False: # Experiment with 'a' as a stop word
+        smooth_unigram = 8.1441
+        smooth_bigram = 4.3253
+        smooth_trigram = 0.5536
+        backoff_bigram = 0.7237
+        backoff_trigram = 0.3509
+        threshold = 4.1927
 
     @staticmethod
     def make_valid(param):
@@ -394,10 +402,10 @@ class BayesClassifier:
             return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
 
         def show_counts(name, counts):
-            return '%s\n%s\n%s\n' % (' ' * 80, name, counts_str(counts))
+            return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
 
         totals = [
-            '          neg,   pos,   cnt',
+            '          (neg,   pos,   cnt)',
             'TRIGRAMS %s' % str(self.cntv_trigrams),
             ' BIGRAMS %s' % str(self.cntv_bigrams),
             'UNIGRAMS %s' % str(self.cntv_unigrams),
