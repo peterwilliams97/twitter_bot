@@ -47,26 +47,6 @@ def _remove_quoted_text(message):
         message = ' '.join(out_parts) 
     return message    
 
-if False:   
-   
-    def do_test(test):
-        print test
-        #for m in RE_QUOTE.finditer(test):
-        #    print m.start(), m.groups()
-        print _remove_quoted_text(test) 
-        print '-' * 80        
-    tests = [
-        '''I'm out of here ' right now' like "now!"''',
-        '''I'm out of here 'right now' like "now!"''',
-        '''"I just gave myself a paper cut" "Congratulations how do you feel?"''',
-        ''' You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost? ''',
-        ''' life. ?@sockin_bxxches: just got a paper cut'''
-    ]    
-    print '=' * 80
-    for test in tests:
-        do_test(test)
-    exit()   
-
 RE_USER = re.compile(r'@\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
@@ -82,14 +62,12 @@ RE_PUNC3 = re.compile(r'\?')
 RE_PUNC4 = re.compile(r'\?[\s\?]+')
 RE_SPACE = re.compile(r'\s+')
 RE_HASH = re.compile(r'#(\w+)')
-# Not sure why this is so effecitve f 0.821 -> 0.827
+# Not sure why this is so effective f 0.821 -> 0.827
 RE_REPEAT = re.compile(r'(.)\1\1*') # RE_REPEAT = re.compile(r'(.)\1\1+')
 RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile(r'\d+(\s+\d)*')
 
 RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
-#RE_PAPERCUT = re.compile(r'(?<!\S)#?paper[\s]*cuts?(?!\S)', re.IGNORECASE)
-#RE_PAPERCUT2 = re.compile(r'(?<!\S)#?paper\s*cuts?(?!\S)', re.IGNORECASE)
 
 def _pre_tokenize(message):
 
@@ -121,12 +99,8 @@ def _pre_tokenize(message):
      
     return message
   
-if False:  
-    message = '''You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?'''    
-    print message
-    print _pre_tokenize(message)
-    exit()
-    
+# The stop words that have been tried and found to be ineffective are
+#  left in the code and commented out  
 STOP_WORDS = set([
     'the',
     'and',
@@ -143,13 +117,7 @@ STOP_WORDS = set([
     #'of'
     # 'in', 'on', 'at'
     ])    
-    
-if False:    
-    message = 'PaperCut owwwww. #hash'
-    print message
-    print _pre_tokenize(message)
-    exit()
-    
+ 
 def _post_tokenize(words):
     """Post-process list of words created from tokenization
         Remove stop words
@@ -225,40 +193,6 @@ def _get_cntv(counts):
 
 class BayesClassifier:
 
-    if False: # The values tried in the past
-        # Precision = 0.957, Recall = 0.668, F1 = 0.787
-        smooth_unigram = 6.2510
-        smooth_bigram = 1.2650
-        smooth_trigram = 1.1530
-        backoff_bigram = 1.2490
-        backoff_trigram = 0.1730
-        threshold = 3.8590
-        
-        # Precision = 0.883, Recall = 0.848, F1 = 0.865
-        smooth_unigram = 7.1519
-        smooth_bigram = 1.3351
-        smooth_trigram = 1.1283
-        backoff_bigram = 1.3406
-        backoff_trigram = 0.2189
-        threshold = 1.2989
-        
-        # Precision = 0.956, Recall = 0.673, F1 = 0.790
-        smooth_unigram = 8.8799
-        smooth_bigram = 1.4472
-        smooth_trigram = 1.0871
-        backoff_bigram = 1.6691
-        backoff_trigram = 0.2452
-        threshold = 4.0944
-        
-        # Experiment with 'a' as a stop word
-        smooth_unigram = 8.1441
-        smooth_bigram = 4.3253
-        smooth_trigram = 0.5536
-        backoff_bigram = 0.7237
-        backoff_trigram = 0.3509
-        threshold = 4.1927
-    
-    # The values we currently use
     # Precision = 0.937, Recall = 0.741, F1 = 0.827
     smooth_unigram = 8.4423
     smooth_bigram = 4.4690
@@ -507,6 +441,35 @@ class BayesClassifier:
         else:
             return log_odds > BayesClassifier.threshold, log_odds
 
+def test():
+    """Run some tests on the code"""
+   
+    # Test _remove_quoted_text()
+    def test_remove_quoted_text(test):
+        print test
+        #for m in RE_QUOTE.finditer(test):
+        #    print m.start(), m.groups()
+        print _remove_quoted_text(test) 
+        print '-' * 80        
+    tests = [
+        '''I'm out of here ' right now' like "now!"''',
+        '''I'm out of here 'right now' like "now!"''',
+        '''"I just gave myself a paper cut" "Congratulations how do you feel?"''',
+        ''' You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost? ''',
+        ''' life. ?@sockin_bxxches: just got a paper cut'''
+    ]    
+    print '=' * 80
+    for test in tests:
+        test_remove_quoted_text(test)  
+
+    
+    # Test _pre_tokenize()
+    for message in ['PaperCut owwwww. #hash',
+        '''You really are living the life. ?@sockin_bxxches: just got a paper cut from counting money...no boost?''']:    
+        print message
+        print _pre_tokenize(message)
+
+        
 if __name__ == '__main__':
     # Just dump the BayesClassifier class to stdout  
     for k in sorted(BayesClassifier.__dict__):

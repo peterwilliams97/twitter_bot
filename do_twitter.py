@@ -15,7 +15,7 @@ logging.basicConfig(filename = common.LOG_FILE,
             format = '%(asctime)s %(message)s')
 
 def log_sys_err(msg):
-    """Log serious errors with print system exceptions"""
+    """Log serious errors with system exceptions"""
     full_msg = '%s : %s' % (msg, str([sys.exc_info()[:2]]))
     print full_msg
     logging.error(full_msg)
@@ -57,11 +57,6 @@ def get_local_time_str(tm):
     format = SUMMARY_DAY_FORMAT if _same_day(gmt, datetime.now()) else SUMMARY_TM_FORMAT
     return RE_TIME.sub(_time_replacer, gmt.strftime(format))
  
-if False:
-    print get_local_time_str(1346187731)
-    print get_local_time_str(1346375650.0)
-    exit()    
-
 class ScoredTweet:
     """A ScoredTweet contains information about a tweet and a score for that
         tweet
@@ -159,7 +154,6 @@ def record_tweets(scored_tweets):
 
     try:    
         for tweet in scored_tweets:
-            print tweet.get_scored_line()
             logging.info(tweet.get_scored_line())
             fp.write('%s\n' % tweet.get_tweet_line())
     finally:
@@ -219,7 +213,6 @@ class Activity:
   
     def post_summary_tweet(self, replied_tweets, tweet):
         """Post a summary tweet from time to time.
-           
         """
         tweet_num = len(replied_tweets)
    
@@ -229,7 +222,6 @@ class Activity:
             return
 
         summary = Activity.encode_summary(tweet_num - self._last_reply_num, self._last_time)
-        print 'summary="%s" %d' % (summary, len(summary))
         logging.info('summary="%s" %d' % (summary, len(summary)))
         
         try:
@@ -291,7 +283,6 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
            
             reply_message = get_reply_message(tweet._user)             
 
-            print '  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message))
             logging.info('  Posting in reply to %s: %s' % (A(tweet._user), str(reply_message)))
 
             # Update replied list before replying in case something goes wrong 
@@ -304,7 +295,6 @@ def reply_to_tweets(api, activity, replied_tweets, scored_tweets):
                 api.PostUpdate(reply_message, in_reply_to_status_id=tweet._id)
                 time.sleep(1)
             except Exception:
-                print ' Twitter api error: %s' % str(sys.exc_info()[0:2])
                 logging.error(' Twitter api error: %s' % str(sys.exc_info()[0:2]))
 
             activity.post_summary_tweet(replied_tweets, tweet)
@@ -382,12 +372,10 @@ def run_main_loop(max_duration, replying_enabled):
         delay = 10 if scored_tweets else delay * 2
         delay = max(10, min((abs(elapsed() - max_duration)/10), delay))
         
-        msg = 'Found %3d replyable of %3d relevant results, latest_id=%d, sleeping %5.1f sec, running %4d sec' % (
+        logging.info('Found %3d replyable of %3d relevant results, latest_id=%d, sleeping %5.1f sec, running %4d sec (%4d remaining)' % (
                     len([t for t in scored_tweets if t._replyable]), 
                     len(scored_tweets), latest_tweet_id,
-                    delay, elapsed())
-        print msg
-        logging.info(msg)
+                    delay,  elapsed(), max_duration - elapsed()))
 
 if __name__ == '__main__':
     """Run the main loop for a specified amount of time
@@ -407,7 +395,6 @@ if __name__ == '__main__':
        
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
-    run_main_loop(max_duration, options.replying_enabled)
     try:
         run_main_loop(max_duration, options.replying_enabled)
     except Exception:

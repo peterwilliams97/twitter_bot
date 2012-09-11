@@ -43,6 +43,11 @@ Replying is somewhat more involved
     Replies are made and saved to file.
     Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked with a 
     [Twitter query](http://twitter.com/#!/search/%40owwwpapercut%20liebig).
+    
+[OwwwPapercut](http://twitter.com/OwwwPapercut) is currently being run from an AWS Ubuntu 
+micro-instance with the following crontab line.
+    
+    29 * * * * python /home/ubuntu/twitter_bot/do_twitter.py 55 -r
  
 do_label.py
 ----------- 

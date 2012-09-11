@@ -97,31 +97,6 @@ def get_opt_target(matrix):
     """The objective function that we aim to maximize"""
     return 1.0/(ALPHA/get_precision(matrix) + (1.0-ALPHA)/get_recall(matrix)) 
 
-def get_design(vals):
-    """Return design matrix for which each element has all values
-        in corresponding element of vals
-    """
-    
-    def fill_design(design, row):
-        if len(row) == len(vals):
-            design.append(row)
-        else:
-            for v in vals[len(row)]:
-                fill_design(design, row + [v])    
-
-    design = []
-    row = []
-    fill_design(design, row)
-    
-    print '-' * 80
-    print vals
-    print '-' * 80
-    for i,row in enumerate(design):
-        print '%3d : %s' % (i, row)
-    print '-' * 80
-    
-    return design
-
 def matrix_str(matrix):
     total = sum([matrix[a,p] for p in (False,True) for a in (False,True)])
     vals = ', '.join(['%4.1f' % (matrix[a,p]/total * 100.0)
