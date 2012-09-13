@@ -10,7 +10,7 @@ is the id of the latest tweet do_twitter.py has fetched from Twitter.
 [owww_papertcut.replies](https://github.com/peterwilliams97/twitter_bot/blob/master/data/owww_papertcut.replies)
 is all the tweets replied to by [OwwwPapercut](http://twitter.com/OwwwPapercut). 
 
-[owww_papertcut.cls](https://github.com/peterwilliams97/twitter_bot/blob/master/data/owww_papertcut.cls)
+[owww_papertcut.cls](https://raw.github.com/peterwilliams97/twitter_bot/master/data/owww_papertcut.cls)
 is the list of hand-labelled tweets used to train 
 [BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py).
 
