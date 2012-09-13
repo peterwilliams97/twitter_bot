@@ -1,10 +1,8 @@
 TODO
 ====
 
-Create _MULTI n-grams
----------------------
-  a) In addition to n-gram
-  b) Instead of n-gram
+Update all data files with latest classifier
+--------------------------------------------  
   
 Hardcode timezone
 -----------------  
