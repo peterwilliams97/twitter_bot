@@ -10,7 +10,7 @@ from __future__ import division
     
     A tunable threshold is classifying based on posterior probabalities
     
-    The paramates for all these things are at the start of BayesClassifier
+    The paramaters for all these things are at the start of BayesClassifier
 """
 import math, re
 
@@ -45,9 +45,10 @@ def _remove_quoted_text(message):
             out_parts.append(' ' if in_quote else p)
             in_quote = not in_quote
         message = ' '.join(out_parts) 
+        
     return message    
 
-RE_USER = re.compile(r'@\w+')
+RE_USER = re.compile(r'@+\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
 RE_SYM = re.compile(r'&(\w+);')
@@ -60,12 +61,18 @@ RE_PUNC = re.compile(r'[,.;:-]')
 RE_PUNC2 = re.compile(r'[!?\']{2,}')
 RE_PUNC3 = re.compile(r'\?')
 RE_PUNC4 = re.compile(r'\?[\s\?]+')
+RE_BRACKETS = re.compile(r'[\(\)\{\}]+')
 RE_SPACE = re.compile(r'\s+')
 RE_HASH = re.compile(r'#(\w+)')
 # Not sure why this is so effective f 0.821 -> 0.827
-RE_REPEAT = re.compile(r'(.)\1\1*') # RE_REPEAT = re.compile(r'(.)\1\1+')
+#RE_REPEAT = re.compile(r'(.)\1\1*')
+RE_REPEAT = re.compile(r'(.)\1\1+')
+RE_REPEAT2 = re.compile(r'[<>](\s*[<>])+')
+
 RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile(r'\d+(\s+\d)*')
+
+RE_JUNK = re.compile(r'[@*#%_+=&/\^\$]+')
 
 RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
 
@@ -77,25 +84,36 @@ def _pre_tokenize(message):
     message = _remove_quoted_text(message)
     
     message = RE_USER.sub('[TAG_USER]', message)
-    message = RE_HTTP.sub('[TAG_LINK]', message)
+    message = RE_HTTP.sub(' [TAG_LINK] ', message)
     
-    #message = RE_AMP.sub(' & ', message)
-    #message = RE_GT.sub(' < ', message)
-    #message = RE_LT.sub(' > ', message)
-    #message = RE_SYM.sub(r' \1 ', message) 
-    message = RE_SYM.sub(r'[TAG_SYMBOL]', message) 
-    message = RE_SYM2.sub(r'[TAG_SYMBOL]', message) 
-    
+    message = RE_AMP.sub(' & ', message)
+    message = RE_GT.sub(' < ', message)
+    message = RE_LT.sub(' > ', message)
+    message = RE_SYM.sub(r' \1 ', message) 
+    message = RE_SYM.sub(r' [TAG_SYMBOL] ', message) 
+    message = RE_SYM2.sub(r' [TAG_SYMBOL] ', message) 
+       
     message = RE_PUNC.sub(' ', message)
-    message = RE_PUNC2.sub('!', message)
+    message = RE_PUNC2.sub(' ! ', message)
     message = RE_PUNC3.sub(r' ? ', message)
     message = RE_PUNC4.sub(r' ? ', message)
+    message = RE_BRACKETS.sub(' ', message)
+    
     message = RE_SPACE.sub(' ', message)
+    
     message = RE_HASH.sub(r'\1', message)
-    message = RE_REPEAT.sub(r'\1', message) # message = RE_REPEAT.sub(r'\1\1', message)
+        
+    message = RE_REPEAT.sub(r'\1', message) 
+    #message = RE_REPEAT.sub(r'\1\1', message)
+    message = RE_REPEAT2.sub(r'>', message) 
+    
     message = RE_BANG.sub(r'\1 \2', message)
+    
+    message = RE_JUNK.sub(r' [TAG_JUNK] ', message) 
   
-    message = RE_NUMBER.sub('[TAG_NUMBER]', message)
+    message = RE_NUMBER.sub(' [TAG_NUMBER] ', message)
+    
+    #message = RE_JUNK.sub(' ', message)
      
     return message
   
@@ -104,6 +122,7 @@ def _pre_tokenize(message):
 STOP_WORDS = set([
     'the',
     'and',
+    #'or',
     #'did',
     #'it',
     #'is',
@@ -113,7 +132,7 @@ STOP_WORDS = set([
     #'a', # Excluding 'a' increases precision and decreases recall
     #'have', 
     #'my',
-    
+    #'i',
     #'of'
     # 'in', 'on', 'at'
     ])    
@@ -192,14 +211,14 @@ def _get_cntv(counts):
     return cntn,cntp,v
 
 class BayesClassifier:
-
-    # Precision = 0.937, Recall = 0.741, F1 = 0.827
-    smooth_unigram = 8.4423
-    smooth_bigram = 4.4690
-    smooth_trigram = 0.5298
-    backoff_bigram = 0.7356
-    backoff_trigram = 0.3505
-    threshold = 3.7898
+    
+    # Precision = 0.942, Recall = 0.730, F1 = 0.822
+    smooth_unigram = 9.0039
+    smooth_bigram = 4.5435
+    smooth_trigram = 0.5263
+    backoff_bigram = 0.7710
+    backoff_trigram = 0.3751
+    threshold = 3.2122
 
     @staticmethod
     def make_valid(param):
@@ -255,7 +274,29 @@ class BayesClassifier:
         message = message.lower()
         message = BayesClassifier.pre_tokenize(message)
         words = message.split()
-        return BayesClassifier.post_tokenize(words)    
+        return BayesClassifier.post_tokenize(words) 
+
+    @staticmethod
+    def get_features(ngrams):
+        """Make features to classify on from ngrams
+            We make these features binary
+        """    
+        #Precision = 0.935, Recall = 0.708, F1 = 0.806
+        # "Binarize"
+        # 0 or 1 occurrences of ngram in document
+        #return set(ngrams)
+        
+        counts = {}
+        for w in ngrams:
+            counts[w] = counts.get(w,0) + 1
+        features = []
+        
+        for k,v in counts.items():
+            features.append(k)
+            for cnt in range(2,min(3,v)+1): 
+                features.append('%s (COUNT=%d)' % (k,cnt))
+
+        return features        
 
     class Example:
         """Represents a document with a label. cls is True or False
@@ -300,11 +341,9 @@ class BayesClassifier:
         bigrams = _get_bigrams(words)
         trigrams = _get_trigrams(words)
       
-        # "Binarize"
-        # 0 or 1 occurrences of ngram in document
-        unigrams = set(unigrams)
-        bigrams = set(bigrams)
-        trigrams = set(trigrams)
+        unigrams = BayesClassifier.get_features(unigrams)
+        bigrams = BayesClassifier.get_features(bigrams)
+        trigrams = BayesClassifier.get_features(trigrams)
 
         def update_ngrams(ngrams, ngram_counts, ngram_keys):
             """Update ngram_counts and ngram_keys for ngrams
@@ -351,13 +390,12 @@ class BayesClassifier:
              + show_counts('BIGRAMS', self.bigram_counts) \
              + show_counts('UNIGRAMS', self.unigram_counts) 
 
-   
     def classify(self, message, detailed=False):
         """ 
             'message' is a string to classify. Return True or False classification.
             
             Method is to calculate a log_odds from a liklihood based on
-            trigram, bigram and unigram p,n counts in the training set
+            trigram, bigram and unigram (p,n) counts in the training set
             For each trigram
                 return smoothed trigram score if trigram in training set, else
                 for the 2 bigrams in the trigram
@@ -371,14 +409,28 @@ class BayesClassifier:
         words = BayesClassifier.extract_words(message)
         if detailed:
             print words
-        unigrams = words
-        bigrams = _get_bigrams(words)
-        trigrams = _get_trigrams(words)
-
-        # "Binarize"
-        unigrams = set(unigrams)
-        bigrams = set(bigrams)
-        trigrams = set(trigrams)
+        
+        unigrams = []
+        bigrams = []
+        trigrams = []
+        
+        # !@#$ Best intuition is to compute back-off based on counts
+        for i in range(len(words)-3):
+            tri = WORD_DELIMITER.join(words[i:i+3])
+            if tri in self.trigram_keys:
+                trigrams.append(tri)
+            else:
+                for j in (0,1):
+                    bi = WORD_DELIMITER.join(words[i+j:i+j+2])
+                    if bi in self.bigram_keys:
+                        bigrams.append(bi)
+                    else:
+                        for k in (0,1):
+                            unigrams.append(words[i+j+k])
+        
+        unigrams = BayesClassifier.get_features(unigrams)
+        bigrams = BayesClassifier.get_features(bigrams)
+        trigrams = BayesClassifier.get_features(trigrams)        
 
         def get_score(counts, cntv, alpha):
             """
@@ -415,29 +467,30 @@ class BayesClassifier:
             return score
             
         def bigram_score(k):
-            if k not in self.bigram_keys:
-                w1,w2 = _U(k) 
-                return (unigram_score(w1) + unigram_score(w2)) * BayesClassifier.backoff_bigram 
             score = get_score(self.bigram_counts.get(k, [0,0]), self.cntv_bigrams, BayesClassifier.smooth_bigram)
             _dbg(2, score, k)
             return score
 
         def trigram_score(k):
             if detailed: print '-----', k
-            if k not in self.trigram_keys:
-                w1,w2,w3 = _U(k)
-                return (bigram_score(_B(w1,w2)) + bigram_score(_B(w2,w3))) * BayesClassifier.backoff_trigram 
             score = get_score(self.trigram_counts.get(k, [0,0]), self.cntv_trigrams, BayesClassifier.smooth_trigram)
             _dbg(3, score, k)
             return score
 
         n,p = self.class_count
         prior = math.log(p) - math.log(n)    
-        likelihood = sum(trigram_score(k) for k in trigrams)
+        likelihood = sum(trigram_score(k) for k in trigrams) \
+                   + BayesClassifier.backoff_trigram *(sum(bigram_score(k) for k in bigrams) 
+                   + (BayesClassifier.backoff_bigram * sum(unigram_score(k) for k in unigrams))) 
         log_odds = prior + likelihood
         
         if detailed:
-            return log_odds > BayesClassifier.threshold, log_odds, dict((trigram_score(k),k) for k in trigrams) 
+            n_gram_dict = {}
+            for k in trigrams: n_gram_dict[k] = trigram_score(k) 
+            for k in  bigrams: n_gram_dict[k] =  bigram_score(k) 
+            for k in unigrams: n_gram_dict[k] = unigram_score(k) 
+                    
+            return log_odds > BayesClassifier.threshold, log_odds, n_gram_dict 
         else:
             return log_odds > BayesClassifier.threshold, log_odds
 

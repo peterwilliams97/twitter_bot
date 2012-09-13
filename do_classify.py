@@ -8,6 +8,10 @@ import sys, re, random
 from BayesClassifier import BayesClassifier
 import common, definitions, filters
 
+RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
+def is_papercut(message):
+    return RE_PAPERCUT.search(message) is not None
+
 def get_labelled_tweets():  
     """Load the labelled tweets we analyze from common.CLASS_FILE"""
     tweets = []
@@ -15,6 +19,8 @@ def get_labelled_tweets():
     for i,ln in enumerate(fp):
         parts = [pt.strip() for pt in ln.split('|')]
         cls, message = definitions.get_class(parts[0]), parts[1]
+        if not is_papercut(message):
+            continue
         if cls in set([False,True]):
             tweets.append((cls, message))
     fp.close()

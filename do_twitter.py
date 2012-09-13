@@ -40,6 +40,7 @@ def is_relevant(twitter_status):
 """
 from datetime import datetime
 LOCAL_TIME_DELTA = datetime.now() - datetime.utcnow()
+LOCAL_TIME_DELTA
 SUMMARY_DAY_FORMAT = '%I:%M%p' 
 SUMMARY_TM_FORMAT = '%I:%M%p %a %d %b' 
 RE_TIME = re.compile(r'(\d+):(\d+)(AM|PM)', re.IGNORECASE)
