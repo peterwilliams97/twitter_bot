@@ -1,17 +1,32 @@
 from __future__ import division
+# -*- coding:iso-8859-1 -*-
 """
     Peform various statistical tests on the labelled tweets in CLASS_FILE
 """ 
-import sys, re, random
+import sys, re, random, math
 
 # Our shared modules
-from BayesClassifier import BayesClassifier
 import common, definitions, filters
 
-RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
-def is_papercut(message):
-    return RE_PAPERCUT.search(message) is not None
+# The Classifer class is used through this module. It is loaded dynamically
+# with load_classifier_class()
 
+def load_module_class(module_name, class_name):
+    """Dynamic module loader for classifier.
+        Loads class class_name from module module_name
+        Classifier = load_module_class('BayesClassifier', 'BayesClassifier') 
+        is equivalent to
+        from BayesClassifier import BayesClassifier as Classifier
+    """    
+    temp = __import__(module_name, globals(), locals(), [class_name], -1)
+    return temp.__dict__[class_name] 
+    
+def load_classifier_class(classifier_name):
+    """Convenience function to load our classifiers that are conventionally
+        have the same module and class names.
+    """
+    return load_module_class(classifier_name, classifier_name)   
+ 
 def get_labelled_tweets():  
     """Load the labelled tweets we analyze from common.CLASS_FILE"""
     tweets = []
@@ -19,25 +34,27 @@ def get_labelled_tweets():
     for i,ln in enumerate(fp):
         parts = [pt.strip() for pt in ln.split('|')]
         cls, message = definitions.get_class(parts[0]), parts[1]
-        if not is_papercut(message):
+        if not filters.is_allowed_for_training(message):
             continue
         if cls in set([False,True]):
             tweets.append((cls, message))
+        #!@#$
+        #if len(tweets) > 100: break
     fp.close()
     return tweets
     
 def show_ngrams(tweets): 
-    """Print all the ngrams that the BayesClassifier saves for 
+    """Print all the ngrams that the Classifier saves for 
         a list of tweets
     """
-    print BayesClassifier(tweets)
+    print Classifier(tweets)
 
 def show_self_validation(tweets):
     """Create a classification model based on tweets
         then classify all the entries in tweets with
         that model and print the results to stdout.
     """
-    model = BayesClassifier(tweets)
+    model = Classifier(tweets)
     
     ratings = [(model.classify(t[1]), t) for t in tweets]
     ratings.sort()
@@ -54,7 +71,7 @@ def get_empty_score():
 
 do_filter = False    
 def get_test_score(training_tweets, test_tweets, test_indexes):
-    model = BayesClassifier(training_tweets)
+    model = Classifier(training_tweets)
 
     score = get_empty_score()
     fp = []
@@ -71,7 +88,7 @@ def get_test_score(training_tweets, test_tweets, test_indexes):
     return score, fp, fn
 
 def cross_validate(tweets, num_folds):
-    """Perform num_folds-fold cross-validations on tweets and return
+    """Perform num_folds folds of cross-validations on tweets and return
         confusion_matrix, false_positives, false_negatives
     """    
     confusion_matrix = get_empty_score()
@@ -87,21 +104,25 @@ def cross_validate(tweets, num_folds):
         false_positives += fp   
         false_negatives += fn  
     return confusion_matrix, sorted(false_positives), sorted(false_negatives)
-  
+ 
+def _div(a, b):
+    return a/b if b else 0
+ 
 def get_precision(matrix):
-    return matrix[(True,True)]/(matrix[(True,True)] + matrix[(False,True)])
+    return _div(matrix[(True,True)], matrix[(True,True)] + matrix[(False,True)])
 
 def get_recall(matrix):
-    return matrix[(True,True)]/(matrix[(True,True)] + matrix[(True, False)])  
+    return _div(matrix[(True,True)], matrix[(True,True)] + matrix[(True, False)])  
     
 def get_f(matrix):
-    return 2.0/(1.0/get_precision(matrix) + 1.0/get_recall(matrix))
+    return _div(2.0, _div(1.0,get_precision(matrix)) + _div(1.0, get_recall(matrix)))
 
 ALPHA = 0.9
 assert 0.0 <= ALPHA <= 1.0, 'ALPHA = %f is invalid' % ALPHA
 def get_opt_target(matrix):
     """The objective function that we aim to maximize"""
-    return 1.0/(ALPHA/get_precision(matrix) + (1.0-ALPHA)/get_recall(matrix)) 
+    return _div(1.0, _div(ALPHA,get_precision(matrix)) + _div(1.0-ALPHA, get_recall(matrix)))
+
 
 def matrix_str(matrix):
     total = sum([matrix[a,p] for p in (False,True) for a in (False,True)])
@@ -112,49 +133,54 @@ def matrix_str(matrix):
 def arr_str(arr):
     vals = ','.join(['%6.3f' % x for x in arr])
     return '[%s]' % vals    
+    
+def TF(a):
+    return [math.log(x) for x in a]
+def TR(a):
+    return [math.exp(x) for x in a]
+    
+if False:
+    def test_t(a):
+        b = TR(TF(a))
+        c = TF(TR(a))
+        a_b = max(abs(x-y) for (x,y) in zip(a,b))
+        a_c = max(abs(x-y) for (x,y) in zip(a,c))
+        b_c = max(a_b, a_c)
+        print 'a: %s %f' % (a, b_c)
+        print 'b: %s %f' % (b, a_b)
+        print 'c: %s %f' % (c, a_c)
+    test_t([4, 5, 6])
+    test_t([0.0001, 6, 6])
+    exit()
 
 def optimize_params(tweets):
     from scipy import optimize
     
-    def get_params(x):
-        return (x[0], 
-            #BayesClassifier.smooth_bigram,
-            #BayesClassifier.smooth_trigram,
-            x[1], x[2],
-            x[3], x[4], x[5]
-            )  
-    
-    def func(x):
-        BayesClassifier.set_params(*get_params(x))
-        matrix,_,_ = cross_validate(tweets, 10)
-        f = -get_opt_target(matrix)
-        print ' %.4f %s %s' % (-f, matrix_str(matrix), 
-            arr_str(BayesClassifier.get_params())
-            )
-        return f
+    # We optimize a vector x that is the logs of the Classifier params
 
-    x0 = [
-        BayesClassifier.smooth_unigram,
-        BayesClassifier.smooth_bigram,
-        BayesClassifier.smooth_trigram, 
-        BayesClassifier.backoff_bigram, 
-        BayesClassifier.backoff_trigram,
-        BayesClassifier.threshold
-    ]
+    def func(x):
+        Classifier.set_params(*TR(list(x)))
+        matrix,_,_ = cross_validate(tweets, 4)
+        f = -get_opt_target(matrix)
+        print ' %.4f %s %s' % (-f, matrix_str(matrix), arr_str(Classifier.get_params()))
+        return f
     
     print 'ALPHA = %.3f' % ALPHA
+    
+    x0 = TF(Classifier.get_params())
     x = optimize.fmin(func, x0)
+    
     print '^' * 80
     print -func(x0), x0
     print -func(x), list(x)
     
     # Reinstall the best params
-    BayesClassifier.set_params(*get_params(x))
+    Classifier.set_params(*TR(list(x)))
     matrix,_,_ = cross_validate(tweets, 10)
     
     print '    # Precision = %.3f, Recall = %.3f, F1 = %.3f' % (
         get_precision(matrix), get_recall(matrix), get_f(matrix))  
-    for k,v in zip(BayesClassifier.get_param_names(), BayesClassifier.get_params()):
+    for k,v in zip(Classifier.get_param_names(), Classifier.get_params()):
         print '    %s = %.4f' % (k,v)
  
 def print_confusion_matrix(confusion_matrix):  
@@ -211,19 +237,21 @@ def show_classification_details(test_pattern):
     test_data = [t for t in tweets if test_pattern in t[1]]
     train_data = [t for t in tweets if test_pattern not in t[1]]
     print test_data
-    model = BayesClassifier(train_data)
+    model = Classifier(train_data)
     for cls, message in test_data:
-        kls, log_odds, ngrams = model.classify(message, True)
-        print kls, cls, log_odds
-        for k in sorted(ngrams):
-            print '%6.3f : %s ' % (k, ngrams[k])    
+        pred, log_odds = model.classify(message, True)
+        print pred, cls, log_odds
 
 if __name__ == '__main__':
 
+    # The Nelson.
+    random.seed(111)
+    
     import optparse
 
     parser = optparse.OptionParser(usage = 'Usage: python %prog [options]')
     
+    parser.add_option('-C', '--Classifier', dest='Classifier', default='BayesClassifier', help='Classifier to use')
     parser.add_option('-n', '--ngrams', action='store_true', dest='ngrams', default=False, help='show ngrams')
     parser.add_option('-s', '--self-validate', action='store_true', dest='self_validate', default=False, help='do self=validation')
     parser.add_option('-c', '--cross-validate', action='store_true', dest='cross_validate', default=False, help='do cross-validation')
@@ -232,14 +260,21 @@ if __name__ == '__main__':
     parser.add_option('-o', '--optimize', action='store_true', dest='optimize', default=False, help='find optimum threshold, back-offs and smoothings')
     parser.add_option('-m', '--model', action='store_true', dest='model', default=False, help='save calibration model')
     parser.add_option('-f', '--filter', action='store_true', dest='filter', default=False, help='apply filter')
-    do_filter
+    parser.add_option('-l', '--limit', dest='limit', type = 'int', default=-1, help='max number of tweets to test')
     
     (options, args) = parser.parse_args()
     
     if not any(options.__dict__.values()): 
         parser.error('No options specified')
- 
+
+    Classifier = load_classifier_class(options.Classifier)
+    print 'classifier=%s' % Classifier.__dict__['__module__']
+    
     tweets = get_labelled_tweets() 
+    random.shuffle(tweets)
+    
+    if options.limit > 0:
+        tweets = tweets[:options.limit]
  
     do_filter = options.filter
 
@@ -259,7 +294,7 @@ if __name__ == '__main__':
         show_classification_details(options.test_string)
 
     if options.model:
-        model = BayesClassifier(tweets)
+        model = Classifier(tweets)
         common.save_model(model)
 
         

@@ -2464,7 +2464,7 @@ y | Papercut of my face from a weight watchers leaflet, mm don't ask
 y | Just gave myself a MEAN paper cut on my thumb &gt;_&lt;
 y | OMG OW FUCK YOU @paper giving me a damn paper cut.
 y | Papercut on my face from a weight watchers leaflet, yeah, it was an eventful evening
-Y | ;( got a damn paper cut!
+y | ;( got a damn paper cut!
 y | This paper cut aint no joke
 y | I cut myself with a kitchen knife &amp; I can stop the bleeding in a minute. I get a paper cut &amp; it looks like someone was murdered in my apt?
 n | Dying by 10billion paper cuts with salt in it would feel ALOT better than having the deepest cut of them all... The one that's in my heart
@@ -2511,12 +2511,12 @@ n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to r
 y | Hand sanitized + papercut = :'(
 y | Just got a paper cut?? #ouchh
 y | That paper cut I got today &lt;&lt;&lt;
-N | I'm just another paper cut survivor...
+n | I'm just another paper cut survivor...
 y | Just gave myself a paper cut #ouch
 y | Got a MEAN paper cut smh
 y | Hand sanitizer + papercut = :'(
 y | I got a paper cut and my moms wanna take me to the doctor to get a full check up... -_- it's only a paper cut,  Geesh.
-N | @AyeJazzy_ Maybe she'll learn to accept fault rather than talking back, in fact, let's papercut her fucking tongue off.
+n | @AyeJazzy_ Maybe she'll learn to accept fault rather than talking back, in fact, let's papercut her fucking tongue off.
 y | getting a paper cut across your face #ouchhhh #onlyme
 y | Hand sanitizer + papercut = worst pain of my life
 y | I got a paper cut man .
@@ -2622,7 +2622,7 @@ y | I have a paper cut under my nail.. #fuckme -.-
 y | iGot A Big Ass Paper Cut :'(
 n | Linkin Park stuck in my head for the past 2 days. Papercut.
 n | ?@UnIuckyBrian: Gets paper cut. Bleeds to death.? @Booger_Red
-Y | Got a paper cut in between my fingers -__- #How #Fuck
+y | Got a paper cut in between my fingers -__- #How #Fuck
 n | The baby messing w / this notebook .. gone get a paper cut if you want to.
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Detroit Voodoo. http://t.co/ONQrB2Fw
 y | F this paper cut! ???
@@ -3082,7 +3082,7 @@ n | @PAPERCUT_ no i dint. Did she ask me to?
 y | Worst papercut of my young adult life! #ouchhhh
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request CAPER. http://t.co/kpu0P11k
 y | Got a papercut while eating #needabandaid
-N | papercut....
+? | papercut....
 n | This papercut is ridiculous #QuadProbs
 n | Mackenie Loop   Papercut Magazine (Photographer: Glensius Cal) http://t.co/1ytuymjV http://t.co/mmqACpzn
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request M31. http://t.co/TMmyV7mz
@@ -3131,7 +3131,7 @@ y | First paper cut in 5 years.... It was a good run Reidy....
 n | @SimplyLeTigre Valentine's Day. You'll die of paper cut wounds opening all the twitter follower cards.
 y | I fought papers today ! Huge paper cut on my mouth =( .. I obviously lost
 y | Ahhhh paper cut ='(
-Y | i got a paper cut and it burns like pits of hell
+y | i got a paper cut and it burns like pits of hell
 y | SWEET paper cut received from shipping off some posters for a client. That's right - we BLEED for our Chaos... http://t.co/3jCqSaRi
 y | my phone just gave me a paper cut
 n | FYI the #June issue of Papercut is available on @magcloud for purchase!   http://t.co/5n4kVOuS
@@ -3181,7 +3181,7 @@ n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to r
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request OJ Marley. http://t.co/AF7wRv8m
 y | Got my first official papercut of my real world job #paperpushingprobs
 n | @3Sculli sorry you had a rough day in your air conditioned office. Get a paper cut?
-Y | Paper cuts are ridiculous. How does a cut that small hurt so damn bad?
+y | Paper cuts are ridiculous. How does a cut that small hurt so damn bad?
 n | Now Playing ? Papercut [Live] by Linkin Park, from #SoundHound http://t.co/WQFHpcIF
 n | Umm just got a paper cut but somehow I don?t feel much pain. Lol numb by exhaustion maybe?
 n | IDGAF WHAT ANYBODY SAYS!! The two worst pains ever are a paper cut and a brain freeze lol
@@ -3218,465 +3218,465 @@ n | @melricciutelli do you realise that I still have a scab from that giant pape
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Taryn Laronge. http://t.co/rRqvEFTr
 n | My life is literally one paper cut after another
 y | Scared of reading vogue after receiving a paper cut right across my hand #Ouch
-N | TC is trying to give me a paper cut. :(
+n | TC is trying to give me a paper cut. :(
 n | "I hope he gets a paper cut EVERY day for 6 months straight!"  -@hannnyb
-Y | I don't get how people cut themselves, shit I hate paper cuts let alone razors.
+n | I don't get how people cut themselves, shit I hate paper cuts let alone razors.
 n | @ThaRealPilotP Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request FireWoods. http://t.co/m1QUTX4m
 n | @D3ThaRocStar Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request FireWoods. http://t.co/m1QUTX4m
-N | Getting a paper cut from eight pages to five &gt;&gt;&gt;
-Y | ahhh i just got a paper cut !
-N | Damn paper cut
-Y | I got a papercut yesterday and today -_-
+n | Getting a paper cut from eight pages to five &gt;&gt;&gt;
+y | ahhh i just got a paper cut !
+y | Damn paper cut
+y | I got a papercut yesterday and today -_-
 n | She's gonna bleed to death from a paper cut lol
-N | [Blog] PaperCut: Back To the Future http://t.co/8NecbfuX
-Y | I got a paper cut ... -.-
+n | [Blog] PaperCut: Back To the Future http://t.co/8NecbfuX
+y | I got a paper cut ... -.-
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Starchild X. http://t.co/0uvQiffC
-N | Wtf I papercut myself with a pack of cards
+y | Wtf I papercut myself with a pack of cards
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request The Fabrockators. Thanks!... http://t.co/ZOIexgkS
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request The Fabrockators. Thanks! http://t.co/hv7KDKfs
-Y | Mother f my life co?o que paper cut ma maldito #urghhhhh on my wrist #really! #Smh!
-Y | ARGH! Paper cut on lip from licking an envelope. THE PAIN! THE PAIN!!
-N | Doing 2011 taxes w/@DJAutomatic. I can think of a million things I'd rather be doing like, stubbing my toe or a paper cut.
-Y | Gave myself a papercut with my fruit roll-up :/
-Y | So my sister decided to headbut a paper while I was pretending they were binoculars and I got a paper cut in my eyes:'/
-N | #WorstFeelings getting a paper cut !
-N | Papercut from flipping through a Nordstrom catalog, why does everything I lust for hurt me?
+y | Mother f my life co?o que paper cut ma maldito #urghhhhh on my wrist #really! #Smh!
+y | ARGH! Paper cut on lip from licking an envelope. THE PAIN! THE PAIN!!
+n | Doing 2011 taxes w/@DJAutomatic. I can think of a million things I'd rather be doing like, stubbing my toe or a paper cut.
+y | Gave myself a papercut with my fruit roll-up :/
+y | So my sister decided to headbut a paper while I was pretending they were binoculars and I got a paper cut in my eyes:'/
+y | #WorstFeelings getting a paper cut !
+y | Papercut from flipping through a Nordstrom catalog, why does everything I lust for hurt me?
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Randy Corinthian.... http://t.co/LlwcRHXp
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Randy Corinthian. http://t.co/Ie7E5qWK
-N | Aint no party like a losty party! #wild #wildfriday #TGIF #papercut http://t.co/3I3B13h7
+n | Aint no party like a losty party! #wild #wildfriday #TGIF #papercut http://t.co/3I3B13h7
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request itchyface. http://t.co/QdCuXkQ8
-Y | i have a papercut #killer
-N | Whoever said 'gd things cum in small packages' obviously has NEVER had a paper cut... X
-Y | Ow got a paper cut on my thumb:'(
+y | i have a papercut #killer
+n | Whoever said 'gd things cum in small packages' obviously has NEVER had a paper cut... X
+y | Ow got a paper cut on my thumb:'(
 n | le gusta Papercut (Recorded Live At BBC1) de Linkin Park en Ping http://t.co/dzRmChbw #iTunes
-N | @AudreyEccles23 all I get out of it is a paper cut #hatethis
-N | There is nothing more annoying than a freaking paper cut.
-N | #WorstFeelings paper cut
-Y | Pro: finally mailed out open house thank you notes today. Con: got a paper cut on my lip from licking said notes.
-N | Ahhhhh!!!! Shit!!! Oh my god!!! ????paper cut!!
-Y | I burned by finger and got a paper cut... My poor hands.
-Y | @GeorgeCallard oh shut up, I can't, I've got a papercut
-N | OMFG ONE DIRECTION PAPER CUT OUTSSSS.
-N | Poster paper cut in circles, spraypainted, layered into a fishscale pattern on fiberboard, trimmed o http://t.co/11l3J5k0
-Y | I got a near-fatal paper cut during first block but found a dollar on the ground during second block, so all in all, it was a great Friday!
-Y | I got a papercut today! It really did hurt :c
+y | @AudreyEccles23 all I get out of it is a paper cut #hatethis
+y | There is nothing more annoying than a freaking paper cut.
+y | #WorstFeelings paper cut
+y | Pro: finally mailed out open house thank you notes today. Con: got a paper cut on my lip from licking said notes.
+y | Ahhhhh!!!! Shit!!! Oh my god!!! ????paper cut!!
+y | I burned by finger and got a paper cut... My poor hands.
+y | @GeorgeCallard oh shut up, I can't, I've got a papercut
+n | OMFG ONE DIRECTION PAPER CUT OUTSSSS.
+n | Poster paper cut in circles, spraypainted, layered into a fishscale pattern on fiberboard, trimmed o http://t.co/11l3J5k0
+y | I got a near-fatal paper cut during first block but found a dollar on the ground during second block, so all in all, it was a great Friday!
+y | I got a papercut today! It really did hurt :c
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Zanya Laurence. http://t.co/mzpu4eFC
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Zanya Laurence.... http://t.co/GyLFxoQn
-N | @teeeenzy hockey has more action. Kopitar's mouth got cut, he got 15 stitches and played that game. Basketball, gets paper cut, out 10 games
-N | Papercut ow ow ow ow
-Y | idk how have I even got a papercut
-Y | Don't flatter yourself. It's not because you hurt my feelings. I'm crying because I'm PMSing &amp; got a papercut (after you hurt my feelings).
-Y | I gave myself a paper cut. ??
-Y | I just got salt on my paper cut :( omg the pain!
-Y | I got a paper cut on my lip.
-N | #WorstFeelings A Paper Cut
+n | @teeeenzy hockey has more action. Kopitar's mouth got cut, he got 15 stitches and played that game. Basketball, gets paper cut, out 10 games
+y | Papercut ow ow ow ow
+y | idk how have I even got a papercut
+y | Don't flatter yourself. It's not because you hurt my feelings. I'm crying because I'm PMSing &amp; got a papercut (after you hurt my feelings).
+y | I gave myself a paper cut. ??
+y | I just got salt on my paper cut :( omg the pain!
+y | I got a paper cut on my lip.
+y | #WorstFeelings A Paper Cut
 n | Featured in Papercut Magazine! Post on their wall to request The Retinas. http://t.co/MilAnmnd
-Y | Got a bitch ass paper cut today :(
-Y | i gotta paper cut though "/
-N | #WorstFeelings Getting a papercut.
-N | Papercut hurts like a .....!
-Y | @Jake_Friel so I just got a paper cut and remembered when I got to wrap your entire head with bandage wrap for Romeo &amp; Harriet?? #goodtimes
-N | @n0rth_  did u get a paper cut on ur thumb that's the worst
-Y | This paper cut hurts soo bad..
-Y | I just got a paper cut from the money in my wallet...#firstworldpains
-N | @MiraTweeta @steelriverboy fingure. Massive bleeding paper cut . Ok now night night now
-Y | I have a paper cut the size of Texas. #ouch
-N | @ayedelapaz THROW EM LIKE  ITS STRIPPER MONEY. pffttt jkjk. Watch him get a paper cut...so many cards being thrown at once.
+y | Got a bitch ass paper cut today :(
+y | i gotta paper cut though "/
+y | #WorstFeelings Getting a papercut.
+y | Papercut hurts like a .....!
+n | @Jake_Friel so I just got a paper cut and remembered when I got to wrap your entire head with bandage wrap for Romeo &amp; Harriet?? #goodtimes
+n | @n0rth_  did u get a paper cut on ur thumb that's the worst
+y | This paper cut hurts soo bad..
+y | I just got a paper cut from the money in my wallet...#firstworldpains
+y | @MiraTweeta @steelriverboy fingure. Massive bleeding paper cut . Ok now night night now
+y | I have a paper cut the size of Texas. #ouch
+n | @ayedelapaz THROW EM LIKE  ITS STRIPPER MONEY. pffttt jkjk. Watch him get a paper cut...so many cards being thrown at once.
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Patricia L.. http://t.co/h7qLAqwh
-N | @mallaryhope don?t paper cut your tongue :p
-N | @ItsNESSA_sary .....paper cut to remember me by /psycho smile HAHA
+n | @mallaryhope don?t paper cut your tongue :p
+n | @ItsNESSA_sary .....paper cut to remember me by /psycho smile HAHA
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Jimmy Byrd - Guitarist. http://t.co/GqHERWzi
-N | I gtts fuckinggg paper cut
+y | I gtts fuckinggg paper cut
 n | sand paper kisses, paper cut bliss.
-Y | dropped my book on my head and got a paper cut on my eye -.-
+y | dropped my book on my head and got a paper cut on my eye -.-
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Pedalay the Boss.... http://t.co/2XAICAIc
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Pedalay the Boss. http://t.co/MAeqtqi0
-Y | i just printed a damn paper and that son of a bitch fucking flew to my huge nose and it almost gave me a paper cut wtf
+n | i just printed a damn paper and that son of a bitch fucking flew to my huge nose and it almost gave me a paper cut wtf
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Jay Kushtana. http://t.co/VYEEQAyH
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Jay Kushtana. http://t.co/VYEEQAyH http://t.co/fccZ6Z7P
-Y | I got a paper cut &amp; hurts more then when I burnt my leg :(
-Y | got the smallest paper cut in the world and i'm almost in tears
-Y | Just gave myself a papercut on my ear
+y | I got a paper cut &amp; hurts more then when I burnt my leg :(
+y | got the smallest paper cut in the world and i'm almost in tears
+y | Just gave myself a papercut on my ear
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Laid back. http://t.co/9NfgsfEL
-Y | - I Gotta Paper Cut The Shdd Hurts : / FUCKKKK
-N | If you unfollow me just because I don't follow you back you should paper cut your vagina.
-Y | I have a paper cut on the skin between my thumb and index finger. KILL ME NOW
-Y | I just got a paper cut and ngl, I cried.
-N | @SymmieEllie it's the smallest paper cut i saw #manup #yousoundlikeagirl #loveyou
-N | #WorstFeelings a paper cut
-N | I'm surprised I didn't get a papercut from cutting up those papers!! #tmlt
-Y | *looks around* wait... I've been alone at work all day. No one even called to check up on me. What if I got a paper cut!! Who would save me
-Y | I got a paper cut but from plastic
-Y | Yes! Lol you got a paper cut??
-Y | @missmayn this kidney infection only gets worse. cant get out of bed. paper cut on my thumb.
-N | what is worse than a paper cut....a card cut!!! #ouchies
-N | @daveskupski No actual bibles with them. Just leaflets. I could paper cut them I guess. And that's not too bad then. Still eww marriage.
-N | Came to work feeling crappy, leaving with a black eye and giant paper cut #somuchfun
+y | - I Gotta Paper Cut The Shdd Hurts : / FUCKKKK
+n | If you unfollow me just because I don't follow you back you should paper cut your vagina.
+y | I have a paper cut on the skin between my thumb and index finger. KILL ME NOW
+y | I just got a paper cut and ngl, I cried.
+n | @SymmieEllie it's the smallest paper cut i saw #manup #yousoundlikeagirl #loveyou
+y | #WorstFeelings a paper cut
+n | I'm surprised I didn't get a papercut from cutting up those papers!! #tmlt
+n | *looks around* wait... I've been alone at work all day. No one even called to check up on me. What if I got a paper cut!! Who would save me
+y | I got a paper cut but from plastic
+n | Yes! Lol you got a paper cut??
+y | @missmayn this kidney infection only gets worse. cant get out of bed. paper cut on my thumb.
+n | what is worse than a paper cut....a card cut!!! #ouchies
+n | @daveskupski No actual bibles with them. Just leaflets. I could paper cut them I guess. And that's not too bad then. Still eww marriage.
+y | Came to work feeling crappy, leaving with a black eye and giant paper cut #somuchfun
 n | Papercut Magazine Shoot preview Cherish shoot preview make up by Melanie Manson hair by Manuel Benevides http://t.co/9AvjIBQP
-N | ppl who dont get msg.Ima write it on paper cut in2 pieces mix with tobacco,roll a spliff,smoke it collect the ash &amp; then blow it your face!!
-N | Would rather papercut my nips than be stuck in this shitty country, with this shitty weather, on this shitty Bank Holiday! HELLO IBIZA!!! ??
-N | this firetrucking papercut hurts like a mofoD: #ragemodeengaged #fuuuu
-Y | At work i got a massive paper cut and ended up getting vinegar in it, painful at fuck :@@
-Y | -- got a paper cut today and it hurts -__-
-N | Damn paper cut ?????? http://t.co/eB2LDjxk
+n | ppl who dont get msg.Ima write it on paper cut in2 pieces mix with tobacco,roll a spliff,smoke it collect the ash &amp; then blow it your face!!
+n | Would rather papercut my nips than be stuck in this shitty country, with this shitty weather, on this shitty Bank Holiday! HELLO IBIZA!!! ??
+y | this firetrucking papercut hurts like a mofoD: #ragemodeengaged #fuuuu
+y | At work i got a massive paper cut and ended up getting vinegar in it, painful at fuck :@@
+y | -- got a paper cut today and it hurts -__-
+y | Damn paper cut ?????? http://t.co/eB2LDjxk
 n | Papercut Magazine Shoot preview model: Cherish  make up by Melanie Manson hair by Manuel Benevides http://t.co/4tsijXcx
-N | Paper cut #DamnYouCruelWorld
-N | She said she loves but she comes and goes as she pleases. and when the door shuts, its like another paper cut.
-Y | I got a papercut on my eyelid ... Df
-Y | I just got a papercut, except it wasn't paper it was my nail. Nailcut. Nailpapercut. Papernail. Fingernailcut. Paperfingernailcutnailcut.
+y | Paper cut #DamnYouCruelWorld
+n | She said she loves but she comes and goes as she pleases. and when the door shuts, its like another paper cut.
+y | I got a papercut on my eyelid ... Df
+n | I just got a papercut, except it wasn't paper it was my nail. Nailcut. Nailpapercut. Papernail. Fingernailcut. Paperfingernailcutnailcut.
 n | Linkin Park-Papercut Ideal para desestresarse;D
-Y | :( I got a paper cut today.
-N | keeley said " she got a paper cut" #forreal
-N | She can fall somewhere and hit her elbow. And then get a paper cut then get up and slam her toe on a table
-N | I have the World's Most Intense Paper Cut #StingsSoBad
-Y | PAPERCUT ON MY ARM WAT
-Y | Argos catalogue just given me a papercut!! #NotCool  #HurtsLikeABitch
-Y | i had no idea that i had a paper cut on my pinky but thank you purell for finding it
-N | Dear Ebay-Buyer-Guy, I hate you. You're not making this as easy as it's spose to be and I want to papercut your entire face with the tickets
-N | #WorstFeelings getting a paper cut :/
-Y | I GOT A PAPER CUT ON MY FINGER AND IT HURTS!! &gt;.&lt;
+y | :( I got a paper cut today.
+n | keeley said " she got a paper cut" #forreal
+n | She can fall somewhere and hit her elbow. And then get a paper cut then get up and slam her toe on a table
+y | I have the World's Most Intense Paper Cut #StingsSoBad
+y | PAPERCUT ON MY ARM WAT
+y | Argos catalogue just given me a papercut!! #NotCool  #HurtsLikeABitch
+y | i had no idea that i had a paper cut on my pinky but thank you purell for finding it
+n | Dear Ebay-Buyer-Guy, I hate you. You're not making this as easy as it's spose to be and I want to papercut your entire face with the tickets
+y | #WorstFeelings getting a paper cut :/
+y | I GOT A PAPER CUT ON MY FINGER AND IT HURTS!! &gt;.&lt;
 n | @CHASELBC Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request FireWoods. http://t.co/m1QUTX4m
-N | My Tattoos, no problem. Minor paper cut, hurts like hell!!
-Y | @nanceetran I got a paper cut on my elbow from it..... #fuckyouscience kkkk, on my way c':
-N | @_LAURENSCARROTT we know what he's up to! @Callum_Hassall got paper cut off a ducks muff
-Y | Ouch paper cut :(
-N | #WorstFeelings a paper cut. That you didn't even know you had until 6 hours later. That shit then feels like a gun shot.
+y | My Tattoos, no problem. Minor paper cut, hurts like hell!!
+y | @nanceetran I got a paper cut on my elbow from it..... #fuckyouscience kkkk, on my way c':
+n | @_LAURENSCARROTT we know what he's up to! @Callum_Hassall got paper cut off a ducks muff
+y | Ouch paper cut :(
+y | #WorstFeelings a paper cut. That you didn't even know you had until 6 hours later. That shit then feels like a gun shot.
 n | Spindle Shell Matted Paper Cut Out http://t.co/fWYDbUBh at Bonanza
-Y | Just got a paper cut... ????
+y | Just got a paper cut... ????
 n | a paper cut is a trees last revenge
-N | papercut the hell outta my birdfinger :   * evil smile *  gives me an excusee to flick off peoplee  &gt;: ]
-Y | I got a effing paper cut!
-Y | I put money in my bra and it's given me a papercut and now my boob is bleeding
-Y | I got a papercut in my blister.... owww
-Y | I got a paper cut today and I didn't even TELL THE TEACHER ?? or disinfect it ? #REBEL #thuglife.
+n | papercut the hell outta my birdfinger :   * evil smile *  gives me an excusee to flick off peoplee  &gt;: ]
+y | I got a effing paper cut!
+y | I put money in my bra and it's given me a papercut and now my boob is bleeding
+y | I got a papercut in my blister.... owww
+y | I got a paper cut today and I didn't even TELL THE TEACHER ?? or disinfect it ? #REBEL #thuglife.
 n | @LinkinPark for the love of god please play Papercut!! #HondaCivicTour
-N | i remember when i asked my teacher for a band-aid and she was like "it's just a paper cut, it's not bleeding it's fine!" -she breaks a nail-
+ | i remember when i asked my teacher for a band-aid and she was like "it's just a paper cut, it's not bleeding it's fine!" -she breaks a nail-
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Casey Ed. http://t.co/HRrvGieV http://t.co/ZQ6oveIV
-N | When you have a super annoying paper cut...stick a flag on it! :)   @ Halfling House http://t.co/Poh7kUb6
-N | Kerry Meier is out again for the Atlanta Falcons? What, a paper cut this time? Might be time for the Turk to visit Kerry.
-N | To realize how madly in love you are with someone and all they want is to just be friends hurts more than a paper cut
-Y | I got a papercut in class and everyone looked at me :b I had blood all over my paper :D
-N | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America: [[ This is a? http://t.co/LgGiUw1O
-Y | "Please don`t take this the wrong way, but I`d rather swim buck naked across the Ganges with a paper cut on my nipple and die a slow-
-N | @KayleighEHug @CaitlinMortimer hahahaaa :p maybe some paper cut outs tooo!!
-Y | i got a paper cut and i told my friend that i cried and she said "really????????" so i punched her in the face bc what the frick no
-N | Really quickly, my sister threw one at my legs it made a really sore long and deep (for a paper cut) it hurt like fuck! D:
-Y | how in the hell did i get a paper cut thing on my lip
-Y | Had a pizza slice to go and the cardboard box gave me a paper cut #onlyme
-N | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America: eBay 's PayPal and Discover are teami... http://t.co/j8omHno9
-N | paper cut...fack T-T
-Y | @RujinaMiah I got a better idea paper cut his eye
+n | When you have a super annoying paper cut...stick a flag on it! :)   @ Halfling House http://t.co/Poh7kUb6
+n | Kerry Meier is out again for the Atlanta Falcons? What, a paper cut this time? Might be time for the Turk to visit Kerry.
+n | To realize how madly in love you are with someone and all they want is to just be friends hurts more than a paper cut
+y | I got a papercut in class and everyone looked at me :b I had blood all over my paper :D
+n | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America: [[ This is a? http://t.co/LgGiUw1O
+n | "Please don`t take this the wrong way, but I`d rather swim buck naked across the Ganges with a paper cut on my nipple and die a slow-
+n | @KayleighEHug @CaitlinMortimer hahahaaa :p maybe some paper cut outs tooo!!
+y | i got a paper cut and i told my friend that i cried and she said "really????????" so i punched her in the face bc what the frick no
+y | Really quickly, my sister threw one at my legs it made a really sore long and deep (for a paper cut) it hurt like fuck! D:
+y | how in the hell did i get a paper cut thing on my lip
+y | Had a pizza slice to go and the cardboard box gave me a paper cut #onlyme
+n | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America: eBay 's PayPal and Discover are teami... http://t.co/j8omHno9
+y | paper cut...fack T-T
+n | @RujinaMiah I got a better idea paper cut his eye
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Chivalry. http://t.co/KnAQeWHp
 n | #nowplaying Papercut - Linkin Park
-N | @itsCassieRamone how about a video you paper cut by CMLoser on your butthole then pouring running alcohol on it?
-Y | Just found out I got a paper cut :'(
-N | oh... I was gone say a paper cut ?@BlakeMartinCEO: You know what the worst thing in the world is? Liking someone!?
+n | @itsCassieRamone how about a video you paper cut by CMLoser on your butthole then pouring running alcohol on it?
+y | Just found out I got a paper cut :'(
+n | oh... I was gone say a paper cut ?@BlakeMartinCEO: You know what the worst thing in the world is? Liking someone!?
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request BLACK ICE  AKA SON OF A SOLDIER. http://t.co/OenZewUM
-N | It's all good until you get pickled onion juice on your paper cut.
-N | Owww Papercut just replied to me, feeling niice
-N | I'd rather have a broken arm than a paper cut, that shit hurts.
+y | It's all good until you get pickled onion juice on your paper cut.
+n | Owww Papercut just replied to me, feeling niice
+n | I'd rather have a broken arm than a paper cut, that shit hurts.
 n | @Mister_Playset lol I'm fa real no way bro it feels JUST like a paper cut my hand is NUMB!
-Y | Watching robot chicken..s2 paper cut!! Fucking hilarious!!! #robotchicken
-N | Srsly what is wrong with me. I drop my monster, manage to lose one of my shoes nd get a paper cut in the same day :(
-N | A paper cut #WorstFeelings
-Y | So mad I got a paper cut todaee _-_
-N | Think green this weekend! The Papercut team are contemplating making a vegie patch at our studio :)
-Y | Getting a papercut on the edge of your fingertip #Awkward #Ouch #NotSoCool
-Y | My gcse results put me in a bad mood and gave me a paper cut, what fuckers
-Y | Got my first paper cut of the school year.
-Y | how does this papercut still hurt? o.O
-N | @WhatTheFFacts Ooops, papercut!
-N | This damn paper cut tho -_-
-Y | I got a massive paper cut in a awkward position by my thump.
-Y | he says he loves me but he comes and goes as he pleases, when the door shuts its another papercut and I'm stuck with a handful band aids.
-N | I got the worse booboo ever. #PaperCut!
-Y | Purell is 99.8% effective ....in reminding you about your paper cut.
-Y | @mallaryhope, paper cut on the lip did it for me.
-Y | @wlgcclub pretty good.... I got a horrible paper cut yesterday :(
-Y | I got the harshest paper cut at work...
-Y | got a paper cut at work then had to clean up lemons ): #FML
+n | Watching robot chicken..s2 paper cut!! Fucking hilarious!!! #robotchicken
+y | Srsly what is wrong with me. I drop my monster, manage to lose one of my shoes nd get a paper cut in the same day :(
+y | A paper cut #WorstFeelings
+y | So mad I got a paper cut todaee _-_
+n | Think green this weekend! The Papercut team are contemplating making a vegie patch at our studio :)
+y | Getting a papercut on the edge of your fingertip #Awkward #Ouch #NotSoCool
+y | My gcse results put me in a bad mood and gave me a paper cut, what fuckers
+y | Got my first paper cut of the school year.
+y | how does this papercut still hurt? o.O
+? | @WhatTheFFacts Ooops, papercut!
+y | This damn paper cut tho -_-
+y | I got a massive paper cut in a awkward position by my thump.
+y | he says he loves me but he comes and goes as he pleases, when the door shuts its another papercut and I'm stuck with a handful band aids.
+y | I got the worse booboo ever. #PaperCut!
+y | Purell is 99.8% effective ....in reminding you about your paper cut.
+y | @mallaryhope, paper cut on the lip did it for me.
+y | @wlgcclub pretty good.... I got a horrible paper cut yesterday :(
+y | I got the harshest paper cut at work...
+y | got a paper cut at work then had to clean up lemons ): #FML
 n | Paranoia's all I got left I don't know what stressed me first or how the pressure was fed  :rom Papercut #linkinpark #lp
-N | @WhiteMamba0621 where does "paper cut" rate in relation to "stepping on a Lego"? ??
-Y | I have a paper cut on my finger and it's so sore
-N | Gym Class Heroes Feat. Ryan Tedder - The Fighter - The Papercut Chronicles ?
-N | Papercut my heart in half and discard the evidence.
+n | @WhiteMamba0621 where does "paper cut" rate in relation to "stepping on a Lego"? ??
+y | I have a paper cut on my finger and it's so sore
+n | Gym Class Heroes Feat. Ryan Tedder - The Fighter - The Papercut Chronicles ?
+n | Papercut my heart in half and discard the evidence.
 n | I liked a @YouTube video http://t.co/Lz9d41Gi Linkin Park - Papercut
-N | I always forgot about a papercut until i put hand santizer on ?? #ouch
+y | I always forgot about a papercut until i put hand santizer on ?? #ouch
 n | Why did jasper attack bella when she had a paper cut but not on the floor of the ballet studio when she was bleeding to death
-N | @vampirelady5 :D I went right through one the night I was heading to Indiana.Had bad paper cut!! Had to turn back,couldn't show up hideous!
-Y | I feel like my finger just got cut off. how do paper cuts hurt so bad???
+y | @vampirelady5 :D I went right through one the night I was heading to Indiana.Had bad paper cut!! Had to turn back,couldn't show up hideous!
+y | I feel like my finger just got cut off. how do paper cuts hurt so bad???
 n | "Sandpaper kisses.......paper cut bliss.........."..........
-N | Another paper cut survivor
-Y | @ohheyitskiesh Hahahaha today I had to write 100 times "I will never get paper cut in Mr. Ng's class"
-N | you'd almost think it was a paper cut!
-N | There are only a few things that hurt more than a paper cut #nohandsanitizereveragain
-Y | My paper cut still hurts..thaaaaanks @Aye_Angelica
-N | Ouch paper cut
-Y | Got a fucking paper cut &gt;.&lt;
-N | Put my life into a papercut?
-N | I meant paper cut!
-N | @RobbySallee23 you ain't native American you got a paper cut when you were younger and bled that out
-N | @AnthraxRipple thankfully, not really. paper cut and some broken nails. still have time left in the day though!
-N | @KristinLHill YOU WANT A PAPER CUT ???
-Y | i hve a paper cut on my finger ??
-N | love letter papercut http://t.co/Qbki5FkH
-Y | Holy shat i have a paper cut and it's only the first week of school! I'm so hard core ??
-N | the worst is when you get a paper cut #ouch
-Y | I got a freakn paper cut, and boy does it hurt
-N | Papercut Chronicles II
-Y | I have a horrible paper cut
-Y | Had my first papercut today...:(
-N | #WorstFeelings paper cut on the scrotum then balls fall out and a bee stings them and eats them with his bee family
+n | Another paper cut survivor
+n | @ohheyitskiesh Hahahaha today I had to write 100 times "I will never get paper cut in Mr. Ng's class"
+n | you'd almost think it was a paper cut!
+y | There are only a few things that hurt more than a paper cut #nohandsanitizereveragain
+y | My paper cut still hurts..thaaaaanks @Aye_Angelica
+y | Ouch paper cut
+y | Got a fucking paper cut &gt;.&lt;
+n | Put my life into a papercut?
+n | I meant paper cut!
+n | @RobbySallee23 you ain't native American you got a paper cut when you were younger and bled that out
+y | @AnthraxRipple thankfully, not really. paper cut and some broken nails. still have time left in the day though!
+n | @KristinLHill YOU WANT A PAPER CUT ???
+y | i hve a paper cut on my finger ??
+n | love letter papercut http://t.co/Qbki5FkH
+y | Holy shat i have a paper cut and it's only the first week of school! I'm so hard core ??
+n | the worst is when you get a paper cut #ouch
+y | I got a freakn paper cut, and boy does it hurt
+n | Papercut Chronicles II
+y | I have a horrible paper cut
+y | Had my first papercut today...:(
+y | #WorstFeelings paper cut on the scrotum then balls fall out and a bee stings them and eats them with his bee family
 n | @ActualALove Your theme (papercut) was just playing at a baseball game! Lol (:
 n | Woah I haven't listened to linkin park in ages :/ #papercut
 n | @hyunil we'll be like that girl who does things while wearing a paper cut out of yoona's face
 n | "@derrekbgn: #WorstFeelings paper cut on the scrotum then balls fall out and a bee stings them and eats them with his bee family" damn...
-N | #Iam the paper cut that ruins your day!"
-Y | How.... Tf did I jst paper cut myself with my hair???
-N | [12-08-24 9:37:51 PM] Dez: screw textbooks [12-08-24 9:38:06 PM] Geoff Shapiro: I don't wanna get a paper cut
-Y | Dang, why not? And i just got a paper cut on my toe!!@Beedubbss
-Y | Found a mysterious paper cut on my thumb. By mincing jalape?os. #burningsensation
-N | Working together #papercut for him and drawing for me.  http://t.co/qBPKiKHZ
-N | Photo: Working together #papercut for him and drawing for me. (Pris avec Instagram) http://t.co/Y7EtRH8k
-Y | Ow I got a paper cut :(
-Y | Where did this paper cut come from -.-
-Y | I've got a paper cut on my pinkie finger. It smarts.
+n | #Iam the paper cut that ruins your day!"
+y | How.... Tf did I jst paper cut myself with my hair???
+n | [12-08-24 9:37:51 PM] Dez: screw textbooks [12-08-24 9:38:06 PM] Geoff Shapiro: I don't wanna get a paper cut
+y | Dang, why not? And i just got a paper cut on my toe!!@Beedubbss
+y | Found a mysterious paper cut on my thumb. By mincing jalape?os. #burningsensation
+n | Working together #papercut for him and drawing for me.  http://t.co/qBPKiKHZ
+n | Photo: Working together #papercut for him and drawing for me. (Pris avec Instagram) http://t.co/Y7EtRH8k
+y | Ow I got a paper cut :(
+y | Where did this paper cut come from -.-
+y | I've got a paper cut on my pinkie finger. It smarts.
 n | @JasmineKhaitan it really would. but i think a papercut to the eyeball would be just as bad
-Y | This paper cut&lt;&lt;&lt;
+y | This paper cut&lt;&lt;&lt;
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Lucia. http://t.co/qlYfDvu8
 n | A face that awakes when i close my eyes  A face that watches everytime i lie  A face that laughs every time i fall  #papercut
-N | Papercut ? @Dionathaam
+? | Papercut ? @Dionathaam
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Solo P. Corleone. http://t.co/sAod2Hq4
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Kalaxe. http://t.co/JDOB1pbc
-N | This papercut killen me
+y | This papercut killen me
 n | #np Papercut by Linkin Park  on @bbtweetmedia
-N | All good things must come to an end. Now you U have 1 of the last 3D papercut designs for #kids http://t.co/PlUC6R9f see final closeout sale
+n | All good things must come to an end. Now you U have 1 of the last 3D papercut designs for #kids http://t.co/PlUC6R9f see final closeout sale
 n | #CancionesQueMePonenFeliz Papercut ~ Linkin Park
-N | Math homework hates me. #papercut
+y | Math homework hates me. #papercut
 n | Sandpaper sand kisses. Papercut bliss,
-N | If I get a paper cut, I expect it be pretty
-Y | Just got a paper cut on my mouth COOOOOOL
-Y | Homework is evil ... I just got a paper cut :(
-N | Paper cut's are the worse
-N | #BeWeirdLikeMe whenever u get a papercut, u should say "Fuck trees, i hate them all!" and u should never recycle again for ur whole life.
+n | If I get a paper cut, I expect it be pretty
+y | Just got a paper cut on my mouth COOOOOOL
+y | Homework is evil ... I just got a paper cut :(
+y | Paper cut's are the worse
+n | #BeWeirdLikeMe whenever u get a papercut, u should say "Fuck trees, i hate them all!" and u should never recycle again for ur whole life.
 n | Sandpaper kisses, papercut bliss Don't know what this is, but it all leads to this..??
 n | Then Alex with his paper cut out quote. Puta.
 n | linkinpark "papercut"
-Y | Paper cut on the fingerrrrrr ??
-Y | I just got a really bad paper cut...holy crap it won't stop bleeding.
-N | while nicole is texting random boys I am just complaining about my awful paper cut and she's ignoring me... HELLO I'm dying over here
-N | @jennvdh_ I was just walking (office job, nothing dangerous maybe a potential paper cut) and my foot twisted outwards! Fractured in 2 spots!
-N | Kiddin. But that paper cut was horrific
-Y | Between my paper cut, canker sore, blister and sore mouth,  I'm so freaking uncomfortable. Wine, salad and "The Hunger Games" with my love.
-N | @AlexPls_ I wanted to take my book and paper cut him in the jugular
-N | #WorstFeelings A papercut!
+y | Paper cut on the fingerrrrrr ??
+y | I just got a really bad paper cut...holy crap it won't stop bleeding.
+y | while nicole is texting random boys I am just complaining about my awful paper cut and she's ignoring me... HELLO I'm dying over here
+n | @jennvdh_ I was just walking (office job, nothing dangerous maybe a potential paper cut) and my foot twisted outwards! Fractured in 2 spots!
+y | Kiddin. But that paper cut was horrific
+y | Between my paper cut, canker sore, blister and sore mouth,  I'm so freaking uncomfortable. Wine, salad and "The Hunger Games" with my love.
+n | @AlexPls_ I wanted to take my book and paper cut him in the jugular
+y | #WorstFeelings A papercut!
 n | Imagine being paper cut to death? #Top10WorstWaysToDie
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Boom Doggottie. http://t.co/PQzv53AP
-N | This is odd. I shuffle my iPod, first, "Paper Planes" came on, and now "It's Only A Paper Moon". What's next? "Papercut"?
-N | My papercut on the 4th finger isn't healing because I keep using it to type the keyboard and ouch like a pinch!!
+n | This is odd. I shuffle my iPod, first, "Paper Planes" came on, and now "It's Only A Paper Moon". What's next? "Papercut"?
+y | My papercut on the 4th finger isn't healing because I keep using it to type the keyboard and ouch like a pinch!!
 n | Linkin Park has its share of weird songs.. like Papercut. Now that's just weird.
-N | #WorstFeelings; Getting a paper cut, those lil things friken sting.!
-N | @YoAmanduhh Giovanni's, but their damn boxes gave me a freaking paper cut. UGH. Horrible. Bleh. THEN, I go to the mall only to find out when
-Y | Omg this paper cut hurts
-N | #WorstFeelings Getting a paper cut. Omg, they sting so bad!
-N | papercut hurts. its just a small cut but deep.
+n | #WorstFeelings; Getting a paper cut, those lil things friken sting.!
+y | @YoAmanduhh Giovanni's, but their damn boxes gave me a freaking paper cut. UGH. Horrible. Bleh. THEN, I go to the mall only to find out when
+y | Omg this paper cut hurts
+n  | #WorstFeelings Getting a paper cut. Omg, they sting so bad!
+y | papercut hurts. its just a small cut but deep.
 n | @YoAmanduhh , my best friend. So, ya know. The paper cut ruined my fucking day. UGH. But now it's good. How about you? ;) LOL
-Y | Got a papercut on my wenus how the hell did this happen??
-N | #WorstFeelings gettin a paper cut in one of the lines on yo finger
-N | Some folks will never be able to say they've gotten a paper cut on their nose. I am not one of those folks.
+y | Got a papercut on my wenus how the hell did this happen??
+n | #WorstFeelings gettin a paper cut in one of the lines on yo finger
+y | Some folks will never be able to say they've gotten a paper cut on their nose. I am not one of those folks.
 n | The suuuuuuuun gooooes down! #Papercut #LinkinPark
-Y | This paper cut I have is intense #papercut
+y | This paper cut I have is intense #papercut
 n | @Papercut_Dolls you no school right???? &gt;&lt; sushi buffet? ^^
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request ALPHAONE. http://t.co/2LqGCYoS
-Y | just found a paper cut on my thumb :( #ouchy
-Y | i got a papercut!! @HeroFromThe90s
+t | just found a paper cut on my thumb :( #ouchy
+t | i got a papercut!! @HeroFromThe90s
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request ALPHAONE. http://rvrb.fm/MrtAtw..#FB.#facebook.
-N | i am a papercut swimming through an ocean of lemon juice
-N | eBay&amp;#039;s Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America - http://t.co/v7h74yWi
-N | That asdfghjkl moment when you get a paper cut.
+n | i am a papercut swimming through an ocean of lemon juice
+n | eBay&amp;#039;s Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America - http://t.co/v7h74yWi
+y | That asdfghjkl moment when you get a paper cut.
 n | Hope to Get Featured in Papercut Magazine! please post on their wall to request Todd Morgan &amp; the Emblems.... http://t.co/OxxPxTkP
-Y | This paper cut hurts like a mother effer
-N | Just because you don't see it bleed doesn't meant it didn't go deep ~ Papercut
-Y | #WorstFeelings a damn paper cut
-N | ?@ryanlochtits: i am a papercut swimming through an ocean of lemon juice? yes
-Y | Dis paper cut can go fuck itself
-N | FISHY PAPER CUT
+y | This paper cut hurts like a mother effer
+n | Just because you don't see it bleed doesn't meant it didn't go deep ~ Papercut
+y | #WorstFeelings a damn paper cut
+n | ?@ryanlochtits: i am a papercut swimming through an ocean of lemon juice? yes
+y | Dis paper cut can go fuck itself
+? | FISHY PAPER CUT
 n | Your labia deserves to be paper cut. Fuck It and Fuck You.  You're a cunt. #catty
-N | Omg! Go get a paper cut you stupid immature fuck! ??
+n | Omg! Go get a paper cut you stupid immature fuck! ??
 n | @Papercut_Dolls the promotion is like forever. I swear. Dari last year.
 n | @Papercut_Dolls yes. Not exactly a promotion. They amyhow say.
 n | @Papercut_Dolls you going???
 n | @Papercut_Dolls 56 for 4 box i think.
-Y | I have the paper cut from hell on my thumb.
-N | No matter how many time I cut it will never hurt like a paper cut does...
+y | I have the paper cut from hell on my thumb.
+n | No matter how many time I cut it will never hurt like a paper cut does...
 n | Gottah paper cut from counting money. lol Literally -___- bubs lazy
 n | I just set up a whole photoshoot for a paper cut out of a pizza slice hanging off my desk for my assignment that's how much I love pizza.
-N | I experienced tons of pain today because of a paper cut #worstpainevv
+y | I experienced tons of pain today because of a paper cut #worstpainevv
 y | I think I got the most severe paper cut today. :/
 n | Imagine getting a papercut on your eyeball.
 n | @Papercut_Dolls Shave off one side?
 n | @theechamp Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request FireWoods. http://t.co/m1QUTX4m
-N | Ouch, I just realized I had a paper cut. What a bitch..
-N | #WorstFeelings paper cut...dat shit hurts
+y | Ouch, I just realized I had a paper cut. What a bitch..
+y | #WorstFeelings paper cut...dat shit hurts
 n | @Papercut_Dolls today newspaper?
 n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Late Cambrian. http://t.co/KmFgktuU
-N | @wtfcel Hell yeah, they started the show with a place for my head. Then near the end they had a mash of like, papercut &amp; somewhere I belong
-N | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America http://t.co/cWp1I0R6
-Y | #RejectedCookieFortunes Eat fortune, have paper cut on anus
+n | @wtfcel Hell yeah, they started the show with a place for my head. Then near the end they had a mash of like, papercut &amp; somewhere I belong
+n | eBay's Bold Move, a Citigroup Debate, and a Paper Cut for Bank of America http://t.co/cWp1I0R6
+n | #RejectedCookieFortunes Eat fortune, have paper cut on anus
 n | I have a fear of getting a paper cut on my eye
 y | Getting a paper cut + accidentally putting hand sanitizer on it = the most excruciating pain known to man.N | Burns, paper cut and a 2 stitch wound. A very adventurous week for my right hand!
-N | #nowplaying papercut - linkin park
-Y | Got a papercut on my right thumb so I put a Band-Aid on it and now I can't use my right thumb to type on my phone... #firstworldpains ?
-Y | My paper cut still hurts :c
-N | @detly i found 9 &amp; 10. 9 sealing nylon rope after being cut. 10 cauterizing paper cuts.
-N | when niall wears tanks and his muscles are so noticeable i want to papercut my asshole
-Y | OUCH ! I Got A Paper Cut It HURT
-Y | Wth did I get this big ass paper cut...must have been when I was counting my white men...smh it hurts
-Y | Man how TF did I get a paper cut? This shit don't even hurt its just annoying ??
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paul Diello. http://t.co/uWC2ukJ5
-Y | Seriously just got a paper cut ......Hurts like hell
-Y | ?@1JayHill Man how TF did I get a paper cut? This shit don't even hurt its just annoying ??? ??????? !!!
-N | @hfzzchry when life gives you lemon, find someone with papercut. Lol. Bila esok tu? Mkn ice cream tak lama pon. Haha
-N | count my own money, see the paper cut fingers
-N | remember when i revealed my papercut phobia to my tafe class and one girl said "it seems to really cut you up" and every1 laughed except me
-Y | This paper cut I got hurts like hell
-Y | Idk how I even got a paper cut
-N | Why don't you give me a nice paper cut and pour lemon juice on it
-N | paper cut ?
-N | @_JB33ZY_ " okaye", "hows your day" "so" , "how's THA weather " "I heard you got a very bad paper cut??" endless possiblities
-N | sandpaper kisses .. paper cut bliss ..
-N | My papercut haven't heal yet
-N | ?@bangthehomos: when niall wears tanks and his muscles are so noticeable i want to papercut my asshole? WTF? Never heard this. Ever. #gross
-Y | Just discovered a paper cut on my palm. REALLY?!
-Y | I got a paper cut and it still hurts :(
-N | Want some lemon juice for that paper cut?
-Y | One direction are clearly mad at me. I just got the deepest freaking papercut.
-N | Wow! papercut - LinkinPark @kisfmjakarta #Rockweekend... Mantaaaab!!!
-Y | I got a damn paper cut!!
-N | Beautiful paper cut work. http://t.co/5giAQx5d
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Erica Paige. http://t.co/cm7Ubp8k
-N | #15LaguGueBanget Untittled, Anywhere Else But Here, Perfect, Waiting For The End, Papercut, Innocence, Payphone, Astronaut, Stereo Hearts.
-Y | Woke up with a massive paper cut on my hand, wtf
-N | @Biancabbdoll but a papercut? The wambulance HAS to attend.................... o_O
-N | The truth of the matter is that I was never really cut out for anything. Surrounded by paper cut outs, I want to set myself on fire.
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Angela Eren. http://t.co/FnW7key1
-N | Papercut is worse bits!!!
-Y | paper cut! #ouch
-N | I've entered a #giveaway to #win $10 in PaperCut Art from ArwenDesigns @MorbidSanctuary on #etsy @EmKatCreations blog:  http://t.co/wO1lZs74
-Y | Woke up with paper cut across forehead.
-Y | Just when my toast doesn't land on the buttered side &amp; I'm thinking Murphey is on my side,.. Then I paper cut myself on my cut finger?
-Y | I have a paper cut on my finger /:
-N | #IWannaKnowWhy Paper Cut hurt more than anything else
-Y | Once again, i got another paper cut :( #WHY!
-N | I liked a @YouTube video http://t.co/wddfFNY3 Linkin Park - Papercut
-Y | Woke up to a card from my mum for my good results opened it and got a paper cut
-Y | paper cut :(
-N | @ThugNamed_Cooch - - lmao , he gone throw mail at cho ass ; you gone be paper cut shawty lmfao
-N | Paper cut- linkin park... Lunchbox- marilyn manson... Give it a way- red hor chillipeppers... This picture- placebo... Herzeleid- rammsteim
-Y | Nothing spells epic fail like getting a paper cut from trying to tear open a Hansaplast band-aid packaging strip
-N | Paper cut out of the whole Quays at the Tall Ships #dubtallships   @ Tall Ships Festival http://t.co/hKFhIz6h
-N | .@mattsandozbbc I think he once had a paper cut. That will probably rule him out.
-N | "@OwwwPapercut: @JossISmeek Yes, paper cuts sure do hurt. I hope it gets better soon." But I didn't get a papercut?!
-Y | Ow ow ow, #PaperCut D:
-N | #NowPlay Paper Cut @linkinpark
-N | is currently sat with hair dye on so no cutting just yet unless anyone wants a purple stained papercut? Off for a... http://t.co/Qe66XcCU
-N | Beautiful Illustrations and Papercut Works by Bomboland   Abduzeedo   Graphic Design Inspiration and P... http://t.co/kUjDWu3i via @thefancy
-Y | Paper cut. Ouch!
-N | Can deal with this hangover, its just not about this naughty papercut. #drunkinjury
-Y | Got a paper cut getting Oreos out. #kissit
-Y | Got a paper cut from a bank letter. There's a double-whammy I could have done without.
-Y | after hours in pain yesterday, I finally found my paper cut??
-Y | Trust me to get a paper cut on my tongue.
-N | (02)It?s like I / can?t stop what I?m hearing within, It?s like the face inside is right beneath my skin (PAPERCUT)
-Y | I haven't had a paper cut in agessss. #stingslikeabitch
-N | http://t.co/MigHjOlF THAT'S A F KN PAPERCUT
-N | Handmade Papercut Art - Peter Pan Silhouette: "Making a papercut requires a lot of precision and attention to de... http://t.co/PSlOZ3Yd
-Y | I have a paper cut down my nail #ow
-N | my wrestling name is Glen Ash Page and my finishing move in the 'papercut' #CWF
-Y | @papercutmag Hello Papercut! Any news about the iPad edition? I have the thumbnail but nothing else :/
-Y | fucking fuck the paper cut
-N | @FaraahMk there is a song for linkin park called #PaperCut :P if u like rock , go listen to it :P
-N | Linkin Park- papercut
-N | #papercut survivor
-N | Oh. My. God. C4 is playing Linkin Park's 'Papercut'. Pretty sure I haven't heard this song since I was in sixth form #EvenWorseThanIRemember
-N | Hate the bit when she gets a papercut ick
-Y | Phoebe gave me a paper cut yesterday it really hurts
-N | Successfully submitted to Get Featured in Papercut Magazine! Post on their wall to request David J Caron. http://t.co/fkxaZWkO
-N | My paper cut doesn't hurt that much~
-Y | @keowsie it isn't deep but it keeps bleeding. Strange.. hahaha paper cut?
-N | @georgeabbott66 just think of a paper cut! And then someone stabbing you! I'm sure the second one would hurt a lot moreeee
-Y | This darn paper cut!
-N | I liked a @YouTube video http://t.co/GgtM4mXz Linkin Park Victimized/QWERTY Papercut Live Jiffy Lube Live Aug
-N | "Paper cuts from counting stiff dollars, that's a pay cut" - AyeYoDonny
-Y | @iama_dolphin But i don't think i had a paper cut during tuition.. i barely touched the paper :-( omg so creepy!!
-Y | I have a paper cut ??
-Y | @ACD_DJSouljah shidddd show does but her lips to small and I damn near cry from a paper cut on my hand .. I can image her lil ass lips ..smh
-N | #Amazon  : Paper Cut Design Protective Skin Decal Sticker for Sanyo Xacti VPC-CG20 Digital Camcorder: Add your o... http://t.co/9OQRqXJ3
-N | PAPER CUT FROM HELL this morning!! I'm sacrificing my body to bring you the news, Buffalo. http://t.co/Etj6S2Dr
-Y | you have a paper cut not a deep gash in a major artery, you don't need a fucking plaster omg
-N | Work related injury! IMA SUE YOUR ASS FOR MY CARDBOARD CUT (like a paper cut, but a little bit more manly) # http://t.co/zld7jGfV
-N | The face inside is right beneath your skin  :from Papercut #linkinpark #lp
-Y | Just Papercut my tongue licking and envelope #WorstPainEver
-N | Left a fiver in the self scan till at morrisons, hope the cunt who finds it gets a paper cut and contracts gangrene and spreads to his face
-Y | I have the worst paper cut on my finger right now.
-N | Thought I was going to die with this little cut as small as a paper cut but doctor dev bandaged me up;D @devwhelan http://t.co/GfqoGrgS
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paper Memory.... http://t.co/nadJuK2B
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paper Memory. http://t.co/Lczc3Gji
-N | Linkin park : papercut ???
-Y | Paper cut can be the most painful thing
-Y | Besar gile sia paper cut *faints*
-N | @azsportza @OhhYeahRachel @NaomiD74 hahahahahaha!!! Better than printing it and then making out with it *papercut*
-N | Woke up to a note from @LoveKidrauhl_x3 saying @robert15jgod followed her &amp; almost got paper cut.
-N | @azsportza @OhhYeahRachel @NaomiD74 ...a picture of me &amp; make out with it, but be careful you don't get a papercut haha
-N | linkin park - papercut
-N | Just in case you wanted to make paper cut out versions of The Young Ones http://t.co/A69QWHDU The Vyvyan is excellent.
-Y | Paper cut under my nail hurts so much! #ouchies
-N | Hoping Get Featured in Papercut Magazine! Post on their wall to request Michael Ray. http://t.co/pEuIS3AN http://t.co/vXlBHpvm
-N | sandpaper kisses, papercut bliss x
-Y | How can I get a paper cut across my whole arm #special
-Y | See my DP- look at that handsome devil. Oh &amp;*$&amp;*&amp;*EYW&amp;*EYW87we OWWW!!!! IT HURTS SO MUCH!!!! papercut
-N | Who needs guns and knives when u can use paper #deadlyweapon #papercut
-Y | got a papercut in work last night....forgot how ridiculously sore they were
-Y | I been geting paper cut all this dam week! Just taking out of my notebook! W.f
-Y | Darn you PAPER CUT!!!!! &gt;_&lt; LOL
-Y | Just got a bitchhh of a papercut #workproblems http://t.co/M8TxwcSQ
-Y | Have a really deep paper cut on my finger and its sooo sore #excellent
-Y | Paper cut grr
-Y | Just gave myself a paper cut while sealing an envelope. Did not think this actually happened outside of Tuesday night sitcoms.
-N | Paper cut
-Y | !!! Paper cut my foot!. it itches and Hurts! #HowPainful;;;
-Y | I just put nail polish remover in my paper cut owwwww #badidea
-Y | Just got a paper cut from my new Macbook Air...it is soooooo thin!
-N | Spindle Shell Matted Paper Cut Out http://t.co/644fP9iB at Bonanza
-N | I would rather break all the bones in my body than get a paper cut. #stillhurts #worstpain
-N | Papercut - Linkin Park
-Y | I just gave myself a paper cut....i wanna cry right now #fucksake
-N | You barely even cross my mind, and it doesn't hurt that much~ it was only a paper cut.. :))
-N | Gets paper cut .. *dies*
-Y | Went to put a plaster on my cut finger but then got a paper cut on my thumb on the packaging
-N | I am a papercut surviver... Your argument is invalid
-N | Sandpaper kisses, papercut bliss
-Y | I feel like the toilet paper at work one of these days will give my vagina a paper cut. Fack. #notcool
-Y | Just walked into a sign dangling in ikea and got a papercut on my head
-N | Quality value Hot Air Balloons Paper Cut Outs By Eureka: Top quality With stars in vibrant colors, or shapes for... http://t.co/DJscEoBi
-Y | Paper cut :(
-N | They hurt more than getting stabbed by a nice "@jecumali Paper cut :("
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Melek Ra'. http://t.co/xQlbge4P
-N | @vincegerardsc you mean becca? Hahaha.. Mine is the paper cut scene of becca super hilarious HAHAHAHA
-N | @lorafulton Thankfully the biggest danger in writing is eye strain or a paper cut haha
-N | @igor__davis oh sorry, is that miniscual mark on your finger a paper cut?
-N | @Ashley_McCoy12 I'd sooner take a papercut to the jap's eye.
-Y | Oh shit just got a paper cut. Worst feeling in the world
-Y | I rlly paper cut my lip tryna lick an envelope -_-
-N | @_lucydawson omg I will papercut his tiny eyes
-N | @autocorrects: Paper cut: A tree's one glorious moment of revenge.
-N | FGN can Get Featured in Papercut Magazine! Post on their wall to request Freaky Geeky Nation. http://t.co/OzD6lj3T
-N | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request SaviorBoys. http://t.co/izggoI0h
-Y | Ah freak!! Got a paper cut. Shit. One of the worse might as well stab me with a knife.
-N | Coke boy leave ya leakin like a paper cut
-N | "I'm a paper cut survivor, a future cat lady hehe" ...#YeahhhhNO
-Y | @adnitura Omg that's what I said when I got a paper cut :( =))
-Y | Do those ppl like search the word paper cut everyday how did they find out i got a ppr cut n tweet me like in a second...
+n | #nowplaying papercut - linkin park
+y | Got a papercut on my right thumb so I put a Band-Aid on it and now I can't use my right thumb to type on my phone... #firstworldpains ?
+y | My paper cut still hurts :c
+n | @detly i found 9 &amp; 10. 9 sealing nylon rope after being cut. 10 cauterizing paper cuts.
+n | when niall wears tanks and his muscles are so noticeable i want to papercut my asshole
+y | OUCH ! I Got A Paper Cut It HURT
+y | Wth did I get this big ass paper cut...must have been when I was counting my white men...smh it hurts
+y | Man how TF did I get a paper cut? This shit don't even hurt its just annoying ??
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paul Diello. http://t.co/uWC2ukJ5
+y | Seriously just got a paper cut ......Hurts like hell
+y | ?@1JayHill Man how TF did I get a paper cut? This shit don't even hurt its just annoying ??? ??????? !!!
+n | @hfzzchry when life gives you lemon, find someone with papercut. Lol. Bila esok tu? Mkn ice cream tak lama pon. Haha
+n | count my own money, see the paper cut fingers
+y | remember when i revealed my papercut phobia to my tafe class and one girl said "it seems to really cut you up" and every1 laughed except me
+y | This paper cut I got hurts like hell
+y | Idk how I even got a paper cut
+n | Why don't you give me a nice paper cut and pour lemon juice on it
+? | paper cut ?
+n | @_JB33ZY_ " okaye", "hows your day" "so" , "how's THA weather " "I heard you got a very bad paper cut??" endless possiblities
+n | sandpaper kisses .. paper cut bliss ..
+y | My papercut haven't heal yet
+n | ?@bangthehomos: when niall wears tanks and his muscles are so noticeable i want to papercut my asshole? WTF? Never heard this. Ever. #gross
+y | Just discovered a paper cut on my palm. REALLY?!
+y | I got a paper cut and it still hurts :(
+n | Want some lemon juice for that paper cut?
+y | One direction are clearly mad at me. I just got the deepest freaking papercut.
+n | Wow! papercut - LinkinPark @kisfmjakarta #Rockweekend... Mantaaaab!!!
+y | I got a damn paper cut!!
+n | Beautiful paper cut work. http://t.co/5giAQx5d
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Erica Paige. http://t.co/cm7Ubp8k
+n | #15LaguGueBanget Untittled, Anywhere Else But Here, Perfect, Waiting For The End, Papercut, Innocence, Payphone, Astronaut, Stereo Hearts.
+y | Woke up with a massive paper cut on my hand, wtf
+n | @Biancabbdoll but a papercut? The wambulance HAS to attend.................... o_O
+n | The truth of the matter is that I was never really cut out for anything. Surrounded by paper cut outs, I want to set myself on fire.
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Angela Eren. http://t.co/FnW7key1
+n | Papercut is worse bits!!!
+y | paper cut! #ouch
+n | I've entered a #giveaway to #win $10 in PaperCut Art from ArwenDesigns @MorbidSanctuary on #etsy @EmKatCreations blog:  http://t.co/wO1lZs74
+y | Woke up with paper cut across forehead.
+y | Just when my toast doesn't land on the buttered side &amp; I'm thinking Murphey is on my side,.. Then I paper cut myself on my cut finger?
+y | I have a paper cut on my finger /:
+n | #IWannaKnowWhy Paper Cut hurt more than anything else
+y | Once again, i got another paper cut :( #WHY!
+n | I liked a @YouTube video http://t.co/wddfFNY3 Linkin Park - Papercut
+y | Woke up to a card from my mum for my good results opened it and got a paper cut
+y | paper cut :(
+n | @ThugNamed_Cooch - - lmao , he gone throw mail at cho ass ; you gone be paper cut shawty lmfao
+n | Paper cut- linkin park... Lunchbox- marilyn manson... Give it a way- red hor chillipeppers... This picture- placebo... Herzeleid- rammsteim
+y | Nothing spells epic fail like getting a paper cut from trying to tear open a Hansaplast band-aid packaging strip
+n | Paper cut out of the whole Quays at the Tall Ships #dubtallships   @ Tall Ships Festival http://t.co/hKFhIz6h
+n | .@mattsandozbbc I think he once had a paper cut. That will probably rule him out.
+n | "@OwwwPapercut: @JossISmeek Yes, paper cuts sure do hurt. I hope it gets better soon." But I didn't get a papercut?!
+y | Ow ow ow, #PaperCut D:
+n | #NowPlay Paper Cut @linkinpark
+n | is currently sat with hair dye on so no cutting just yet unless anyone wants a purple stained papercut? Off for a... http://t.co/Qe66XcCU
+n | Beautiful Illustrations and Papercut Works by Bomboland   Abduzeedo   Graphic Design Inspiration and P... http://t.co/kUjDWu3i via @thefancy
+y | Paper cut. Ouch!
+y | Can deal with this hangover, its just not about this naughty papercut. #drunkinjury
+y | Got a paper cut getting Oreos out. #kissit
+y | Got a paper cut from a bank letter. There's a double-whammy I could have done without.
+y | after hours in pain yesterday, I finally found my paper cut??
+y | Trust me to get a paper cut on my tongue.
+n | (02)It?s like I / can?t stop what I?m hearing within, It?s like the face inside is right beneath my skin (PAPERCUT)
+y | I haven't had a paper cut in agessss. #stingslikeabitch
+y | http://t.co/MigHjOlF THAT'S A F KN PAPERCUT
+n | Handmade Papercut Art - Peter Pan Silhouette: "Making a papercut requires a lot of precision and attention to de... http://t.co/PSlOZ3Yd
+y | I have a paper cut down my nail #ow
+n | my wrestling name is Glen Ash Page and my finishing move in the 'papercut' #CWF
+n | @papercutmag Hello Papercut! Any news about the iPad edition? I have the thumbnail but nothing else :/
+y | fucking fuck the paper cut
+n | @FaraahMk there is a song for linkin park called #PaperCut :P if u like rock , go listen to it :P
+n | Linkin Park- papercut
+? | #papercut survivor
+n | Oh. My. God. C4 is playing Linkin Park's 'Papercut'. Pretty sure I haven't heard this song since I was in sixth form #EvenWorseThanIRemember
+n | Hate the bit when she gets a papercut ick
+y | Phoebe gave me a paper cut yesterday it really hurts
+n | Successfully submitted to Get Featured in Papercut Magazine! Post on their wall to request David J Caron. http://t.co/fkxaZWkO
+n | My paper cut doesn't hurt that much~
+y | @keowsie it isn't deep but it keeps bleeding. Strange.. hahaha paper cut?
+n | @georgeabbott66 just think of a paper cut! And then someone stabbing you! I'm sure the second one would hurt a lot moreeee
+y | This darn paper cut!
+n | I liked a @YouTube video http://t.co/GgtM4mXz Linkin Park Victimized/QWERTY Papercut Live Jiffy Lube Live Aug
+n | "Paper cuts from counting stiff dollars, that's a pay cut" - AyeYoDonny
+n | @iama_dolphin But i don't think i had a paper cut during tuition.. i barely touched the paper :-( omg so creepy!!
+y | I have a paper cut ??
+? | @ACD_DJSouljah shidddd show does but her lips to small and I damn near cry from a paper cut on my hand .. I can image her lil ass lips ..smh
+n | #Amazon  : Paper Cut Design Protective Skin Decal Sticker for Sanyo Xacti VPC-CG20 Digital Camcorder: Add your o... http://t.co/9OQRqXJ3
+y | PAPER CUT FROM HELL this morning!! I'm sacrificing my body to bring you the news, Buffalo. http://t.co/Etj6S2Dr
+n | you have a paper cut not a deep gash in a major artery, you don't need a fucking plaster omg
+n | Work related injury! IMA SUE YOUR ASS FOR MY CARDBOARD CUT (like a paper cut, but a little bit more manly) # http://t.co/zld7jGfV
+n | The face inside is right beneath your skin  :from Papercut #linkinpark #lp
+y | Just Papercut my tongue licking and envelope #WorstPainEver
+n | Left a fiver in the self scan till at morrisons, hope the cunt who finds it gets a paper cut and contracts gangrene and spreads to his face
+y | I have the worst paper cut on my finger right now.
+n | Thought I was going to die with this little cut as small as a paper cut but doctor dev bandaged me up;D @devwhelan http://t.co/GfqoGrgS
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paper Memory.... http://t.co/nadJuK2B
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Paper Memory. http://t.co/Lczc3Gji
+n | Linkin park : papercut ???
+n | Paper cut can be the most painful thing
+n | Besar gile sia paper cut *faints*
+n | @azsportza @OhhYeahRachel @NaomiD74 hahahahahaha!!! Better than printing it and then making out with it *papercut*
+n | Woke up to a note from @LoveKidrauhl_x3 saying @robert15jgod followed her &amp; almost got paper cut.
+n | @azsportza @OhhYeahRachel @NaomiD74 ...a picture of me &amp; make out with it, but be careful you don't get a papercut haha
+n | linkin park - papercut
+n | Just in case you wanted to make paper cut out versions of The Young Ones http://t.co/A69QWHDU The Vyvyan is excellent.
+y | Paper cut under my nail hurts so much! #ouchies
+n | Hoping Get Featured in Papercut Magazine! Post on their wall to request Michael Ray. http://t.co/pEuIS3AN http://t.co/vXlBHpvm
+n | sandpaper kisses, papercut bliss x
+y | How can I get a paper cut across my whole arm #special
+n | See my DP- look at that handsome devil. Oh &amp;*$&amp;*&amp;*EYW&amp;*EYW87we OWWW!!!! IT HURTS SO MUCH!!!! papercut
+n | Who needs guns and knives when u can use paper #deadlyweapon #papercut
+y | got a papercut in work last night....forgot how ridiculously sore they were
+y | I been geting paper cut all this dam week! Just taking out of my notebook! W.f
+y | Darn you PAPER CUT!!!!! &gt;_&lt; LOL
+y | Just got a bitchhh of a papercut #workproblems http://t.co/M8TxwcSQ
+y | Have a really deep paper cut on my finger and its sooo sore #excellent
+y | Paper cut grr
+y | Just gave myself a paper cut while sealing an envelope. Did not think this actually happened outside of Tuesday night sitcoms.
+n | Paper cut
+y | !!! Paper cut my foot!. it itches and Hurts! #HowPainful;;;
+y | I just put nail polish remover in my paper cut owwwww #badidea
+y | Just got a paper cut from my new Macbook Air...it is soooooo thin!
+n | Spindle Shell Matted Paper Cut Out http://t.co/644fP9iB at Bonanza
+n | I would rather break all the bones in my body than get a paper cut. #stillhurts #worstpain
+n | Papercut - Linkin Park
+y | I just gave myself a paper cut....i wanna cry right now #fucksake
+n | You barely even cross my mind, and it doesn't hurt that much~ it was only a paper cut.. :))
+n | Gets paper cut .. *dies*
+y | Went to put a plaster on my cut finger but then got a paper cut on my thumb on the packaging
+m | I am a papercut surviver... Your argument is invalid
+m | Sandpaper kisses, papercut bliss
+n | I feel like the toilet paper at work one of these days will give my vagina a paper cut. Fack. #notcool
+y | Just walked into a sign dangling in ikea and got a papercut on my head
+n | Quality value Hot Air Balloons Paper Cut Outs By Eureka: Top quality With stars in vibrant colors, or shapes for... http://t.co/DJscEoBi
+y | Paper cut :(
+n | They hurt more than getting stabbed by a nice "@jecumali Paper cut :("
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request Melek Ra'. http://t.co/xQlbge4P
+n | @vincegerardsc you mean becca? Hahaha.. Mine is the paper cut scene of becca super hilarious HAHAHAHA
+n | @lorafulton Thankfully the biggest danger in writing is eye strain or a paper cut haha
+n | @igor__davis oh sorry, is that miniscual mark on your finger a paper cut?
+n | @Ashley_McCoy12 I'd sooner take a papercut to the jap's eye.
+y | Oh shit just got a paper cut. Worst feeling in the world
+y | I rlly paper cut my lip tryna lick an envelope -_-
+n | @_lucydawson omg I will papercut his tiny eyes
+n | @autocorrects: Paper cut: A tree's one glorious moment of revenge.
+n | FGN can Get Featured in Papercut Magazine! Post on their wall to request Freaky Geeky Nation. http://t.co/OzD6lj3T
+n | Hoping to play at Get Featured in Papercut Magazine! Post on their wall to request SaviorBoys. http://t.co/izggoI0h
+y | Ah freak!! Got a paper cut. Shit. One of the worse might as well stab me with a knife.
+n | Coke boy leave ya leakin like a paper cut
+n | "I'm a paper cut survivor, a future cat lady hehe" ...#YeahhhhNO
+n | @adnitura Omg that's what I said when I got a paper cut :( =))
+n | Do those ppl like search the word paper cut everyday how did they find out i got a ppr cut n tweet me like in a second...
 Y | This paper cut is killing me I swear omg my thumb hurts like hell
 N | " Paper cuts are small yet so evil ._". -Always had paper cuts and its painful than a blade cut.. :D
 N | #np The Summer Set - Papercut
@@ -8517,7 +8517,7 @@ N | Linkin Park-Papercut Ideal para desestresarse;D
 Y | :( I got a paper cut today.
 N | keeley said " she got a paper cut" #forreal
 N | She can fall somewhere and hit her elbow. And then get a paper cut then get up and slam her toe on a table
-Y | I have the World's Most Intense Paper Cut #StingsSoBad
+y | I have the World's Most Intense Paper Cut #StingsSoBad
 Y | PAPERCUT ON MY ARM WAT
 N | Argos catalogue just given me a papercut!! #NotCool  #HurtsLikeABitch
 Y | i had no idea that i had a paper cut on my pinky but thank you purell for finding it

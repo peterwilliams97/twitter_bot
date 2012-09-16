@@ -5,14 +5,17 @@ import  re
 # These strings should be added t screen new tweets as well
 # Also
 #   RT
-TRAINING_EXCLUSIONS = [
-    #'only creatures on earth that will cut down trees',
-    #'one final moment of glorious revenge',
+EXCLUDED_WORDS_TRAINING = [
+    r'Papercut_Dolls',  # @ is treated as a word boundary
+    'only creatures on earth that will cut down trees',
+    'one final moment of glorious revenge',
     #'Paper cut. I don\'t like it lmao',
-    #'holy cow balls Harry',
-    #'receiving a papercut whilst signing his',
-    #'The Gym Leader used a full restore.',
-    #'Linkin',
+    'holy cow balls Harry',
+    'receiving a papercut whilst signing his',
+    'The Gym Leader used a full restore.',
+    'Linkin',
+    r'Papercut\s*Mag',
+
 ]
 
 REPLYING_EXCLUSIONS = [
@@ -71,10 +74,11 @@ EXCLUDED_WORDS = [
     '#np'
 ]
 
-L_TRAINING_EXCLUSIONS = set([e.lower() for e in TRAINING_EXCLUSIONS])
+L_EXCLUDED_WORDS_TRAINING = set([e.lower() for e in EXCLUDED_WORDS_TRAINING])
 L_REPLYING_EXCLUSIONS = set([e.lower() for e in REPLYING_EXCLUSIONS])
 L_EXCLUDED_WORDS = set([e.lower() for e in EXCLUDED_WORDS])
 L_REPLYING_EXCLUSIONS -= L_EXCLUDED_WORDS
+RE_EXCLUDED_WORDS_TRAINING = re.compile(r'\b(%s)\b' % '|'.join(sorted(L_EXCLUDED_WORDS_TRAINING)))
 
 RE_RT = re.compile(r'\brt(:|\b)')
 RE_LOL = re.compile(r'\blols?\b')
@@ -108,9 +112,9 @@ def is_allowed_for_training(message):
     l_message = message.lower()
     if not RE_PAPERCUT.search(message):
         return False
-    return not any(e in l_message for e in L_TRAINING_EXCLUSIONS) \
-        and not RE_RT.search(l_message)
-
+    return not RE_RT.search(l_message) \
+       and not RE_EXCLUDED_WORDS_TRAINING.search(l_message)  
+  
 def is_allowed_for_replying(message): 
     if not is_allowed_for_training(message):
         return False
@@ -149,4 +153,11 @@ if __name__ == '__main__':
     tests_3 = ['lol papercut', 'hi lol x', 'hollow']  
     for message in tests_3:
         print '%6s : %s' % (RE_LOL.search(message) is None, message)
-   
+        
+
+    message = '@Papercut_Dolls yes. Not exactly a promotion'.lower() 
+    print message
+    print is_allowed_for_training(message)
+    print RE_PAPERCUT.search(message)
+    print RE_RT.search(message)
+    print RE_EXCLUDED_WORDS_TRAINING.search(message)  
