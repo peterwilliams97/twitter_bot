@@ -126,6 +126,39 @@ class BayesClassifier:
     backoff_bigram = 0.8775
     backoff_trigram = 0.3725
     threshold = 3.8509
+    
+    # Precision = 0.938, Recall = 0.661, F1 = 0.775
+    smooth_unigram = 9.6726
+    smooth_bigram = 4.1389
+    smooth_trigram = 0.6313
+    backoff_bigram = 0.8775
+    backoff_trigram = 0.3725
+    threshold = 3.8509
+    
+    # Precision = 0.948, Recall = 0.621, F1 = 0.751
+    smooth_unigram = 10.9372
+    smooth_bigram = 4.0673
+    smooth_trigram = 0.5609
+    backoff_bigram = 0.8826
+    backoff_trigram = 0.3357
+    threshold = 1.9699
+    
+    # Precision = 0.945, Recall = 0.623, F1 = 0.751
+    smooth_unigram = 9.4583
+    smooth_bigram = 3.9214
+    smooth_trigram = 0.5392
+    backoff_bigram = 0.8822
+    backoff_trigram = 0.3174
+    threshold = 1.9151
+    
+    # Precision = 0.943, Recall = 0.634, F1 = 0.758
+    smooth_unigram = 9.8336
+    smooth_bigram = 3.9799
+    smooth_trigram = 0.5381
+    backoff_bigram = 0.8781
+    backoff_trigram = 0.3252
+    threshold = 1.8732
+
  
     @staticmethod
     def make_valid(param):
@@ -369,12 +402,13 @@ class BayesClassifier:
         likelihood = sum(trigram_score(k) for k in trigrams) \
                    + BayesClassifier.backoff_trigram *(sum(bigram_score(k) for k in bigrams) 
                    + (BayesClassifier.backoff_bigram * sum(unigram_score(k) for k in unigrams))) 
+        likelihood /= 1.0 + BayesClassifier.backoff_trigram + BayesClassifier.backoff_bigram          
         log_odds = prior + likelihood
         
         if detailed:
             n_gram_dict = {}
             for k in trigrams: n_gram_dict[k] = trigram_score(k) 
-            for k in  bigrams: n_gram_dict[k] =  bigram_score(k) * BayesClassifier.backoff_trigram
+            for k in  bigrams: n_gram_dict[k] = bigram_score(k) * BayesClassifier.backoff_trigram
             for k in unigrams: n_gram_dict[k] = unigram_score(k) * BayesClassifier.backoff_trigram * BayesClassifier.backoff_bigram
             print 'ngrams scores --------------'
             for k in sorted(n_gram_dict, key = lambda x: n_gram_dict[x]):

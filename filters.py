@@ -8,14 +8,16 @@ import  re
 EXCLUDED_WORDS_TRAINING = [
     r'Papercut_Dolls',  # @ is treated as a word boundary
     'only creatures on earth that will cut down trees',
-    'one final moment of glorious revenge',
+    'glorious\s+revenge',
     #'Paper cut. I don\'t like it lmao',
-    'holy cow balls Harry',
-    'receiving a papercut whilst signing his',
-    'The Gym Leader used a full restore.',
-    'Linkin',
-    r'Papercut\s*Mag',
-
+    r'holy cow balls Harry',
+    r'receiving a papercut whilst signing his',
+    r'The Gym Leader used a full restore.',
+    r'Linkin\w*',
+    r'Paper\s*cut\s*Mag\w*',
+    r'Paper\s*cut\s*chron\w*',
+    r'sand\s*paper\s+kisses',
+    r'glorious\s+moment\s+of'
 ]
 
 REPLYING_EXCLUSIONS = [

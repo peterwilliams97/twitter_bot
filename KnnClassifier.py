@@ -30,6 +30,11 @@ class KnnClassifier:
     backoff = 0.8000
     threshold = 0.2333
     
+    weight_bigrams = 3.842
+    weight_trigrams = 11.921
+    backoff = 0.749
+    threshold = 0.644
+    
     @staticmethod
     def set_params(weight_bigrams, weight_trigrams, backoff, threshold):
         KnnClassifier.weight_bigrams = weight_bigrams
@@ -116,6 +121,7 @@ class KnnClassifier:
         # Normalize docs to unit length
         for word, doc_indexes in tfidf.items():
             for doc_idx in doc_indexes.keys():
+                #assert tfidf_l2norm[doc_idx], '%d : %s' % (doc_idx, documents[doc_idx])
                 tfidf[word][doc_idx] /= tfidf_l2norm[doc_idx]
                 
         return tfidf

@@ -57,6 +57,16 @@ class RocchioClassifier:
             'weight_trigrams',
             'threshold'
         )
+        
+    @staticmethod
+    def get_weights():
+        weights = {
+            1 : 1.0, 
+            2 : RocchioClassifier.weight_bigrams, 
+            3 : RocchioClassifier.weight_trigrams
+        }
+        total = sum(weights.values())
+        return dict((n,w/total) for n,w in weights.items())     
     
     @staticmethod
     def build_inv_index(documents):
@@ -179,24 +189,17 @@ class RocchioClassifier:
         assert cls in set([False, True]), 'invalid cls=%s' % cls
 
         words = preprocessing.extract_words(message)
-        unigrams = words[1:-1] # Trim the [TAG_START] and [TAG_END]
-        bigrams = preprocessing.get_bigrams(words)
-        trigrams = preprocessing.get_trigrams(words)
-
+        if not words:
+            return
+  
         documents = self.pos_documents if cls else self.neg_documents
-
-        def add_doc(n, ngrams):
-            """Update ngram_counts and ngram_keys for ngrams
-                and kls
-            """
+        
+        for n in (1,2,3):
+            ngrams = preprocessing.get_ngrams(n, words)
             documents[n].append(ngrams)
             for g in ngrams:
                 self.vocab[n].add(g)
-
-        add_doc(1, unigrams)
-        add_doc(2, bigrams)
-        add_doc(3, trigrams)
-
+ 
     def train(self, training_data):
         for cls,message in training_data:
             self._add_example(cls, message)
@@ -225,22 +228,19 @@ class RocchioClassifier:
         """
 
         words = preprocessing.extract_words(message)
+        if not words:
+            return False, 0.0
         
         # !@#$ Best intuition is to compute back-off based on counts
-        unigrams = words
-        bigrams = preprocessing.get_bigrams(words)
-        trigrams = preprocessing.get_trigrams(words)
+        ngrams = dict((n,preprocessing.get_ngrams(n, words)) for n in (1,2,3))
+        
+        query_vecs = dict((n, RocchioClassifier.get_query_vec(ngrams[n])) for n in (1,2,3))
     
-        unigrams_query = RocchioClassifier.get_query_vec(unigrams)
-        bigrams_query = RocchioClassifier.get_query_vec(bigrams)    
-        trigrams_query = RocchioClassifier.get_query_vec(trigrams)
+        weights = RocchioClassifier.get_weights()   
+        
                     
         def get_weighted_distance(centroid):
-            #print type(centroid), len(centroid)
-            #print type(centroid[1]), len(centroid[1])
-            return RocchioClassifier.get_distance(centroid[1], unigrams_query) \
-                 + RocchioClassifier.get_distance(centroid[2], bigrams_query) * RocchioClassifier.weight_bigrams \
-                 + RocchioClassifier.get_distance(centroid[3], trigrams_query) * RocchioClassifier.weight_trigrams
+            return sum(RocchioClassifier.get_distance(centroid[n], query_vecs[n]) * weights[n] for n in (1,2,3))
 
         pos_distance = get_weighted_distance(self.pos_centroid)
         neg_distance = get_weighted_distance(self.neg_centroid)

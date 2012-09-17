@@ -64,6 +64,15 @@ RE_JUNK = re.compile(r'[@*#%+=&/\^\$]+')
 
 RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
 
+#RE_A_PAPERCUT =  re.compile(r'\b(a|the|my)\s+#?paper\s*cut\b')
+RE_A_PAPERCUT =  re.compile(r'\bpaper\s*?cuts?\b')
+
+if False:
+    message = ' i got a paper cut '
+    message = RE_A_PAPERCUT.sub(' PAPER_CUT ', message)
+    print message
+    exit() 
+
 def pre_tokenize(message):
 
     assert RE_PAPERCUT.search(message), message
@@ -72,6 +81,10 @@ def pre_tokenize(message):
     
     message = RE_USER.sub('[TAG_USER]', message)
     message = RE_HTTP.sub(' [TAG_LINK] ', message)
+    
+    #print ' >>>', message
+    message = RE_A_PAPERCUT.sub(' PAPER_CUT ', message)
+    #print ' <<<', message
     
     message = RE_AMP.sub(' & ', message)
     message = RE_GT.sub(' < ', message)
@@ -99,8 +112,7 @@ def pre_tokenize(message):
     message = RE_JUNK.sub(r' [TAG_JUNK] ', message) 
   
     message = RE_NUMBER.sub(' [TAG_NUMBER] ', message)
-   
-     
+        
     return message
   
 # The stop words that have been tried and found to be ineffective are
@@ -164,13 +176,14 @@ def get_trigrams(words):
 def get_ngrams(n, words):    
     """Return all the ngrams in the list of words"""
     if n == 1:
+        words = [w for w in words if w != 'PAPER_CUT']
         return words[1:-1] # Trim the [TAG_START] and [TAG_END]
     return [WORD_DELIMITER.join(words[i:i+n]) for i in range(len(words)-n)]    
     
 import PorterStemmer    
 stemmer = PorterStemmer.PorterStemmer()    
 
-def extract_words(message, do_stem = True):
+def extract_words(message, do_stem = False):
     """The word extractor that is run over every message that is trained on or
         classified or None if 'paper cut' was removed in processing.
     """
@@ -185,6 +198,8 @@ def extract_words(message, do_stem = True):
     
     words = post_tokenize(words) 
     
-    return words if ('paper' in words and 'cut' in words) or 'papercut' in words else None
+
+    return words if ('PAPER_CUT' in words) else None
+  #  return words if ('paper' in words and 'cut' in words) or 'papercut' in words else None
     
 
