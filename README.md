@@ -160,31 +160,31 @@ The n-grams for the paper cut tweets are
 [here](https://raw.github.com/peterwilliams97/twitter_bot/master/data/owww_papertcut.ngram). The most influential are
 
     TRIGRAMS
-    [  0, 98] 98.0 '[TAG_START] i got'
-    [  0, 47] 47.0 '[TAG_START] just got'
-    [  0, 34] 34.0 'on my finger'
+    [  0,118] 118.0 '[TAG_START] i got'
+    [  0, 51] 51.0 '[TAG_START] just got'
+    [  0, 40] 40.0 'on my finger'
     ...
-    [347,  0] -347.0 'featured in papercut'
-    [348,  0] -348.0 'in papercut magazine'
-    [350,  0] -350.0 'papercut magazine !'
+    [ 12,  0] -12.0 '[TAG_USER] [TAG_USER] [TAG_USER]'
+    [ 12,  0] -12.0 'hope you get'
+    [ 18,  0] -18.0 'i hope you
     
     BIGRAMS
-    [  0, 34] 34.0 'gave myself'
-    [  0, 18] 18.0 'cut ouch'
-    [  0, 17] 17.0 'gota paper'
+    [  0, 39] 39.0 'gave myself'
+    [  0, 28] 28.0 'my thumb'
+    [  0, 15] 15.0 'ow [TAG_END]'
     ...
-    [347,  0] -347.0 'featured in'
-    [350,  0] -350.0 'magazine !'
-    [373,  0] -373.0 'papercut magazine'
+    [ 20,  0] -20.0 'hope you'
+    [ 23,  0] -23.0 'i hope'
+    [ 25,  0] -25.0 'PAPER_CUT out''
     
     UNIGRAMS
     [  0, 14] 14.0 'remover'
+    [  0, 14] 14.0 'stings'
     [  0,  9]  9.0 'fuckin'
-    [  0,  8]  8.0 'polish'
     ...
-    [338,  0] -338.0 'hoping'
-    [347,  0] -347.0 'featured'
-    [347,  0] -347.0 'request'
+    [ 15,  0] -15.0 'make'
+    [ 18,  0] -18.0 'i'll'
+    [ 28,  0] -28.0 'want'
 
 Results
 -------
