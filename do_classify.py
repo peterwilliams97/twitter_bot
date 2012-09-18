@@ -38,8 +38,6 @@ def get_labelled_tweets():
             continue
         if cls in set([False,True]):
             tweets.append((cls, message))
-        #!@#$
-        #if len(tweets) > 100: break
     fp.close()
     return tweets
     
@@ -134,25 +132,13 @@ def arr_str(arr):
     vals = ','.join(['%6.3f' % x for x in arr])
     return '[%s]' % vals    
     
+# Translate array to (TF) and from (TR) log     
 def TF(a):
     return [math.log(x) for x in a]
+    
 def TR(a):
     return [math.exp(x) for x in a]
     
-if False:
-    def test_t(a):
-        b = TR(TF(a))
-        c = TF(TR(a))
-        a_b = max(abs(x-y) for (x,y) in zip(a,b))
-        a_c = max(abs(x-y) for (x,y) in zip(a,c))
-        b_c = max(a_b, a_c)
-        print 'a: %s %f' % (a, b_c)
-        print 'b: %s %f' % (b, a_b)
-        print 'c: %s %f' % (c, a_c)
-    test_t([4, 5, 6])
-    test_t([0.0001, 6, 6])
-    exit()
-
 def optimize_params(tweets):
     from scipy import optimize
     

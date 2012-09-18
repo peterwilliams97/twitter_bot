@@ -25,10 +25,6 @@ import preprocessing
 EPSILON = 1.0e-6
 
 class RocchioClassifier:
-
-    weight_bigrams = 3.0
-    weight_trigrams = 9.0
-    threshold = 1.3
     
     # Precision = 0.956, Recall = 0.544, F1 = 0.694
     weight_bigrams = 3.0195
@@ -73,7 +69,6 @@ class RocchioClassifier:
         """Build an inverted index of the documents.
             inv_index[word][i] = number of occurences of word in documents[i]
         """
-        #print 'Indexing...',
         
         inv_index = {}
   
@@ -156,9 +151,7 @@ class RocchioClassifier:
     
     def __init__(self, training_data):
         """RocchioClassifier initialization
-
         """
-
         self.pos_documents = dict((n,[]) for n in (1,2,3))
         self.neg_documents = dict((n,[]) for n in (1,2,3))
         self.vocab = dict((n,set()) for n in (1,2,3))
@@ -182,11 +175,8 @@ class RocchioClassifier:
             for n in (3,2,1)) 
 
     def _add_example(self, cls, message):
+        """Add a training example
         """
-            Add a training example
-        """
-
-        assert cls in set([False, True]), 'invalid cls=%s' % cls
 
         words = preprocessing.extract_words(message)
         if not words:
@@ -231,7 +221,7 @@ class RocchioClassifier:
         if not words:
             return False, 0.0
         
-        # !@#$ Best intuition is to compute back-off based on counts
+        # Best intuition would be to compute back-off based on counts
         ngrams = dict((n,preprocessing.get_ngrams(n, words)) for n in (1,2,3))
         
         query_vecs = dict((n, RocchioClassifier.get_query_vec(ngrams[n])) for n in (1,2,3))
@@ -245,9 +235,7 @@ class RocchioClassifier:
         pos_distance = get_weighted_distance(self.pos_centroid)
         neg_distance = get_weighted_distance(self.neg_centroid)
 
-        
         diff = (pos_distance + EPSILON)/(neg_distance + EPSILON)
-        #print '--', pos_distance, neg_distance, diff
         return diff > RocchioClassifier.threshold, math.log(diff)
 
 if __name__ == '__main__':

@@ -1,10 +1,11 @@
 from __future__ import division
 # -*- coding:iso-8859-1 -*-
 """
-    Preprocessing functions common to many classifiers
+    Preprocessing functions common to all our classifiers.
 """
 import re
 
+# Text between quotation marks.
 RE_QUOTE = re.compile(r'''(?:'(?!\S)|(?<!\S)'|")''')
 
 # In Twitter 'some text @someone: some quote' is a way of quoting 'some quote'
@@ -15,7 +16,6 @@ RE_QUOTE3 = re.compile(r'\brt\b.+$')
 def _remove_quoted_text(message):
     """Remove quoted text from message because it we presume it was 
         not written the author of message
-        by some
     """
 
     message = RE_QUOTE2.sub(' ', message)
@@ -36,6 +36,8 @@ def _remove_quoted_text(message):
         
     return message    
 
+RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
+    
 RE_USER = re.compile(r'@+\w+')
 RE_HTTP = re.compile(r'http://\S+')
 
@@ -52,29 +54,18 @@ RE_PUNC4 = re.compile(r'\?[\s\?]+')
 RE_BRACKETS = re.compile(r'[\(\)\{\}]+')
 RE_SPACE = re.compile(r'\s+')
 RE_HASH = re.compile(r'#(\w+)')
-# Not sure why this is so effective f 0.821 -> 0.827
-#RE_REPEAT = re.compile(r'(.)\1\1*')
 RE_REPEAT = re.compile(r'(.)\1\1+')
 RE_REPEAT2 = re.compile(r'[<>](\s*[<>])+')
 
 RE_BANG = re.compile(r'(\w+)([!])')
 RE_NUMBER = re.compile(r'\d+(\s+\d)*')
-
 RE_JUNK = re.compile(r'[@*#%+=&/\^\$]+')
 
-RE_PAPERCUT = re.compile(r'\b#?paper\s*cuts?\b')
-
-#RE_A_PAPERCUT =  re.compile(r'\b(a|the|my)\s+#?paper\s*cut\b')
-RE_A_PAPERCUT =  re.compile(r'\bpaper\s*?cuts?\b')
-
-if False:
-    message = ' i got a paper cut '
-    message = RE_A_PAPERCUT.sub(' PAPER_CUT ', message)
-    print message
-    exit() 
-
 def pre_tokenize(message):
-
+    """The preprocessing performed on text before tokenization
+    """
+    
+    # This is for a "paper cut" classifier so text must contain "paper cut" 
     assert RE_PAPERCUT.search(message), message
     
     message = _remove_quoted_text(message)
@@ -82,9 +73,7 @@ def pre_tokenize(message):
     message = RE_USER.sub('[TAG_USER]', message)
     message = RE_HTTP.sub(' [TAG_LINK] ', message)
     
-    #print ' >>>', message
-    message = RE_A_PAPERCUT.sub(' PAPER_CUT ', message)
-    #print ' <<<', message
+    message = RE_PAPERCUT.sub(' PAPER_CUT ', message)
     
     message = RE_AMP.sub(' & ', message)
     message = RE_GT.sub(' < ', message)
@@ -116,18 +105,20 @@ def pre_tokenize(message):
     return message
   
 # The stop words that have been tried and found to be ineffective are
-#  left in the code and commented out  
+#  left in the code and commented out'
+# I was surprised at how many common words improved classification for 
+#  this classifier of tweets as being from people with papercuts or not.  
 STOP_WORDS = set([
     'the',
     'and',
+    'that', 
     #'or',
     #'did',
     #'it',
     #'is',
     #'get',
     #'got',
-    
-    #'a', # Excluding 'a' increases precision and decreases recall
+    #'a',       # Excluding 'a' increases precision and decreases recall
     #'have', 
     #'my',
     #'i',
@@ -138,7 +129,7 @@ STOP_WORDS = set([
 def post_tokenize(words):
     """Post-process list of words created from tokenization
         Remove stop words
-        Remove words after indicators that they are not meants
+        Remove words after indicators that they are not meant
     """
     words = [w for w in words if w not in STOP_WORDS]
     
@@ -150,7 +141,8 @@ def post_tokenize(words):
                 continue
             else:
                 skip_from = -1
-        if w in set(['almost']):
+        if w in set(['almost', 'she', 'he', 'except', 'like', 'not', "ain't", 
+                    'who']):
             skip_from = i
             continue
         out_words.append(w)    
@@ -191,15 +183,11 @@ def extract_words(message, do_stem = False):
     
     if do_stem:
         message2 = stemmer.stem(message)
-    
+
     message = pre_tokenize(message)
-    
+
     words = message.split()
-    
+
     words = post_tokenize(words) 
-    
 
     return words if ('PAPER_CUT' in words) else None
-  #  return words if ('paper' in words and 'cut' in words) or 'papercut' in words else None
-    
-

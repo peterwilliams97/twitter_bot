@@ -341,7 +341,7 @@ def run_main_loop(max_duration, replying_enabled):
     RE_CREDENTIALS = re.compile(r"(\w+)='([^']+)'")
     credentials = dict((m.group(1),m.group(2)) 
         for m in RE_CREDENTIALS.finditer(file(common.CREDENTIALS_FILE,'rt').read()))
-      
+    
     # Create an object that gives access to the Twitter APIs        
     api = twitter.Api(**credentials)
     

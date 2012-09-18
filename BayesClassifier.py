@@ -46,120 +46,16 @@ def _get_cntv(counts):
     return cntn,cntp,v
 
 class BayesClassifier:
-    
-    # Precision = 0.942, Recall = 0.730, F1 = 0.822
-    smooth_unigram = 9.0039
-    smooth_bigram = 4.5435
-    smooth_trigram = 0.5263
-    backoff_bigram = 0.7710
-    backoff_trigram = 0.3751
-    threshold = 3.2122
-    
-    # Precision = 0.944, Recall = 0.697, F1 = 0.802
-    smooth_unigram = 8.2849
-    smooth_bigram = 4.4319
-    smooth_trigram = 0.5499
-    backoff_bigram = 0.7943
-    backoff_trigram = 0.3943
-    threshold = 3.2672
-    
-    # Precision = 0.942, Recall = 0.697, F1 = 0.801
-    smooth_unigram = 8.2368
-    smooth_bigram = 4.5056
-    smooth_trigram = 0.5768
-    backoff_bigram = 0.7956
-    backoff_trigram = 0.3920
-    threshold = 3.2431
-    
-    # Precision = 0.950, Recall = 0.684, F1 = 0.796
-    smooth_unigram = 7.7367
-    smooth_bigram = 3.7312
-    smooth_trigram = 0.6309
-    backoff_bigram = 0.8581
-    backoff_trigram = 0.4143
-    threshold = 3.4499
-    
-    # Precision = 0.950, Recall = 0.685, F1 = 0.796
-    smooth_unigram = 7.8733
-    smooth_bigram = 3.7971
-    smooth_trigram = 0.6379
-    backoff_bigram = 0.8732
-    backoff_trigram = 0.4058
-    threshold = 3.4112    
-    
-    # Precision = 0.915, Recall = 0.768, F1 = 0.835
-    smooth_unigram = 9.0028
-    smooth_bigram = 3.7889
-    smooth_trigram = 0.6121
-    backoff_bigram = 0.8706
-    backoff_trigram = 0.3995
-    threshold = 2.4145
-    
-    # Precision = 0.910, Recall = 0.768, F1 = 0.833
-    smooth_unigram = 9.7141
-    smooth_bigram = 3.7590
-    smooth_trigram = 0.6176
-    backoff_bigram = 0.8744
-    backoff_trigram = 0.3851
-    threshold = 2.4536
-    
-    # Precision = 0.932, Recall = 0.718, F1 = 0.811
-    smooth_unigram = 9.7141
-    smooth_bigram = 3.7590
-    smooth_trigram = 0.6102
-    backoff_bigram = 0.8744
-    backoff_trigram = 0.3851
-    threshold = 3.4536
-    
-    # Precision = 0.933, Recall = 0.705, F1 = 0.803
-    smooth_unigram = 10.0797
-    smooth_bigram = 3.9112
-    smooth_trigram = 0.6253
-    backoff_bigram = 0.8732
-    backoff_trigram = 0.3809
-    threshold = 3.5051
-    
-    # Precision = 0.935, Recall = 0.694, F1 = 0.797
-    smooth_unigram = 9.6726
-    smooth_bigram = 4.1389
-    smooth_trigram = 0.6349
-    backoff_bigram = 0.8775
-    backoff_trigram = 0.3725
-    threshold = 3.8509
-    
-    # Precision = 0.938, Recall = 0.661, F1 = 0.775
-    smooth_unigram = 9.6726
-    smooth_bigram = 4.1389
-    smooth_trigram = 0.6313
-    backoff_bigram = 0.8775
-    backoff_trigram = 0.3725
-    threshold = 3.8509
-    
-    # Precision = 0.948, Recall = 0.621, F1 = 0.751
-    smooth_unigram = 10.9372
-    smooth_bigram = 4.0673
-    smooth_trigram = 0.5609
-    backoff_bigram = 0.8826
-    backoff_trigram = 0.3357
-    threshold = 1.9699
-    
-    # Precision = 0.945, Recall = 0.623, F1 = 0.751
-    smooth_unigram = 9.4583
-    smooth_bigram = 3.9214
-    smooth_trigram = 0.5392
-    backoff_bigram = 0.8822
-    backoff_trigram = 0.3174
-    threshold = 1.9151
-    
-    # Precision = 0.943, Recall = 0.634, F1 = 0.758
-    smooth_unigram = 9.8336
-    smooth_bigram = 3.9799
-    smooth_trigram = 0.5381
-    backoff_bigram = 0.8781
-    backoff_trigram = 0.3252
-    threshold = 1.8732
+   
+    # Precision = 0.947, Recall = 0.649, F1 = 0.770
+    smooth_unigram = 11.4338
+    smooth_bigram = 4.5718
+    smooth_trigram = 0.5261
+    backoff_bigram = 0.8718
+    backoff_trigram = 0.4252
+    threshold = 1.8402
 
- 
+
     @staticmethod
     def make_valid(param):
         """This keeps values sane when running an optimizer on set_params()"""
@@ -201,12 +97,7 @@ class BayesClassifier:
     @staticmethod
     def get_features(ngrams):
         """Make features to classify on from ngrams
-            We make these features binary
         """    
-        #Precision = 0.935, Recall = 0.708, F1 = 0.806
-        # "Binarize"
-        # 0 or 1 occurrences of ngram in document
-        #return set(ngrams)
         
         counts = {}
         for w in ngrams:
@@ -240,15 +131,34 @@ class BayesClassifier:
         self.trigram_keys = set([])
         self.class_count = [0,0]
 
-        if training_data:
-            self.train(training_data)
+        self.train(training_data)
+        
+    def __repr__(self):    
+
+        def counts_str(counts):
+            def n(k):  return -_cnt_positivity(counts[k]), k.lower()
+            return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
+
+        def show_counts(name, counts):
+            return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
+
+        totals = [
+            '          (neg,   pos,   cnt)',
+            'TRIGRAMS %s' % str(self.cntv_trigrams),
+            ' BIGRAMS %s' % str(self.cntv_bigrams),
+            'UNIGRAMS %s' % str(self.cntv_unigrams),
+        ]   
+        totals_string = '\n'.join(totals) + '\n'
+        
+        return totals_string \
+             + show_counts('TRIGRAMS', self.trigram_counts) \
+             + show_counts('BIGRAMS', self.bigram_counts) \
+             + show_counts('UNIGRAMS', self.unigram_counts) 
+    
 
     def _add_example(self, cls, message):
+        """Add a training example
         """
-            Add a training example
-        """
-
-        assert cls in set([False, True]), 'invalid cls=%s' % cls
             
         words = preprocessing.extract_words(message)
         if not words:
@@ -256,7 +166,7 @@ class BayesClassifier:
         unigrams = words[1:-1]
         bigrams = preprocessing.get_bigrams(words)
         trigrams = preprocessing.get_trigrams(words)
-
+        
         unigrams = BayesClassifier.get_features(unigrams)
         bigrams = BayesClassifier.get_features(bigrams)
         trigrams = BayesClassifier.get_features(trigrams)
@@ -284,31 +194,9 @@ class BayesClassifier:
         self.cntv_bigrams  = _get_cntv(self.bigram_counts)   
         self.cntv_trigrams = _get_cntv(self.trigram_counts)
 
-    def __repr__(self):    
-
-        def counts_str(counts):
-            def n(k):  return -_cnt_positivity(counts[k]), k.lower()
-            return '\n'.join([_cnt_show(key, counts[key]) for key in sorted(counts, key = lambda k : n(k))])
-
-        def show_counts(name, counts):
-            return '%s\n%s\n%s\n' % ('-' * 80, name, counts_str(counts))
-
-        totals = [
-            '          (neg,   pos,   cnt)',
-            'TRIGRAMS %s' % str(self.cntv_trigrams),
-            ' BIGRAMS %s' % str(self.cntv_bigrams),
-            'UNIGRAMS %s' % str(self.cntv_unigrams),
-        ]   
-        totals_string = '\n'.join(totals) + '\n'
-        
-        return totals_string \
-             + show_counts('TRIGRAMS', self.trigram_counts) \
-             + show_counts('BIGRAMS', self.bigram_counts) \
-             + show_counts('UNIGRAMS', self.unigram_counts) 
 
     def classify(self, message, detailed=False):
-        """ 
-            'message' is a string to classify. Return True or False classification.
+        """message is a string to classify. Return True or False classification.
             
             Method is to calculate a log_odds from a liklihood based on
             trigram, bigram and unigram (p,n) counts in the training set
@@ -328,13 +216,13 @@ class BayesClassifier:
         if not words:
             return False, 0.0    
         
-        # Using dicts with offset keys prevents same ngram being included twice
+        # Using dicts with offset keys prevents the same ngram being included twice
         unigrams = {}
         bigrams = {}
         trigrams = {}
         
         from preprocessing import WORD_DELIMITER
-        # !@#$ Best intuition is to compute back-off based on counts
+        # Best intuition is to compute back-off based on counts
         for i in range(len(words)-3):
             tri = WORD_DELIMITER.join(words[i:i+3])
             if tri in self.trigram_keys:
@@ -353,8 +241,7 @@ class BayesClassifier:
         trigrams = BayesClassifier.get_features(trigrams.values())        
 
         def get_score(counts, cntv, alpha):
-            """
-                Get a smoothed score for an ngram
+            """Get a smoothed score for an ngram
                 
                 counts = (n,p) 
                     n = number of negatives for ngram in training set                    

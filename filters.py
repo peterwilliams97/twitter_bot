@@ -2,14 +2,10 @@ import  re
 
 # This list is used to exclude whole tweets that have already been seen
 # It is NOT used to exclude phrases like 'Sandpaper kisses, paper cut bliss'
-# These strings should be added t screen new tweets as well
-# Also
-#   RT
 EXCLUDED_WORDS_TRAINING = [
     r'Papercut_Dolls',  # @ is treated as a word boundary
-    'only creatures on earth that will cut down trees',
-    'glorious\s+revenge',
-    #'Paper cut. I don\'t like it lmao',
+    r'only creatures on earth that will cut down trees',
+    r'glorious\s+revenge',
     r'holy cow balls Harry',
     r'receiving a papercut whilst signing his',
     r'The Gym Leader used a full restore.',

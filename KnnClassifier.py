@@ -14,7 +14,6 @@ from __future__ import division
     
     This does not seem to be well-suited to tweet classification as the
     vectors are all sparse with element values rarely greater than 1.
-
 """
 import math, heapq
 import preprocessing
@@ -23,17 +22,11 @@ class KnnClassifier:
 
     N = 4
     
-    # N = 4    
-    # Precision = 0.796, Recall = 0.843, F1 = 0.819
-    weight_bigrams = 3.0195
-    weight_trigrams = 9.8414
-    backoff = 0.8000
-    threshold = 0.2333
-    
-    weight_bigrams = 3.842
-    weight_trigrams = 11.921
-    backoff = 0.749
-    threshold = 0.644
+    # Precision = 0.924, Recall = 0.617, F1 = 0.740
+    weight_bigrams = 3.6683
+    weight_trigrams = 13.3895
+    backoff = 0.7429
+    threshold = 0.6493
     
     @staticmethod
     def set_params(weight_bigrams, weight_trigrams, backoff, threshold):
@@ -138,7 +131,6 @@ class KnnClassifier:
     def get_distance(vocab, tfidf, doc_id, query_vec):
         # Return the distance between query_vec and doc_vec
         # Return the cosine    
-        # ~!@# Assume some normalization somewhere
         words = [w for w in query_vec if w in vocab]
         return sum(query_vec[w] * tfidf[w].get(doc_id, 0) for w in words)    
     
@@ -230,28 +222,17 @@ class KnnClassifier:
         ngrams = dict((n,preprocessing.get_ngrams(n, words)) for n in (1,2,3))
        
         query_vecs = dict((n, KnnClassifier.get_query_vec(ngrams[n])) for n in (1,2,3))
-        
-          
-        #print message
-        
+         
         diffs = {}    
         for n in (1,2,3):
             doc_ids = get_docs_with_terms(self.vocab[n], self.tfidf[n], ngrams[n])
             nearest = get_nearest(KnnClassifier.N, self.documents[n], self.vocab[n], self.tfidf[n], doc_ids, query_vecs[n])
-            #print '%d ----' % n
-            #print query_vecs[n]
-            #for cls,i,dist in nearest:
-            #    print '%5s %3d %7.4f %s' % (cls,i,dist, sorted(self.documents[n][i][1])[:10])
-            
-            #pos = sum(1 if cls else -1 for cls,_,_ in nearest)
             pos = sum((1 if cls else -1) * (KnnClassifier.backoff ** i) for i,(cls,_,_) in enumerate(nearest))
             diffs[n] = pos/KnnClassifier.N 
-        #exit()
        
         weights = KnnClassifier.get_weights()   
         diff = sum(diffs[n]*weights[n] for n in (1,2,3))      
- 
-        #print '--', pos_distance, neg_distance, diff
+
         return diff > KnnClassifier.threshold, diff
 
 if __name__ == '__main__':
