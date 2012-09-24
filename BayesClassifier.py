@@ -128,14 +128,14 @@ class BayesClassifier:
     
     def __init__(self, training_data):
         """BayesClassifier initialization
-            *gram_counts are dicts of positive and negative
-                counts for each <n>gram
-            *gram_counts[k] = [neg,pos]
+            ngram_counts are dicts of positive and negative
+                counts for each ngrams for n = 1,2,3
+            ngram_counts[n][term] = [neg,pos]
             
-            *gram_keys is *gram_counts' key set
+            ngram_keys[n] is ngram_counts[n]'s key set
             
             class_count = [neg,pos] is the total counts of negative and
-                positive examples
+                positive training examples
         """
 
         self.class_count = [0,0]
@@ -196,7 +196,7 @@ class BayesClassifier:
         """message is a string to classify. Return True or False classification.
             
             Method is to calculate a log_odds from a liklihood based on
-            trigram, bigram and unigram (p,n) counts in the training set
+            trigram, bigram and unigram (pos,neg) counts in the training set
             For each trigram
                 return smoothed trigram score if trigram in training set, else
                 for the 2 bigrams in the trigram
@@ -205,7 +205,7 @@ class BayesClassifier:
                         return smoothed unigram score
                         
             get_score() shows the smoothed scoring    
-            <n>gram_score() shows the backoff and smoothing factors    
+            gram_score() shows the backoff and smoothing factors    
         """
         words = preprocessing.extract_words(message)
         if detailed:
