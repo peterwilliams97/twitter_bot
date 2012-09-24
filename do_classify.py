@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 from __future__ import division
-# -*- coding:iso-8859-1 -*-
 """
     Peform various statistical tests on the labelled tweets in CLASS_FILE
 """ 

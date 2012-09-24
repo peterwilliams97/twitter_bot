@@ -6,6 +6,7 @@
 """
 import twitter, os, time, sys, re
 
+
 # Our shared modules
 import common, filters
 
@@ -131,11 +132,11 @@ def fetch_latest_scored_tweets(api, model, latest_tweet_id):
     """    
 
     def search_twitter(pattern):
-        try:
+        #try:
             results = api.GetSearch(pattern, since_id = latest_tweet_id)
             time.sleep(1)
             return results
-        except Exception:
+        #except Exception:
             log_sys_err(' Twitter api error for search "%s"' %  pattern) 
             return []
     
@@ -396,6 +397,7 @@ if __name__ == '__main__':
        
     logging.info('-' * 80)
     logging.info('Starting %s' % str(sys.argv[0]))
+    run_main_loop(max_duration, options.replying_enabled)
     try:
         run_main_loop(max_duration, options.replying_enabled)
     except Exception:

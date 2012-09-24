@@ -1,5 +1,4 @@
 from __future__ import division
-# -*- coding:iso-8859-1 -*-
 """
     Preprocessing functions common to all our classifiers.
 """

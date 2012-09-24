@@ -1,5 +1,4 @@
 from __future__ import division
-# -*- coding:iso-8859-1 -*-
 """
     Rocchio-like classifier
     
@@ -26,10 +25,10 @@ EPSILON = 1.0e-6
 
 class RocchioClassifier:
     
-    # Precision = 0.956, Recall = 0.544, F1 = 0.694
-    weight_bigrams = 3.0195
-    weight_trigrams = 3.8414
-    threshold = 1.7598
+    # Precision = 0.936, Recall = 0.606, F1 = 0.736
+    weight_bigrams = 2.0318
+    weight_trigrams = 4.4337
+    threshold = 1.9442
 
     @staticmethod
     def set_params(weight_bigrams, weight_trigrams, threshold):
@@ -195,9 +194,7 @@ class RocchioClassifier:
             self._add_example(cls, message)
             
         for n in (1,2,3):
-            #print 'pos %d' % n,
             self.pos_centroid[n] = RocchioClassifier.get_centroid(self.vocab[n], self.pos_documents[n])
-            #print 'neg %d' % n,
             self.neg_centroid[n] = RocchioClassifier.get_centroid(self.vocab[n], self.neg_documents[n])
 
     def classify(self, message, detailed=False):

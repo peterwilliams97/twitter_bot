@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 from __future__ import division
-# -*- coding:iso-8859-1 -*-
 """
     A basic KNN classifier
     
@@ -22,11 +22,11 @@ class KnnClassifier:
 
     N = 4
     
-    # Precision = 0.924, Recall = 0.617, F1 = 0.740
-    weight_bigrams = 3.6683
-    weight_trigrams = 13.3895
-    backoff = 0.7429
-    threshold = 0.6493
+    # Precision = 0.938, Recall = 0.613, F1 = 0.741
+    weight_bigrams = 3.7627
+    weight_trigrams = 13.1366
+    backoff = 0.7386
+    threshold = 0.6497
     
     @staticmethod
     def set_params(weight_bigrams, weight_trigrams, backoff, threshold):
