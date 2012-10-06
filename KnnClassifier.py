@@ -9,7 +9,8 @@ from __future__ import division
     of ngrams.
     
         - The vectors are normalized to length 1
-        - New documents are classifier according the N training documents they are closest to.
+        - New documents are classifier according the K training documents 
+           they are closest to.
         - In the current implementation, the distance measure is cosine.
     
     This does not seem to be well-suited to tweet classification as the
@@ -17,22 +18,25 @@ from __future__ import division
 """
 import math, heapq
 import preprocessing
+from vectorizer_lib import TfidfVectorizer
 
 class KnnClassifier:
 
-    N = 4
-    
-    # Precision = 0.938, Recall = 0.613, F1 = 0.741
-    weight_bigrams = 3.7627
-    weight_trigrams = 13.1366
-    backoff = 0.7386
-    threshold = 0.6497
+    K = 20 
+ 
+    # Precision = 0.716, Recall = 0.716, F1 = 0.716
+    weight_bigrams = 4.4661
+    weight_trigrams = 15.8206
+    backoff = 0.9867
+    backoff2 = 0.9895
+    threshold = 0.4948
     
     @staticmethod
-    def set_params(weight_bigrams, weight_trigrams, backoff, threshold):
+    def set_params(weight_bigrams, weight_trigrams, backoff, backoff2, threshold):
         KnnClassifier.weight_bigrams = weight_bigrams
         KnnClassifier.weight_trigrams = weight_trigrams   
-        KnnClassifier.backoff = backoff   
+        KnnClassifier.backoff = backoff  
+        KnnClassifier.backoff2 = backoff2          
         KnnClassifier.threshold = threshold   
 
     @staticmethod    
@@ -40,7 +44,8 @@ class KnnClassifier:
         return (
             KnnClassifier.weight_bigrams, 
             KnnClassifier.weight_trigrams,  
-            KnnClassifier.backoff, 
+            KnnClassifier.backoff,
+            KnnClassifier.backoff2,    
             KnnClassifier.threshold            
         )
     
@@ -49,7 +54,8 @@ class KnnClassifier:
         return (
             'weight_bigrams',
             'weight_trigrams',
-            'backoff',  
+            'backoff',
+            'backoff2',    
             'threshold'  
         ) 
     
@@ -62,77 +68,7 @@ class KnnClassifier:
         }
         total = sum(weights.values())
         return dict((n,w/total) for n,w in weights.items()) 
-    
-    @staticmethod
-    def build_inv_index(documents):
-        """Build an inverted index of the documents.
-            inv_index[word][i] = number of occurences of word in documents[i]
-        """
-        
-        inv_index = {}
-  
-        for i,(_,doc) in enumerate(documents):
-            for word in doc:
-                if not word in inv_index.keys():
-                    inv_index[word] = {}
-                inv_index[word][i] = inv_index[word].get(i,0) + 1
 
-        return inv_index
-       
-    @staticmethod
-    def compute_tfidf(documents):
-        """Build a tf-idf dict for documents
-            tfidf[word][i] = tf-idf for word and document with index i
-        """
-        
-        inv_index = KnnClassifier.build_inv_index(documents)
-       
-        tfidf = {}
-        logN = math.log(len(documents), 10)
- 
-        for word in inv_index:
-            # word_doc_counts[i] = number of occurences of word in documents[i]
-            word_doc_counts = inv_index[word] 
-            # inverse document frequency ~ -log10(number of documents that word occurs in)
-            idf = logN - math.log(len(word_doc_counts), 10)
-            for doc_idx,word_count in word_doc_counts.items():
-                if word not in tfidf:
-                    tfidf[word] = {}
-                # term frequency ~ log10(number of occurrences of word in doc)    
-                tf = 1.0 + math.log(word_count, 10)
-                tfidf[word][doc_idx] = tf * idf 
-       
-        # Calculate per-document l2 norms for use in cosine similarity
-        # tfidf_l2norm[d] = sqrt(sum[tdidf**2])) for tdidf of all words in 
-        # document number d
-        tfidf_l2norm2 = {}
-        for word, doc_indexes in tfidf.items():
-            for doc_idx,val in doc_indexes.items():
-                tfidf_l2norm2[doc_idx] = tfidf_l2norm2.get(doc_idx, 0.0) + val ** 2
-        tfidf_l2norm = dict((doc_idx,math.sqrt(val)) for doc_idx,val in tfidf_l2norm2.items())   
-
-        # Normalize docs to unit length
-        for word, doc_indexes in tfidf.items():
-            for doc_idx in doc_indexes.keys():
-                #assert tfidf_l2norm[doc_idx], '%d : %s' % (doc_idx, documents[doc_idx])
-                tfidf[word][doc_idx] /= tfidf_l2norm[doc_idx]
-                
-        return tfidf
-
-    @staticmethod
-    def get_query_vec(ngrams):
-        # Construct the query vector as a dict word:log(tf)
-        query_vec = {}
-        for word in ngrams: 
-            query_vec[word] = query_vec.get(word,0) + 1
-        return dict((word, math.log(query_vec[word], 10) + 1.0) for word in query_vec)
-        
-    @staticmethod
-    def get_distance(vocab, tfidf, doc_id, query_vec):
-        # Return the distance between query_vec and doc_vec
-        # Return the cosine    
-        words = [w for w in query_vec if w in vocab]
-        return sum(query_vec[w] * tfidf[w].get(doc_id, 0) for w in words)    
     
     def __init__(self, training_data):
         """KnnClassifier initialization
@@ -140,8 +76,7 @@ class KnnClassifier:
         """
 
         self.documents = dict((n,[]) for n in (1,2,3))
-        self.vocab = dict((n,set()) for n in (1,2,3))
-        self.tfidf = dict((n,set()) for n in (1,2,3))
+        self.vectorizers = {}
        
         self.train(training_data)
         
@@ -171,15 +106,13 @@ class KnnClassifier:
         for n in (1,2,3):
             ngrams = preprocessing.get_ngrams(n, words)
             self.documents[n].append((cls,ngrams))
-            for g in ngrams:
-                self.vocab[n].add(g)
 
     def train(self, training_data):
         for cls,message in training_data:
             self._add_example(cls, message)
             
         for n in (1,2,3):
-            self.tfidf[n] = KnnClassifier.compute_tfidf(self.documents[n])  
+            self.vectorizers[n] = TfidfVectorizer([doc for _,doc in self.documents[n]])
 
     def classify(self, message, detailed=False):
         """ 
@@ -198,37 +131,45 @@ class KnnClassifier:
             <n>gram_score() shows the backoff and smoothing factors    
         """
 
-        def get_docs_with_terms(vocab, tfidf, ngrams):
+        def get_docs_with_terms(vectorizer, ngrams):
             docs = set()
             for term in ngrams:
-                if term in vocab:
-                    docs |= set(tfidf[term].keys())
+                if term in vectorizer.vocab:
+                    docs |= set(vectorizer.tfidf[term].keys())
             return docs
             
-        def get_nearest(N, documents, vocab, tfidf, doc_ids, query_vec):
-            """Return doc ids of N documents nearest query_vec
+        def get_nearest(K, documents, vectorizer, ngrams, doc_ids):
+            """Return doc ids of K documents nearest query_vec
             """
             # Compute scores and add to a priority queue
             scores = []
             for i in doc_ids:
-                heapq.heappush(scores, (KnnClassifier.get_distance(vocab, tfidf, i, query_vec), i, documents[i][0]))
-            # Return top N scores
-            return [(cls,i,dist) for dist,i,cls in heapq.nlargest(N,scores)]
+                heapq.heappush(scores, (vectorizer.get_distance(i, ngrams), i, documents[i][0]))
+            # Return top K scores
+            return [(cls,i,dist) for dist,i,cls in heapq.nlargest(K,scores)]
 
         words = preprocessing.extract_words(message)
         if not words:
             return False, 0.0
-            
+
         ngrams = dict((n,preprocessing.get_ngrams(n, words)) for n in (1,2,3))
-       
-        query_vecs = dict((n, KnnClassifier.get_query_vec(ngrams[n])) for n in (1,2,3))
-         
+
         diffs = {}    
         for n in (1,2,3):
-            doc_ids = get_docs_with_terms(self.vocab[n], self.tfidf[n], ngrams[n])
-            nearest = get_nearest(KnnClassifier.N, self.documents[n], self.vocab[n], self.tfidf[n], doc_ids, query_vecs[n])
-            pos = sum((1 if cls else -1) * (KnnClassifier.backoff ** i) for i,(cls,_,_) in enumerate(nearest))
-            diffs[n] = pos/KnnClassifier.N 
+            doc_ids = get_docs_with_terms(self.vectorizers[n], ngrams[n])
+            nearest = get_nearest(KnnClassifier.K, self.documents[n], self.vectorizers[n], ngrams[n], doc_ids )
+                        
+            pos = sum((1 if cls else -1) * (KnnClassifier.backoff ** k) for k,(cls,_,_) in enumerate(nearest))
+            max_pos = sum(KnnClassifier.backoff ** k for k in range(len(nearest)))
+            
+            # pos2/max_pos2 is in range [-1,+1]
+            pos2 = sum((1 if cls else -1) * (KnnClassifier.backoff2 ** (2*k)) for k,(cls,_,_) in enumerate(nearest))
+            max_pos2 = sum(KnnClassifier.backoff2 ** (2*k) for k in range(len(nearest)))
+   
+            pos *= pos2
+            max_pos *= max_pos2
+
+            diffs[n] = pos/max_pos if max_pos else 0.0 
        
         weights = KnnClassifier.get_weights()   
         diff = sum(diffs[n]*weights[n] for n in (1,2,3))      

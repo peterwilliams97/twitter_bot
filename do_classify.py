@@ -104,6 +104,7 @@ def cross_validate(tweets, num_folds):
     return confusion_matrix, sorted(false_positives), sorted(false_negatives)
  
 def _div(a, b):
+    """Return a/b but avoids division by zero"""
     return a/b if b else 0
  
 def get_precision(matrix):
@@ -112,15 +113,20 @@ def get_precision(matrix):
 def get_recall(matrix):
     return _div(matrix[(True,True)], matrix[(True,True)] + matrix[(True, False)])  
     
-def get_f(matrix):
-    return _div(2.0, _div(1.0,get_precision(matrix)) + _div(1.0, get_recall(matrix)))
+def get_f(matrix, beta2):
+    return _div(1.0+beta2, _div(1.0,get_precision(matrix)) + _div(beta2, get_recall(matrix)))
+    
+def get_f1(matrix):
+    return get_f(matrix, 1.0)
 
 ALPHA = 0.9
-assert 0.0 <= ALPHA <= 1.0, 'ALPHA = %f is invalid' % ALPHA
+assert 0.01 <= ALPHA <= 0.99, 'ALPHA = %f is invalid' % ALPHA
+BETA = 1.0/ALPHA - 1.0
+ 
 def get_opt_target(matrix):
     """The objective function that we aim to maximize"""
-    return _div(1.0, _div(ALPHA,get_precision(matrix)) + _div(1.0-ALPHA, get_recall(matrix)))
-
+    #return _div(1.0, _div(ALPHA,get_precision(matrix)) + _div(1.0-ALPHA, get_recall(matrix)))
+    return get_f(matrix, BETA)
 
 def matrix_str(matrix):
     total = sum([matrix[a,p] for p in (False,True) for a in (False,True)])
@@ -132,12 +138,12 @@ def arr_str(arr):
     vals = ','.join(['%6.3f' % x for x in arr])
     return '[%s]' % vals    
     
-# Translate array to (TF) and from (TR) log     
+# Translate array to (TF) and from (TR) array of log of elements of array    
 def TF(a):
-    return [math.log(x) for x in a]
+    return [math.log(x) + 2.0 for x in a]
     
 def TR(a):
-    return [math.exp(x) for x in a]
+    return [math.exp(x - 2.0) for x in a]
     
 def optimize_params(tweets):
     from scipy import optimize
@@ -165,7 +171,7 @@ def optimize_params(tweets):
     matrix,_,_ = cross_validate(tweets, 10)
     
     print '    # Precision = %.3f, Recall = %.3f, F1 = %.3f' % (
-        get_precision(matrix), get_recall(matrix), get_f(matrix))  
+        get_precision(matrix), get_recall(matrix), get_f1(matrix))  
     for k,v in zip(Classifier.get_param_names(), Classifier.get_params()):
         print '    %s = %.4f' % (k,v)
  
@@ -193,7 +199,7 @@ def print_confusion_matrix(confusion_matrix):
     print
     print_matrix(percentage_matrix) 
     print 'Precision = %.3f, Recall = %.3f, F1 = %.3f' % (
-        get_precision(confusion_matrix), get_recall(confusion_matrix), get_f(confusion_matrix))    
+        get_precision(confusion_matrix), get_recall(confusion_matrix), get_f1(confusion_matrix))    
     print
 
 def show_cross_validation(tweets, show_errors):

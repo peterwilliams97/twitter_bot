@@ -9,11 +9,12 @@ Hardcode timezone
 
 Classifiers
 ------------  
-Knn with LCD  
+KNN with LCD  
+[Fast KNN](http://www.reddit.com/r/MachineLearning/comments/10u4hq/what_is_the_state_of_the_art_for_efficient/)
+[FLANN](http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN)
 
 POS tagged words
 nltk tokenizer
-
 
 Re-think General Idea
 ---------------------

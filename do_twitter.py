@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import division
 """
     Program to monitor Twitter for people tweeting about their paper cuts
      and optionally reply to them.
@@ -5,7 +7,6 @@
     Uses http://code.google.com/p/python-twitter/
 """
 import twitter, os, time, sys, re
-
 
 # Our shared modules
 import common, filters
@@ -327,8 +328,9 @@ def run_main_loop(max_duration, replying_enabled):
     #  before tweets have been saved and labeled
     model = common.load_model() 
     if replying_enabled:
-        assert model, 'Cannot reply with a classification model'
-    
+        assert model, 'Cannot reply without a classification model'
+    logging.info('Using %s classifier' % model.__class__.__name__)
+        
     # Lastest tweet id (an integer) is stored as text in LATEST_FILE
     # We use to prevent re-reading tweets
     latest_tweet_id = int(file(common.LATEST_FILE, 'rt').read().strip()) if os.path.exists(common.LATEST_FILE) else 0

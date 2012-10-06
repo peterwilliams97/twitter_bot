@@ -72,17 +72,9 @@ class RocchioClassifier:
         inv_index = {}
   
         for i,doc in enumerate(documents):
-            #print doc
             for word in doc:
-                #print word, type(word)
-                #exit()
                 if not word in inv_index.keys():
                     inv_index[word] = {}
-                inv_index[word][i] = inv_index[word].get(i,0) + 1
-                #if word == '[TAG_START]':
-                #    print doc
-                #    exit()
-               
         return inv_index
        
     @staticmethod

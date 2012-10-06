@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import division
 import  re
 
 # This list is used to exclude whole tweets that have already been seen

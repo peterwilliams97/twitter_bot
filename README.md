@@ -6,16 +6,17 @@ I am attempting to find out if it is possible
 to determine from the text of a tweet alone if the tweeter has suffered a 
 paper cut. 
 
-The Twitter-bot also gratuitouslty ests the acccuracy of its predictions by replying to 
+This Twitter-bot also gratuitouslty tested the acccuracy of its predictions
+for a while by replying to 
 those tweets it has determined to be from paper cut sufferers with a 
 [sympathetic message](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py#L27-29).
 
 How it Works
 ------------
-The are 3 main programs
+There are 3 main programs
 
-* [do_twitter.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) Monitors and replies to tweets on Twitter 
-* [do_label.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_label.py) Used to labels tweets as indicating tweeter has a papercut 
+* [do_twitter.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) Monitors and replies to tweets on Twitter. 
+* [do_label.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_label.py) Used to labels tweets as being about papercuts or not. 
 * [do_classify.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_classify.py) Builds a tweet classification model from labelled tweets and evaluates it.  
 
 After [installing](https://github.com/peterwilliams97/twitter_bot/blob/master/INSTALL.md) this code you can build a working twitter-bot by 
@@ -23,7 +24,7 @@ After [installing](https://github.com/peterwilliams97/twitter_bot/blob/master/IN
 * using do_label.py to label the tweets as being from people with paper cuts or not.
 * running do_classify on the corpus of labelled tweets to build a classification model.
 
-When you have a classification model that meets your acccuracy requires you can run do_twitter.py in replying mode and see how well it chooses
+When you have a classification model that meets your acccuracy requirements you can run do_twitter.py in replying mode and see how well it chooses
 which tweets to reply to. 
 
 The following explains each of these steps in more detail.
@@ -33,13 +34,15 @@ do_twitter.py
 [do_twitter.py](http://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) monitors and replies to tweets on Twitter.
 
 Monitoring comprises
+
     Making Twitter queries to find all tweets variants of the term "paper cut".
     Doing some extra filtering on the query results.
     Saving the tweets to file.
     
-Replying is somewhat more involved
+Replying is somewhat more involved.
+
     Care is taken to avoid replying more than once to a person or a conversation.
-    Tweets are checked against the classification model
+    Tweets are checked against the classification model.
     Replies are made and saved to file.
     Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked with a 
     [Twitter query](http://twitter.com/#!/search/%40owwwpapercut%20liebig).
@@ -51,14 +54,13 @@ micro-instance with the following crontab line.
  
 do_label.py
 ----------- 
-[do_label.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_label.py) is used to label tweets as indicating tweeter 
-has a papercut.  It creates a text file of tweets where each line has a placehold for classification and the text of the tweet.     
+[do_label.py](https://github.com/peterwilliams97/twitter_bot/blob/master/do_label.py) is used to label tweets as whether tweeter has a papercut or not. It creates a text file of tweets where each line has a placeholder for classification and the text of the tweet.     
 e.g.
 
     ? | If I see one more back to school commercial I'm giving my eyes a paper cut.
     ? | i got lemon on my finger and it stings .-. stupid paper cut -.-
 
-You should edit this file and replce the ? with the correct classfication.  
+You should edit this file and replace the ? with the correct classfication.  
 e.g.    
 
     n | If I see one more back to school commercial I'm giving my eyes a paper cut.
@@ -70,6 +72,9 @@ do_classify.py
 the labelled tweets end evaluates it. The classifier is discussed later under the heading [The Classifier](#the-classifier).
 
 Options:
+
+    -C <class>            Use <class> as classifier.
+    -l <n>                limit number of tweets in test set to <n>        
     -n, --ngrams          show ngrams
     -s, --self-validate   do self-validation
     -c, --cross-validate  do full cross-validation
@@ -103,11 +108,11 @@ It will produce some output like this
 
 The columns are the predicted classifications of the tweets and rows ares the actual classifications.
 
-In this result 3225 tweets were evaluated and
-* 1876 were __correctly__ predicted as people tweeting about their paper cuts.   
-* 995 were __correctly__ predicted as _not_ people tweeting about their paper cuts. 
+In this result 3,225 tweets were evaluated and
+* 1,876 were __correctly__ predicted as people tweeting about their paper cuts.   
+* 995 were __correctly__ predicted as people _not_ tweeting about their paper cuts. 
 * 165 were __incorrectly__ predicted as people tweeting about their paper cuts.   
-* 189 were __incorrectly__ predicted as _not_ people tweeting about their paper cuts. 
+* 189 were __incorrectly__ predicted as people _not_ tweeting about their paper cuts. 
 
 (These numbers are from the start of development. Scores for the current code are 
 [here](https://github.com/peterwilliams97/twitter_bot/blob/master/results/cv.latest).)
@@ -154,7 +159,8 @@ The Classifier
 --------------  
 The classifier we use to predict whether tweets are about paper cuts is 
 [BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py). This is a simple
-[n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier.
+[n-gram](http://www.mit.edu/~6.863/spring2011/readings/ngrampages.pdf) classifier. 
+
 
 The n-grams for the paper cut tweets are 
 [here](https://raw.github.com/peterwilliams97/twitter_bot/master/data/owww_papertcut.ngram). The most influential are
@@ -186,6 +192,15 @@ The n-grams for the paper cut tweets are
     [ 18,  0] -18.0 'i'll'
     [ 28,  0] -28.0 'want'
 
+[BayesClassifier.py](https://github.com/peterwilliams97/twitter_bot/blob/master/BayesClassifier.py) outperformed the other classifiers I tested on. This surprised me a little as it is very simple. Two
+possible explanations come to mind.
+* Its simplicity allowed me to tune its preprocessing and parametrization much better than I did
+for the other classifiers.
+* As a generative classifier it is suited to the sparsity of the classification problem where
+the number of calibration samples (thousands) is small compared to the number of possible 
+ngrams (millions or more). See
+[Jordan and Ng](http://ai.stanford.edu/~ang/papers/nips01-discriminativegenerative.pdf).      
+    
 Results
 -------
 The latest internal test results are 

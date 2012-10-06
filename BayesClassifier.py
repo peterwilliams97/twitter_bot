@@ -262,14 +262,14 @@ class BayesClassifier:
  
         weights = BayesClassifier.get_weights()
         smoothings = BayesClassifier.get_smoothings()    
-        
+
         def ngram_score(n, g):
             score = get_score(self.ngram_counts[n].get(g, [0,0]), self.cntv_ngrams[n], smoothings[n])
             _dbg(n, score, g)
             return score
-        
+
         neg,pos = self.class_count
-        
+
         prior = math.log(pos) - math.log(neg)   
         likelihood = sum(weights[n] * sum(ngram_score(n,g) for g in ngrams[n]) for n in (1,2,3))    
         log_odds = prior + likelihood
