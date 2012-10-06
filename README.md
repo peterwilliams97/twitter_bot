@@ -34,18 +34,16 @@ do_twitter.py
 [do_twitter.py](http://github.com/peterwilliams97/twitter_bot/blob/master/do_twitter.py) monitors and replies to tweets on Twitter.
 
 Monitoring comprises
-
-    Making Twitter queries to find all tweets variants of the term "paper cut".
-    Doing some extra filtering on the query results.
-    Saving the tweets to file.
+* Making Twitter queries to find all tweets variants of the term "paper cut".
+* Doing some extra filtering on the query results.
+* Saving the tweets to file.
     
 Replying is somewhat more involved.
-
-    Care is taken to avoid replying more than once to a person or a conversation.
-    Tweets are checked against the classification model.
-    Replies are made and saved to file.
-    Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked with a 
-    [Twitter query](http://twitter.com/#!/search/%40owwwpapercut%20liebig).
+* Care is taken to avoid replying more than once to a person or a conversation.
+* Tweets are checked against the classification model.
+* Replies are made and saved to file.
+* Summary tweets are generated on regular intervals so that the twitter-bot's activity can be checked with a 
+[Twitter query](http://twitter.com/#!/search/%40owwwpapercut%20liebig).
     
 [OwwwPapercut](http://twitter.com/OwwwPapercut) is currently being run from an AWS Ubuntu 
 micro-instance with the following crontab line.
